@@ -1,0 +1,299 @@
+GIT reconnait les renommages de fichier (ou les changement puis renommage)
+à condition que l'on «git add <nouveauNom>» avant la commit.
+
+
+• gitHub : dépôts publics gratuits, dépôts privés payants
+• gitLab, bitBucket : basés sur git eux aussi ; dépôt privé gratuit.
+
+● VOCABULAIRE :
+  « staging area » / index :
+	 contient les changements qui seront inclus dans le prochain commit
+  unstaged :
+	 un fichier modifié mais non enregistré par « git add »
+  staged :
+	 un fichier modifié et enregistré dans l'index via « git add »
+• PR = Pull Request
+
+
+● TRAVAIL DISTRIBUTÉ :
+Un dépôt n'est pas forcément distant, ce peut être un chemin local.
+  git remote -v		liste dépôts distants et sources associées
+
+•ajouter-supprimer-renommer dépôts distants :
+On peut avoir plusieurs dépôts distants !
+  git remote add <alias> <url-dépôt-distant>
+	→ par convention, on nomme le 1er distant «origin»
+
+  git remote rm <alias>
+  git remote rename <de> <vers>
+
+• pousser vers dépôt distant :
+La 1ère fois, il faut lier la branche distante "origin" à la
+ branche locale	<branche>:
+	git push -u <$origin> <branche>
+ensuite, un simple « git push » suffira.
+
+  git pull [distant | ] :
+ 	systématique avant de push, pour vérifier/corriger les conflits
+
+  git fetch [dépôt|]	récupère la liste des branches
+  git fetch -p			"	"	" ET vide le cache des références inexactes
+
+
+• ajouter une nouvelle branche au dépôt distant :
+	git push --set-upstream <origin> <branche>
+
+• télécharger une nouvelle branche distante :
+	git checkout -t <origin>/<nouvelleBranche>
+
+• tirer les changements de la branche <master> distante
+ vers la branche <dev> locale :
+	git checkout dev; git pull origin master
+
+
+• téléverser TOUTES les branches :
+	git push --all origin
+
+• git remote get-url <branch, p.ex origin> :
+ affiche l'URL du dépôt distant
+
+• renommer une branche en local et en distant :
+	git branch -m <ancienNom> <nouveauNom>	#renommage local
+	git push <origin> :<ancienNom>			#suppression de l'ancienne branche
+	git push --set-upstream <origin> <nouveauNom>
+					# pousse la nouvelle branche locale et arme le suivi distant
+
+
+● NETTOYAGE DE BRANCHES :
+Supprimer les branches supprimées, vider le cache de branches distantes :
+
+• lister les branches déjà fusionnées :
+	git branch --merged
+
+• lister les références vers branches distantes :
+	git branch -r
+
+• vider le cache des branches distantes :
+	git remote prune <origin>
+
+(voir aussi git fetch -p)
+
+
+● fusion de diffs en conflit :
+Après un push/pull/merge provoquant des conflits,
+ git indique dans le fichier mergé les parties en conflit par
+	<<<< HEAD
+	version m
+	==========
+	version n
+	>>>>>>>>>> <commit>
+
+• Après correction manuelle, un nouveau git add [.|fichiers]
+ indique à git que la correction est effectuée.
+
+
+• récupérer la branche distante, dans son état le plus récent, sur laquelle
+est basée la branche locale, puis lui applique tout nos changements locaux :
+	git pull -rebase
+
+
+
+● CONFIGURATION GIT :
+ git config [--system|--global|--local] <NOM> <VALEUR>
+	--global : pour l'utilisateur
+	--local : pour le dépôt
+
+• configurer au moins user.name et user.email ...
+• autres options utiles :
+	core.editor 		vim
+	color.ui			true
+	diff.mnemonicPrefix true  :
+		cmp de branches : i→index,w→ working dir, h→head
+	autocrlf			input  :  CRLF → LF
+
+• configuration globale :
+dans ~/.git,
+	~/.config/git/
+(dont ~/.config/git/ignore listant les fichiers/dossiers à ignorer en tout projet)
+
+
+● initier le contrôle de révision :
+Se placer ds le dossier concerné, puis :
+ 	git init
+	(à ce moment on peut utiliser « git config --local xxx » ...)
+	git add <xxx>		#ajoute «xxx» aux fichiers surveillés. par exemple « . » !
+	git commit			#1er commit !
+
+• cloner un dépôt GIT :
+	git clone https//xxxxxxx
+
+• créer une branche :
+	git branch [nom] [nomParente]
+
+• passer dans une branche (ou commit) :
+	git checkout [nom]
+pour ne modifier qu'un seul fichier :
+	git checkout <commit> <fic>
+
+• détruire une branche locale :
+  git branch -d <branche>
+ 	son contenu doit avoir été fusionné dans sa branche parente ou dans HEAD
+  git branch -D <branche>
+ 	raccourci pour « git branch -d --force »
+
+
+● montrer les changements effectués ...
+• ... mais pas enregistrés dans l'index :
+ 	git diff
+• ... et prêt à être commités :
+ 	git diff --cached
+
+• lister les fichiers différant d'une branche à une autre :
+	git diff --name-status <brancheA> <brancheB>
+• diff entre 2 branches :
+	git diff <brancheA> [brancheB|]
+• pour un fichier :
+	git diff <commitA> <commitB> -- <chemin>
+
+• afficher le contenu d'un commit (ou de tous) :
+	git show <commit>
+	git show
+• lister les fichiers modifiés par une commit :
+	git show --name-only <commit|HEAD|etc.>
+
+
+● SYNONYMES :
+	HEAD	@
+	HEAD~	HEAD^1	dernière commit avant HEAD
+
+
+
+● ajouter des fichiers oubliés à la dernière commit :
+	git add <...>
+	git commit --amend --no-edit	** NE JAMAIS FAIRE ÇA SUR COMMIT PUSHÉE **
+
+
+● annuler les changements d'un fichier indexé :
+	git checkout HEAD -- <fic>
+
+● défaire un « git add » – retirer un fichier du suivi avant commit :
+	git reset <fic>
+
+
+● ANNULER LE DERNIER COMMIT :
+• en retirant le commit de l'historique ET les changements :
+	git reset --hard HEAD~1 #annuler dernière commit
+	git reset --hard <commit>
+• annuler le commit mais garder les changements :
+	git reset --soft <commit>
+
+• en retournant sur un commit précédent :
+	git chechout <commit d'avant>
+	[faire ses changements ; commiter ]
+Mais il faut toujours qu'un commit soit lié à une branche pour ne pas être supprimé par le ramasse-miettes : il faut donc créer une branche :
+	git checkout -b <nouvelleBranche>
+
+• en annulant le dernier commit via un autre commit :
+	git revert HEAD		→	nouveau commit annulant le précédent
+
+
+● COPIER UN FICHIER ENTRE BRANCHES :
+	git checkout <branche/commit> <fic>
+
+
+● SUPPRIMER UN FICHIER DE TOUTE L'HISTORIQUE :
+	git rm --cached <fic>
+	git commit ...
+	git push
+
+
+● git stash :
+Les « stash » / « planques » sont toujours en local, jamais pushés ;
+Ils concernent les fichiers stagés et non stagés,
+ mais PAS les fichiers non-suivis ou ignorés par GIT.
+  git stash :
+	 enregistre tout les changements non commités (stagés et non-stagés),
+	 sauf ceux des fichiers non-suivis ou ignorés.
+  git stash -u :
+	 enregistre les changements de TOUT les fichiers.
+• bonne pratique :
+	nommer les stash via « git stash save <msg> »
+
+  git stash pop [stash@{𝑛}] :
+	 applique les changements du [dernier|] stash et le supprime
+  git stash apply [stash@{𝑛}|] :
+	 applique le [dernier|] stash sans le supprimer
+
+  git stash list
+
+  git stash drop [stash@{𝑛}|]
+  git stash clear : supprime tout les stash
+
+  gti stash branch [stash@{𝑛}|] : créé un branche d'un stash
+
+  git stash show
+  git stash -p (...) : pour stasher changements partiels
+
+
+● git tag :
+	git tag <nom>	→ appliqué à la branche/commit en cours
+	git tag --delete <nom>
+	git tag list ou « git tag »
+
+
+● chercher un mot dans les modifications apportées par les commit :
+	git log -G <mot>
+
+
+● CHERCHER UN FICHIER (PEUT-ÊTRE NON EXISTANT DANS LA BRANCHE ACTUELLE)
+ DANS TOUTES LES BRANCHES :
+	git log --all -- <motifFic>
+p.ex :
+	git log --all 'src/*.inc'
+
+• chercher la commit dans laquelle un fichier a été créé :
+	git log --oneline <fic> | tail -1
+ou, plus élégant,
+	git log -1 --reverse --pretty=oneline <fic>
+
+
+
+• lister les branches :
+	git branch
+• et les commits (éventuellement d'une branche différente) depuiq HEAD :
+	git log
+	git log --oneline
+	git log <branche>
+
+• enregistrer un commit :
+ 	git commit -a -m "<texte descriptif>"		# -a : pour "tout les fichiers"
+ enregistre dans le commit tt les changements détectés,
+ au contraite de
+	git add <xxx> <yyyy> <zzz>
+	git commit
+ qui ajoute à l'index les modifications de <xxx>, <yyy>, <zzz> et les commits.
+
+● retirer un commit de l'historique (pas comme «reverse»)
+tout en conservant les changements sur disque :
+ 	git reset HEAD~
+
+• remettre le dépôt dans son dernier état – sans conserver les changements :
+ 	git reset
+• ou juste un fichier :
+	git reset <chemin>
+
+● git status :
+Liste, entre autres, les fichiers non suivis,
+ s'il y a des changements non commités, ...
+
+
+• générer les patches permettant de parvenir à la branche actuelle
+depuis le départ, 1 patch/commit :
+	git format-patch origin
+
+● lister les fichiers sous contrôle de version :
+ 	git ls-tree -r [HEAD|nom-de-branche] --name-only
+ «HEAD» pour la branche actuelle, et [Nombranche] pour ceux de
+ la branche/commit/etc. nommée.
+
+

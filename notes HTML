@@ -1,0 +1,885 @@
+● SITES NOTABLES :
+• validateur W3C : https://validator.w3.org/
+• fontes téléchargeables :
+	https://www.fontsquirrel.com/
+	http://www.dafont.com/
+• fontes référencables :
+	https://developers.google.com/fonts
+et doc (utilisation, syntaxe requêtes, ...)
+sur	https://developers.google.com/fonts/docs/getting_started
+• images placehoder :
+génèrer des liens pour des images placehoder de taille arbitraire :
+	https://placeholder.com/
+
+♦♦♦ Cf «notes programmation» pr notes javascript ! ♦♦♦
+
+• sous firefox :
+	Ctrl maj M	→	voir la page telle que sous un autre appareil / autre déf°
+	F12
+
+
+
+● à propos de validation :
+• la paire attribut/valeur peut s'écrire de différente manières :
+	attr[[:space:]]*=[[:space:]]*("val[^'']"|'val[^']'|val[^ ''<`'>])
+bref, la valeur peut être encadrée d'apostrophes, de guillemets,
+ou non encadrée – mais alors sans contenir aucun espace, guillemet, apostrophe,
+ chevron ouvrant ou fermant, guillemet anglais, et en étant suivie d'un espace.
+
+
+● HTML5 :
+_ insensible à la casse des balises (mais à celle des valeurs d'attributs)
+_ la fermeture des balises «void» par un slash est facultative, au choix du dév'
+_ dans <head>, <style> est de type «text/CSS» par défaut.
+
+
+● COULEURS EN HTML ET EN CSS :
+_ HTML 4.01 définissait 16 couleurs, reprises par CSS1.
+_ le module «color» de CSS niveau 3, lui, en reconnait 140 (dites «extended
+color keywords», «X11 colors» ou «SVG colors») – mais uniquement utilisables en
+CSS et SVG.
+
+
+● GRADIENTS DE COULEUR :
+• linear-gradient :
+par défaut, direction de haut en bas.
+	linear-gradient( rgb(r,v,b), white );
+	linear-gradient( to bottom right,		#donne le sens du dégradé
+		rgb(r,v,b) 10%, rgb(r,v,b) 50%, rgba(r,v,b,a) 30%, rgb(r,v,b) );
+
+  drapeau français dans une div :
+	.flagged {
+		background: linear-gradient( 90deg,
+			blue 33%,
+			white 33%, white 66%,
+			red 66%, red );
+	}
+• repeating-linear-grandient :
+  bandes diagonales avec gradient de haut en bas :
+	.flagged {
+		background:
+		  /* On "top" */
+		  repeating-linear-gradient(
+			45deg,
+			transparent, transparent 10px, #ccc 10px, #ccc 20px ),
+		  /* on "bottom" */
+		  linear-gradient( to bottom, #eee, #999 );
+	}
+
+• radial-gradient :
+par défaut, positionné au centre du conteneur,
+et de forme calquée sur ce dernier :
+	radial-gradient( red, blue );
+	#indique que le dégradé DOIT rester circulaire quelle que soit la
+	# forme du conteneur :
+	radial-gradient( circle, pink, green );
+	# le «at» indique le centre du dégradé
+	radial-gradient( circle at top right, yellow, blue);
+
+•Et, comme on peut empiler les arrières-plans,
+ bandes semi-transparentes par dessus une image,
+
+
+●** TEXTE COLORÉ (GRADIENT OU DÉCOUPÉ SUR IMAGE DE FOND) :
+le CSS :
+	background: linear-gradient(to bottom right, yellow, blue);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+la propriété «background-clip: text» indique que le fond n'est visible que sous
+ le texte (le reste de l'élément prenant alors la couleur du parent),
+ et «color: transparent» que ce même texte ne doit pas masquer l'arrière-plan.
+
+• propriété « text-overflow: ellipsis »
+
+
+●** ANIMER LA COLORATION AJOUTÉE PAR DESSUS UNE IMAGE DE FOND DE DIV :
+on ne peut animer «background-color». Mais on peut animer «opacity»,
+ appliqué à un descendant du conteneur le recouvrant entièrement !
+_ CSS :
+#opacifier {
+	z-index: 1; /* nécessite un ancêtre positionné ! */
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+
+  	background: rgb(255,255,255);
+	opacity: 0.5;
+	transition: opacity 0.5s;
+}
+#container:hover > .opacifier {
+	opacity: 0;
+	transition: opacity 0.5s;
+}
+_ HTML :
+	<div id="container">
+		<div id="opacifier">
+			...
+		</div>
+		...
+	</div>
+
+
+●** ÉLÉMENT DE PROPORTIONS CONSTANTES AU SEIN DE SON CONTENEUR :
+• «padding-top» et «padding-top» sont calculés à partir de la **LARGEUR**.
+Donc si la largeur est déterminée (p.ex : 80% du contenant), alors en jouant sur
+ le padding vertical et en armant «height: 0»,
+ on peut garder la proportion constante !
+	height: 0;
+	width: 40%;
+	padding-top: calc( 9*0.4 /16 * 100%);		/* donc rapport 16/9e */
+• ATTENTION : le contenu est alors situé SOUS le conteneur !
+il faut alors jouer de l'attribut «position» et du «translateY()»,
+ mais c'est très rigide ...
+
+
+● <title>...</title> VS <meta name="title" content="..."> :
+_ balise <title> :	titre de la page.
+_ meta title :
+	simple métadonnée.
+	non officiel
+	Affichée ou non en tant que titre par les navigateurs
+	utilisable par les araignées web pour l'indexation
+
+
+● NE PAS OUBLIER :
+- balises <meta charset=""> et <title> dans <head>
+- déclarer la langue, au moins via <html lang="fr">, et partout où ça change
+	aucune langue : "Zxx"
+	indéterminé : "und"
+- d'après «https://www.w3.org/TR/html5-diff/#syntax», §3.1, on peut utiliser de
+	<h1> à <h6> avec <section> ...
+- en HTML5 : <input>, PAS <input>texteAffiché</input> !
+- <label>...<input type="..."></label> ! <input> DANS son <label>
+- script placé dans l'élément <head> : avec l'attribut «defer» ou «async» !
+
+• penser à l'attribut alt="xxx" des images :
+_ pas de alt=	→	image importante pour le document
+_ alt="xxx"		→	les navigateurs non-graphiques (accessibilité !) utiliseront
+					  cette chaîne à la place
+_ alt=""		→ chaîne vide, l'image n'a pas d'importance structurelle,
+				  elle peut être omise par les navigateurs non-graphiques
+
+• penser à l'attribut title= qui sert de popup explicative
+
+• un élément positionné en «absolute» le sera par rapport au plus proche
+ ancêtre positionnné (pas «static»),
+ et doit avoir au moins un ancêtre positionné.
+
+• z-index ne marche que sur les éléments positionnés !
+	À voir au sujet de l'ordonnancement z-index :
+chaque élément positionné, chaque élément utilisant une propriété CSS transform,
+opacity, etc. – bref, tout ce qui demande un rendu offscreen –, créée
+ un nouveau contexte d'empilement ...
+	cf «/usr/share/doc/divers/HTTP, HTML, CSS : articles/What No One Told You About Z-Index.html»
+
+• si on arme les prop' «width» et «right», cette dernière est ignorée.
+
+
+
+● attributs notables des <script> :
+• async :
+	Apporté par HTML5. Script ne bloquant pas le chargement du reste de la
+page, exécuté en //le, sans attendre que les scripts précédents ou le code HTML
+soient opé.
+_ uniquement pour les scripts externes
+→ Ne pas tenir pour acquis le chargement d'un autre source JS (framework etc.) !
+→ ne pas utiliser document.write() et consorts
+→ exécuté avant l'év. «window.load»
+• defer :
+	Le script est téléchargé en //e, sans arrêter le chargement du reste de la
+page ; il sera exécuté après le parsing du DOM / avant l'év. «DOMContentLoaded».
+→ ordre d'exécution des scripts préservés.
+
+
+
+●importer style externe :
+	<link href="fichiers/style.css" rel="stylesheet" type="text/css">
+dans la feuille de style CSS :
+	@import url=('blablabla')
+• MAIS : ne pas mélanger les deux pour cause de perte de performances !
+plutôt avoir plusieurs @import, qui se téléch' en //èle ... mais pas forcément
+dans un ordre déterminé.
+
+
+● forcer le rechargement de la page de style CSS qd elle change :
+Les navigateurs peuvent la conserver en cache et ne pas la recharger lors d'un
+ nouvel accès à la page la référençant.
+En utilisant dans <head> :
+	<link rel="stylesheet" content="text/css" href="style.css?v2">
+La chaîne de requête (débutée par «?») fait que le navigateur considère que
+ «style.css?1» n'est PAS «style.css?2».
+Quand la feuille de style a changé, il suffit donc de changer, au sein des pages
+ web la référençant, le lien <link> pour provoquer un rechargement ...
+
+
+
+● les balises de type bloc : <div>, <h1>, <p>, ...
+	conteneurs.
+	provoquent retour à la ligne ;
+	peuvent recevoir l'attribut «text-align»
+		(sans effet sur les balises en-ligne)
+● et celles de type inline :
+	contenues dans les balises de type bloc.
+● <br/> serait donc incorrect hors de <p></p> ?
+
+
+● DIFFÉRENCE BALISES BLOCK/INLINE :
+• PAR DÉFAUT :
+				bloc								inline
+	- apparait en dessous					- dans le sens d'écriture après
+		de son prédécesseur						son prédécesseur
+	- largeur 100%							- largeur minimale
+	- hauteur : celle du contenu
+	- retour-à-la-ligne automatique
+		du contenu
+	- sensibles à width et height						!
+				!							- sensible à vertical-align
+											- devient de type «bloc» si
+												prop' «float» armée
+• et si prop' «float» armée :
+- l'élément n'entre plus en compte dans le calcule de la taille du parent
+- un «inline» devient «block»
+
+• éléments «replaced» : conteneurs comme «block», mais se comportants d'avantage
+ comme «inline» :
+_ img
+_ object
+_ input
+_ select
+
+●** Réduire la largeur d'un élément de type bloc :
+Ils occupent par défaut toute la largeur disponible au sein du parent ...
+• on peut se servir d'un conteneur flex (et éventuellement, dans un conteneur
+ de flex-direction horizontale, de «align-self»)
+• ou jouer sur les marges :
+	margin-left: auto;
+	margin-right: auto;
+→ centré horizontalement !
+
+
+
+● Liste de balises «meta name» HTTP :
+	<meta name="XXX" content="XXX" />
+⊕Author
+_Category	valeurs séparées par des virgules
+⊕charset	INSENSIBLE À LA CASSE :
+				Les valeurs «UTF-8» et «utf-8» sont équivalentes.
+_Copyright
+⊕Description	info à afficher par les moteurs de recherche
+_Distribution	zone de destination de la page (global, local, iu (intranet))
+⊕Expires		never/"date d'expiration de la page"
+_Generator		nom du logiciel ayant généré la page
+_Googlebot		pr robots de google ; "noarchive" interdit la mise en cache
+_Identifier-URL	url du site
+⊕Keywords
+⊕Language	abréviation de 2 lettres
+_Publisher	publicateur du site
+_Rating		public ciblé,type de contenu ???????????
+⊕Reply-to	addresse courriel du webmestre
+_Revisit-after	"x days"	 pr les robots de recherche
+_Robots		all/none/(no)index/(no)follow	sép.par.virg autorisation aux robots
+⊕Subject		sujet de la page
+⊕theme-color	une couleur CSS à appliquer à l'UI du navigateur
+
+
+● Liste de méta-balises HTTP :
+	<meta http-equiv="XXXX" content="XXX" />
+ 
+default-style		id de l'élément <link> dont le href renvoit vers le CSS,
+					  ou l'id d'un élément <style>
+Content-Type		text/html;charset=iso-8859-15 (ou «UTF-8»)
+Content-Style-Type	text/css
+Content-Script-Type	text/javascript, text/tcl, ...
+Content-Language	liste de codes de langue(comme "fr,en") ♦♦DÉPRÉCIÉ en faveur de l'attribut «lang» de la balise «html» - ou d'autres balises incluses♦♦
+ 
+Pragma			no-cache		interdit la mise en cache
+Refresh			x			rafraichissement au bout de x secondes
+				x; URL="adresse"	charge tel URL au bout de x secondes
+Window-target	_blank/_top	???????????
+
+
+● cibles <link> notables :
+• la favicon :
+	<link rel="icon" type="image/png" href="favicon.png" />
+on peut les accumuler avec des résolutions diverses :
+	<link rel="icon" type="image/png" href="favicon.png" sizes="16x16" />
+	<link rel="icon" type="image/png" href="favicon.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="favicon.png" sizes="96x96" />
+
+• style CSS :
+CASCADING → accumulables
+on peut définir des styles alternatifs :
+	<link ref="stylesheet" href="xxxx" />				#(1)
+	<link ref="stylesheet" href="xxx" title="xxx"/>		#(2)
+	<link ref="alternate stylesheet" href="xxxx" title="xxx"/>
+	<link ref="alternate stylesheet" href="xxxx" title="xxx"/>
+_ la n°1 est tjr incluse – pas de nom, pas de «alternate»
+_ la n°2 est la feuille de style par défaut, et comme elle a un titre elle est
+ présentée comme possibilité de feuille de style alternative.
+_ les autres sont des feuilles de style alternatives, présentées par le
+ navigateur dans un menu.
+
+
+
+● balises structurantes, conférant une valeur sématique, introduites par HTML5 :
+<header>, <footer>, <nav> (principaux liens de navig°), <main>,
+<section>, <article>, <aside>,
+tous pouvant contenir leurs titres <h𝑛>, ...
+<section> pourra contenir <header>, <article>s, <aside>s, ...
+• et autres balises :
+	<detail> (dont le contenu est caché jsqu'à déploiment),
+	  <summary> qui doit ê le 1er enfant de <detail>,
+	<bdi>,
+	<figure> et <figcaption>, ...
+
+•overflow: «comment afficher le texte qui dépasse du bloc ?»
+	visible, hidden, scroll, auto
+•word-wrap
+
+• display: [inline|block|inline-block|...];
+• «display: inline-block»
+ 	→	en ligne comme un «inline», mais redimensionnable comme un «block»
+Par défaut, ils sont positionnés sur une même «ligne de base» située en bas,
+ celle du texte.
+À moins de, bien sûr :
+	vertical-align: [baseline|top|middle|bottom|nb-par-rapport-à-baseline];
+
+
+● FLEX :
+• Sous chrome, ajouter «margin: 0» aux enfants peut ê
+nécessaire pour avoir une pleine hauteur !
+	.conteneur
+	{
+		display: flex;
+		flex-direction: [row|column|row-reverse|column-reverse];
+		flex-wrap: [nowrap|wrap|wrap-reverse];
+		/* le long de l'axe principal*/
+		justify-content: [flex-start|flex-end|center|space-between|space-around|...];
+		/* et de l'axe secondaire */
+		align-items: [normal|stretch|flex-start|flex-end|self-start|...];
+	}
+• centrage horiz–vertic auto :
+	.conteneur {
+		display: flex;
+	}
+	.éléments {
+		margin: auto;
+	}
+
+•** aligner à gauche LE SEUL élém' d'une ligne d'un bloc «flex-direction: row» :
+	« margin-left: auto; » → justifié à gauche
+
+• la pondération des descendants via «flex» est PRIMORDIALE avec
+ «flex-wrap: wrap»  pour éviter que le sens d'affichage ne bascule.
+	Et quand un des éléments doit s'étaler le moins possible (p. ex : le menu),
+il faut lui donner un flex-grow de 0 !
+	.élément {
+		flex: [poids|flex-grow flex-shrink flex-basis];
+	}
+OU : propriétés flex-grow, flex-shrink, flex-basis ...
+
+
+●** CSS MINIMAL POUR CENTRER LE SEUL DESCENDANT D'UN CONTENEUR FLEX :
+	#parent {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+et un «display: inline-block» sur les descendants blocs ...
+●** CSS MINIMAL POUR CENTRER UN ÉLÉMENT SANS FLEX :
+•ATTENTION : cela a un impact sur la forme donnée au contenu !!!
+	#parent {
+		position: relative;
+	}
+	#fils {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+
+●changer l'ordre des éléments :
+	.élément: nth-child(𝑛) {
+		order: γ;
+	}
+Passera le 𝑛ième élément en position γ
+
+
+
+●type de puces dans une liste :
+	list-style-type: none;
+
+
+● LIEN VERS UNE SECTION DE LA PAGE :
+	<a href="#idsection"></a> avec ... un id défini dans une balise
+		(par ex, ds «<p id="unId">»)
+•autres valeurs notables pour href :
+	#	la page elle-même
+	?	la page, sans sa chaîne de requête / query string
+
+● attribut «target» d'un lien – ses valeurs :
+  _blank		nouvel onglet / fenêtre
+  _self			dans onglet en cours (défaut)
+  _parent		dans cadre parent
+  _top			dans le corps de la fenêtre
+  <nomDeFrame>	dans un frame nommé
+
+
+● UNITÉS NOTABLES DE CSS :
+• préférer certaines unités sur certains supports :
+_ écran & périphériques low-res :
+	px, %, em, vw, ...
+_ imprimantes & périphériques hi-res :
+	em, %, ET cm, mm, ... et autres unités de mesure réelles.
+
+ 	px
+	cm, mm : unités métriques
+ 	% : en % du conteneur
+	em : ratio - par rapport à la hauteur de la fonte utilisée.
+	ex : ratio - par rapport à la hauteur de bas-de-casse de la fonte
+	 «ex» pour «hauteur du x minuscule».
+	rem : «root em». em au sein de l'élément racine.
+	vh, vw : «% of Viewport Height», «% of Viewport Width»,
+	vmin, vmax : «% of minimum/maximum dimension»
+ The viewport-percentage lengths are relative to the size of the initial containing block. When the height or width of the initial containing block is changed, they are scaled accordingly.
+● TAILLE D'UNE FONTE :
+ 	px, cm, mm, ...
+	xx-small, x-small, small, medium, large, x-large, ... :
+		valeurs relatives à la taille par défaut (medium).
+	larger, smaller :
+		équivalents à ↑ large, small
+	em, ex, % :
+		valeur relatives à la taille de la fonte dans l'élément parent.
+	rem :
+		valeur relative à la taille dans l'élément racine (<html>)
+
+• valeurs de la propriété font-size :
+	xx-small, x-small, small, medium, large, x-large, xx-large,
+	smaller, larger
+
+
+
+● FORMAT DU SÉLECTEUR CSS :
+ 	xxx yyy → style des élément yyy DE PARENT xxx
+	xxx > yyy → "	"	"	"	yyy DESCENDANT DIRECT de xxx
+	xxx + yyy →	"	"	"	"	yyy SUIVANT un xxx
+	xxx ~ yyy →	"	"	"	"	yyy APRÈS un xxx DANS LE CONTENEUR
+
+	xxx[yyy] →	"	"	"	"	xxx ayant un attribut yyy
+
+ 	xxx[yyy="zzz"] →	"	"	xxx ayant un attribut yyy de VALEUR EXACTE zzz
+	xxx[yyy*="zzz"] →	"	"	xxx ayant un attribut yyy
+												dont la valeur CONTIENT zzz
+
+ 	xxx[yyy^="zzz"] →	"	"	xxx "	"	"	"	valeur DÉBUTE PAR zzz
+	xxx[yyy$="zzz"] →	"	"	xxx "	"	"	"	valeur FINIT PAR zzz
+
+ 	xxx[data-yyy="zzz"]
+	xxx[yyy~="zzz"]
+
+ 	xxx:not(yyy) →	"	"	"	xxx n'étant PAS un yyy (id, classe, élém', ...)
+
+ 	xxx		→ style par défaut des ÉLÉMENTS xxx
+	.xxx	→ "	"	"	CLASSE xxx
+	xxx.yyy → "	"	"	ÉLÉMENTS xxx DE CLASSE yyy
+	#xxx	→ "	"	"	l'ID xxx
+	:xxx	→ "	"	"	la PSEUDO-CLASSE xxx (comme «hover», «focus», ...)
+des combinaisons sont possibles :
+	«p.xxx:hover» (→ les «p» de classe xxx dans l'état «hover»),
+	«p:first-child img.xxx» (→ toutes les «img» de classe xxx contenues par le 1er descendant d'un élément s«p» d'un élément)
+
+!!!	«p img:first-of-type»			≠	«p img:first-child»		!!!
+les «img» étant le 1er «img» de leur conteneur	≠	les «img» étant le 1er descendant de leur conteneur
+
+!!!		«p img:first-child»		≠	«p > img:first-child»	!!!
+ les «img» étant le 1er descendant d'un «p»	≠	le 1er «img» à être le 1er descendant d'un «p» - un seul dans tt le docum
+
+♦ : :first-child, :first-of-type, :last-child,
+  :nth-of-type(𝑛), :last-of-type,
+  :only-child, :only-of-type, :empty,
+  :nth-child(2n+1), :nth-child(odd), :nth-child(even), ...
+
+ET PLEINS D'AUTRES SUR https://www.w3.org/Style/css3-selectors-updates/WD-css3-selectors-20010126.fr.html#selectors
+
+• pseudo-élément : une partie d'un élément.
+Depuis CSS3, il faut utiliser le préfixe «::»
+	::first-letter, ::first-line, ::before, ::after, ...
+• pseudo-classe : état d'un élément
+	:hover, :focus, :lang("xxx"), :invalid, :first-child, :only-of-type, ...
+
+
+
+● LISTE DES ATTRIBUTS STANDARDS DES BALISES :
+Les attributs applicables à toutes balises :
+	cf «http://www.w3schools.com/tags/ref_standardattributes.asp»
+
+• un attribut intéressant pour la balise <object> : «autoplay=false»
+
+• l'attribut « visibility="hidden" » rend un élément invisible – mais il prend
+tjr de la place, alors que
+• l'attribut « display="none" » le rend comme inexistant !
+
+• l'attribut « tittle="...." » peut être utilisé presque partout, et provoque
+l'affichage d'une infobulle.
+
+• Les attributs d'évènements possibles sont:
+ 	onclick, ondblclick, onmousedown, onmousemove,
+	onkeyup, onmouseout, onmouseover, onmouseup,
+	onkeydown, onkeypress
+
+
+
+● LISTE DES BALISES HTML :
+	cf «http://www.w3schools.com/tags/» !
+
+• bloc <noscript> :
+_ HTML ≤ 4.1, <noscript>	n'est permis que dans <html>
+_ HTML5 :	<noscript> peut être utilisé dans <head> !
+	→	possibiliter d'utiliser un <link rel="stylesheet" ..> différent !
+
+
+•propriété CSS «background» : images cumulables !
+Mais c'est la PREMIÈRE qui est en AVANT-PLAN.
+
+● utiliser une fonte via CSS :
+	@import url('http://blablabla');
+•déclarer une fonte à télécharger :
+	@font-face {
+		font-family: 'nomPolice';
+		[font-stretch|font-weight|font-style|...]: <valeur>;
+		src: url('localeOuDistante') format(['woff'|'truetype'|'svg'|...]),
+			url('autreNomFichier') format(['woff'|'woff2'|'opentype'|...]),
+			local(<nomFonteSurClient>);
+On donne le nom à utiliser dans le CSS, ainsi qu'une liste de fichiers (URL relatives : relatives au fichier CSS) avec leur format : le navigateur prendra le 1er fichier présent du bon format.
+• c'est un peut la même stratégie qu'avec
+	font-family: 'Helvetica', sans-serif;
+
+
+
+● inclure le style css dans la page :
+Il suffit de l'écrire ds une balise (<body>, <p>, <div>, <span>, ...),
+ou dans l'entête (via <style type=...>...</style>) :
+ par ex:
+	<div style="text-align: center; color:black; background-color:#0e0e40; background-image:url(fichiers/bandeau%20titre.png)">
+		<h1><b>Bla Bla Bla</b></h1>
+		<h2><i>Bla bla</i><h2>
+		<h3>Bla</h3>
+	</div>
+ou mieux:
+	<head>
+		....
+		<style type="text/css">
+			/*défs CSS
+			*/
+		</style>
+	</head>
+
+● @media : les «media queries» / requêtes média
+« aucun navigateur mobile à part Opera mobile ne reconnaît handheld »
+• «device-width» est obsolète :
+à la place, utiliser «width» après cette meta :
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+• @media xxx en CSS, <link rel="stylesheet" media = ".. and .. or .."> en HTML :
+	all
+	aural / speech	lecture vocale
+	braille
+	embossed		braille « imprimé »
+	handheld
+	print
+	projector
+	screen			écran classique
+	tty				périphériques avec grille de caractères de taille fixe
+	tv
+• fonctionnalités remarquables :
+	aspect-ratio
+	width, height
+	resolution		en dpcm (pt/cm), dppx ou dpi
+	orientation		"portrait" ou "paysage"
+	color			nombre de couleurs (monochrome pr le nb de niveaux-de-gris)
+	scan, grid, monochrome, color-index, ...
+
+
+● variables CSS :
+- déclarée dans un sélecteur (celui de plus haut niveau étant «:root»),
+- de nom débutant par un double-tiret «--»,
+- utilisées dans les « propriétés personnalisées » par «var(--nom-var)»
+• de valeur héritable par les élements descendants.
+var(--nom-var) OU var(--nom, valeur-si-"nom"-invalide)
+_ (bien sûr, var(--v, var(--w, 𝑛𝑛𝑛) ) est possible !)
+• N'étant pas supportées par 100% des navigateurs, il convient de précéder leur
+déclaration d'un valeur par défaut.
+
+
+● calc() :
+f° CSS permettant les 4 opérations de base, et réentrante.
+Peut servir à calculer des dimensions :
+	with: calc(50% -0.5em);
+
+
+
+● la pseudo-classe «:root», et l'élément «html» :
+« élément racine ».
+Dans un page web, «:root» équivaut à l'élément «html» ...
+Mais en SVG, «:root» reste valide pour style le contenu (sera le parent
+ de «svg») !
+
+
+● la meta «viewport» :
+Le «viewport» est la zone dans laquelle la page est dessinée : sur les
+ appareils mobiles, il est souvent plus grand que l'écran physique.
+•Cette meta évite des problèmes de taille sur ces périphériques.
+<meta name="viewport" content="[  width=[nombre|device-width|...]
+								| height=[nb|device-height|...]
+								| user-scalable=[yes|no]
+								| initial-scale=nbFlottant ]+" />
+
+● habillage de cadres par du texte :
+Controlé par les attributs «float» [right|left] (qui aligne un bloc)
+ et «clear» [right|left|both] (qui indique qu'on ne doit pas habiller un bloc,
+ mais commençer en dessous)
+
+
+● QUAND UNE IMAGE «float: left» EST SUIVIE PAR UN BLOC AVEC BORDURE,
+ pour éviter que le cadre du bloc n'occupe toute la largeur de la page
+ et n'aille dans la zone de l'image, le bloc suivant doit avoir la
+ propriété CSS
+	«display: inline-block»
+→ habillage comme un bloc, mais disposition en ligne comme avec «inline» !
+
+●** retrait négatif d'un bloc de texte :
+{
+	text-indent: -𝑛;
+	padding-left: +𝑛;
+}
+
+
+●** AU SEIN D'UN DIV «FLEX-FLOW: ROW WRAP;», ALIGNER UN ÉLÉMENT À GAUCHE
+ ET UN AUTRE AU CENTRE :
+#parent {								<div id="parent">
+	display: flex;							<div class="centreur">
+	flex-flow: row wrap;						élément à justifier à gauche
+	justify-content: space-around;			</div>
+}
+.centreur									<div>
+{												élément centré
+	flex: 1;								</div>
+	align-self: flex-start;
+	text-align: left;						<div class="centreur"></div>
+	min-width: -moz-max-content;		</div>
+}
+_ l'important est que les 1er & dernier éléments aient un flex-grow à 𝑛 et celui
+du milieu à 0, pour qu'ils occupent le plus d'espace,
+_ et que le 1er, contenant l'élément à justifier, ne puisse pas rétrécir en
+dessous de la taille optimale de son contenu – ici via min-width: -moz-max-content, qui est expérimentale au 03/12/17 !
+
+
+●** BANDEAUX FIXE EN SOMMET DE PAGE, DE PLEINE LARGEUR, ET NE SE SURIMPOSANT
+PAS AU RESTE DU CONTENU QUAND ON EST EN SOMMET DE PAGE :
+• Dans le CSS :
+	body {
+		/* permet au bandeau de dépasser à gauche et à droite de quantités
+		  bien définies, tout en conservant une marge */
+		margin: 0.5em;
+	}
+	#bandeau {
+		position: fixed;
+		top: 0;
+		/*utile pour afficher en pleine largeur un trait ou une image ... */
+		width: 100vw;
+		/* valeur opposée de la propriété «margin» définie pour l'élém «body»*/
+		right: -0.5em;
+	}
+•et dans le HTML :
+	Du code prenant la même taille que le bandeau !
+Mais surtout ayant l'attribut
+	visibility: hidden;
+
+●** SIMULER UN CONTOUR AUTOUR DU TEXTE AVEC PLUSIEURS OMBRES :
+• dans le CSS :
+	text-shadow: -1px -1px 0 black, -1px 1px 0 black,
+				 1px 1px O black, 1px -1px 0 black;
+Ce qui permet de simuler la propriété «text-stroke» qui est encore (09/2017)
+mal supportée.
+
+
+● TABLEAUX :
+• STYLER LES ÉLÉMENTS D'UN TABLEAU :
+	styler «td», pas «tr» !
+Car «tr» est un élément de classification, il n'est donc pas affiché ...
+
+• «Conforming browsers ought to center tables if the left and right margins
+ are equal. The simplest way to accomplish this is to set the left and right
+ margins to “auto.”»
+
+• divisé en lignes par la balise <tr> : «table row»,
+	contenant des cellules (balise <td> : «table data»)
+
+•contient optionnellement les éléments <thead>, <tfoot>, <tbody>, 
+qui servent à indiquer les entêtes, pied et corps du tableau
+
+<table>
+	<caption>Titre</caption>
+
+	<!-- en-tête du tableau -->
+	<thead>
+		<tr>
+			<th>		</th>
+			<th>		</th>
+		</tr>
+	</thead>
+
+	<!-- pied de tableau – même structure que <thead>
+	<tfoot>
+	<!-- ... -->
+	</tfoot>
+
+	<tbody>
+		<tr>
+			<th>		</th> <!-- on peut aussi mettre un <th> dans un <tr> -->
+			<td>		</td>
+			<td>		</td>
+		</tr>
+		<tr>
+			<td>		</td>
+			<td>		</td>
+		</tr>
+	</tbody>
+</table>
+
+• fusionner des cellules :
+	<td rowspan="𝑛"> et <td colspan="𝑛">
+
+• styler le tableau :
+	table {
+	  border-collapse: [collapse|separate];	→ pas d'espaces entre les cases
+	  border-spacing: 𝑛𝑛𝑛;		  → écart entre ligne d'entête & corps
+	}
+
+
+
+• afficher des éléments à la façon d'un tableau :
+	display: [table|table-row|table-column|table-cell|table-column-group
+		|table-header-group|table-footer-group] ;
+_ table-header-group, table-row-group, table-footer-group :
+		l'élément se comporte comme un <thead>/<tbody>/<tfoot>
+
+
+
+● FORMULAIRES :
+• la propriété «name» indique le nom de la donnée renvoyée par le formulaire.
+• penser aux propriétés :
+_ autofocus
+_ disabled sur une balise «input», «select», ...
+	Mais aussi «fieldset» ou «form» !
+_ selected pour les éléments «option»
+
+_ required
+_ pattern="" : regex de validation du contenu.
+
+_ maxlength,
+_ minlength pour les <input type="text"> et les <textarea>
+
+• les pseudo-classes CSS «:valid» et «:invalid»
+
+• et en JS :
+form.reset() !
+• une validation plus poussée peut se faire en JS – voir
+	https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation
+
+• <form> doit contenir des éléments de type bloc.
+donc pas de texte ou de <input> comme descendant direct !
+
+	<form method="[get|post]" action="[URL réception données|
+											javascript:fonctionGlobale()]" >
+		<p>
+			<!-- balise <p> obligatoire si on veut du texte en-dedans ! -->
+			<label for="id de l'entrée référencée">bla</label>
+			<input type="[text|password|email|url|search|...]"
+				name="NomDonnéeenvoyée"
+				placeholder="..."
+				*size="nbCar" *maxLength="maxCar"
+				*required >
+
+			<label for="...">bla</label>
+			<textarea placeholder="..." *name="..." *rows="..." *cols="...">
+				le texte ici (même un simple saut de ligne !) a priorité
+					sur le placeholder
+			</textarea>
+
+			<select name="...">
+				<option value="valeur1">choix1</option>
+				<optgroup label="groupe2">
+					<option value="valeur1">choix2</option>
+					<option value="valeur1">choix3</option>
+				</optgroup>
+			</select>
+		</p>
+
+		<fieldset name="nomGroupe" *form="id Form parente" *disabled>
+			<legend>titre zone de champs</legend>
+			<!-- l'ancienne syntaxe est désormais incorrecte !
+				<input type="..." name="..." value="...">...</input>
+			-->
+			<input type="radio" name="NomGroupe" value="choix 1">
+			<input type="radio" name="NomGroupe" value="choix 2">
+		</fieldset>
+
+		<div>
+			<input type="submit" value="Label du bouton">
+		</div>
+
+	</form>
+
+●  donner une propriété «name» à un input «submit» permet de le voir relayé
+ lors de la soumission du formulaire, et donc, s'il y a plusieurs «submit»,
+ de savoir lequel a été activé, et dc de différencier entre les différents traitements à appliquer liés aux différents boutons ...
+
+
+● <input type="submit"> peut être remplacé par un <button> :
+	Par défaut, un button est de type="submit",
+autres types : «reset» et «button» (pas de comportement par défaut).
+	Remplacer un <input type="submit"> par un <button type="submit">
+permet d'afficher un label différent de la prop' value ;
+ sinon, le fonctionnement est exactement le même.
+
+● un champs qui, si invalide ou vide, est suivi d'un indicateur textuel :
+• se servir de la pseudo-classe «invalid» et du pseudo-élément «::after» :
+	textarea:invalid + span::after,
+	input:invalid + span::after {
+		content: "* valeur manquante";
+		color: red;
+		font-size: small;
+		font-style: italic;
+	}
+● un champs dont le fond est coloré s'il est requis mais vide :
+• même topo :
+	input:required:invalid,
+	textarea:required:invalid {
+		background-color: #C99;
+	}
+
+• l'élément <fieldset> est utile pour :
+_ l'accessibilité (un lecteur d'écran pourra citer les différents choix relatifs
+	à l'information donnée par l'élément <legend>)
+_ inhiber tout un groupe d'entrées
+	en créant la propriété «disabled» de <fieldset>
+
+
+
+●** BOUTON DE FERMETURE D'UN ÉLÉMENT – SANS JS :
+Faisable en précédent d'une case-à-cocher (invisible) un élément, contenant un
+ label lié à cette case à cocher (et donc permettant de basculer son état),
+et dont le CSS spécifie qu'il est invisible si précédé de cette case cochée ...
+→ le HTML :
+	<input  type="checkbox"  id="closeBox"  class="noJShider">
+
+	<div id="noscript" class="closeWithoutJS">
+		<label for="closeBox" class="..." >
+			ce label ↑ doit être cliqué pour cocher la case ...
+		</label>
+	</div>
+→ le CSS :
+	.noJShider,
+	.noJShider:checked + .closeWithoutJS { display: none }
+

@@ -1,0 +1,96 @@
+● MISE EN PROD' :
+configurer la plate-forme,
+démarrer les services web et BdD
+configurer saufegardes automatiques (site et BdD),
+"	"	les alertes (qd un client obtient une 404, ...),
+"	"	le DNS,
+"	"	le SSL,
+"	"	reverse proxy (nginx) et serveur cache,
+"	"	balanceur de charge,
+
+• serveur de pré-production / « staging » :
+_ avec une config la plus proche possible de celle du serveur de prod'
+_ pour validation des changements par le client, tests depuis le net, ...
+
+→ exécuter les tests unitaires & fonctionnels, ...
+
+
+ghandi, 1&1, OVH
+AWS	(Amazon Web Service) – différents services dont hébergement
+heroku
+
+
+
+● TYPES DE SERVEUR :
+• mutualisés :
+_ installation simple (par FTP)
+_ maintenant par l'hébergeur
+_ peu coûteux
+MAIS
+_ faible sécurité,
+_pas de choix des logiciels, peu configurable
+_ peu d'activités possibles
+_ quotas souvent présents
+_ IP partagée
+
+• VPS (Virtual Private Server) :
+plusieurs conteneurs ou VM
+_ IP privée
+_ accès total
+MAIS
+_ mieux vaut être DeOp (aministration système !)
+
+• serveru dédié :
+location du matériel only.
+→ on y installe l'OS et les bibliothèques de son choix,
+→ on y fait ce qu'on veut
+MAIS coût élevé
+
+• en cloud :
+_ très mdoulaire,
+_ IP privée là aussi
+_ auto scalabilité / élasticité
+
+utilisé aussi pour les tâches gourmanes en calcul ...
+
+
+
+_ IaaS	Infrastructure as a Service		matériel
+_ PaaS	Platform	plateforme logcielle (OS, bibliothèques, serveurs)
+_ SaaS	Software	(logiciel fourni, on ne fait que l'utiliser)
+
+
+
+• «Let's encrypt» : un script installable en local permettant de générer le
+ certificat SSL localement (et gratuitement !)
+
+
+
+● LE DÉPLOIEMENT :
+• accès limité au FTP :
+	Pas de bol, on est obligé de copier TOUT les fichiers.
+→ temps de téléversement parfois TRÈS long.
+• par SSH :
+	git clone
+	composer install
+→ bon débit ...
+• outils de déploiement :
+Ansible, chef, puppet :
+des scripts à installer sur le serveur et permettant lors de leur exécution
+ de configurer & automatiser l'installation, de l'OS, des bibliothèques,
+ du site web ...
+• intégration continue :
+jenkins, cruisecontrol, teamCity
+Un push sur le déoôt igt provoque tests / déploiement entièrement
+ automatiques.
+
+• DÉPLOIEMENT SUR UN SERVEUR AVEC ACCÈS TOTAL :
+_ se connecter en SSH
+_ installer git
+_ git clone
+_ armer les droits d'accès corrects sur les /var/cache et autres dossiers
+_ exécuter assetic ou webpack
+_ mettre en place les tâches CRON (envoi de mail à intervalle régulier, ...)
+_ mettre en place les stratégies de backup (incrémentale/totale, vers quel support, ...)
+_ lançer les tests sur le serveur de prod ...
+

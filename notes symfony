@@ -1,0 +1,555 @@
+● installation :
+_ installer l'installateur symfony (p.ex sous /usr/local/bin ...)
+	c'est juste un script php
+_ dans le dossier parent du projet à créer :
+	symfony new <nom> <versionSymfony>
+OU
+	 composer create-project symfony/website-skeleton my-project
+
+	→ configurer app/config/parameters.yml (params co' BdD)
+
+● controlleurs :
+	web/app_dev.php
+	web/app.php
+
+● ajout des outils de déboguage (actifs en mode dev) :
+	composer require --dev symfony/web-profiler-bundle
+
+• après installation, accéder à web/app_dev.php ...
+
+
+• les routes sont générées dans app/config/routing{,_dev}.yml
+
+
+● afficher les routes :
+• toutes les routes :
+	bin/console debug:router
+• celles d'un  objet :
+	bin/console debug:router <nomSymbolique_route>
+• trouver l'objet correspondant à une route :
+	bin/console router:match <URL relative à la racine>
+
+● création automatique de routes :
+pour, par ex, une URL sémantique pour un article nouvellement créé.
+→ «RoutingAutoBundle»
+	https://symfony.com/doc/master/cmf/bundles/routing_auto/introduction.html
+	https://symfony.com/doc/master/cmf/tutorial/auto-routing.html
+
+
+
+● objet ≠ entité :
+une entité est composée d'un objet et de la table reliée.
+• hydrater un objet :
+	lui assigner des valeurs.
+
+
+● doctrine :
+bin/console doctrine:generate:[entity|entities|form|crud]
+
+ bibliothèque ORM (« Object Relationship Mapping » / «Object Relation Mapper »)
+• après configuration paramètres de la BdD dans app/config/parameters.yml,
+ bin/console doctrine:database:create
+
+_ d'abord générer les entités via
+	bin/console doctrine:generate:entity
+• Quand la bidirectionnalité est nécessaire :
+Si la table eleve a une clé étrangère référençant la table «ecole», on peut :
+	eleve->getEcole()
+mais pour avoir
+	école->getEleves(),
+if faut indiquer la bidirectionnalité (pas implémenté au sein de la BdD mais par une liste au sein de la 2e classe ...)
+→ annoter (par ex. dans le code PHP généré) les membres, (cf ↓), puis
+	bin/console doctrine:generate:entities <AppBundle>
+
+• visualiser le schéma SQL généré :
+	bin/console doctrine:schema:update --dump-sql
+• ... et l'appliquer :
+	bin/console doctrine:schema:update --force
+«--force» doit être utilisé pour provoquer la mise-à-jour (opération risquée !)
+
+• ou l'inverse : (avec parfois nécessité de réarrangement)
+	bin/console doctrine:mapping:import
+
+• générer le CRUD :
+Cette commande génère aussi les patrons d'affichage twig !
+	bin/console doctrine:generate:crud
+et après une mise à jour des entités :
+	bin/console doctrine:generate:crud --overwrite
+• mettre à jour tout les getter/setter du bundle :
+	bin/console doctrine:generate:entities <AppBundle>
+
+• importer entités depuis une BdD préexistante :
+Ces commandes effectuent ~ 80% du taf :
+_ importer la description des entités en XML vers
+ «src/AppBundle/Resources/config/doctrine/» :
+	bin/console doctrine:database:import [...]
+_ convertir ces .xml en fichiers sources avec annotations :
+	bin/console doctrine:mapping:convert annotation ./src
+→ il FAUT alors supprimer ces fichiers XML si on veut utiliser des annotations !
+
+
+
+• on peut utiliser des annotations :
+_ dans les classes, indiquer au dessus de chaque méthode :
+/**
+* @ORM\Column(name="xxx", type = "xxx"[, length="xxx"][,nullable=true]
+● et pour la clef primaire :
+* @ORM\Id
+* @ORM\GeneratedValue(strategy="AUTO")
+*/
+• pour indiquer une contrainte d'unicité (ici sur une combinaison de 2 champs) :
+d'abord un
+	use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+puis dans l'annotation :
+	@UniqueEntity(
+ *     fields={"model", "manufacturer"},
+ *     message="Deux personnes de Games of Thrones ne peuvent porter la même combinaison nom/prénom, non-non-non, même si c'est permis dans la réalité !"
+ * )
+ ↑ et autres options dans la définition ...
+
+
+• relation bidirectionnelle :
+	#Cette classe «Eleve» fait référence à une table ayant
+	# une clef étrangère «id_ecole» ...
+	class Eleve {
+		/**
+		* @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ecole", inversedBy="eleves")
+		* @ORM\JoinColumn(nullable=false)
+		*/
+		private $ecole;
+	}
+	#Cette classe, par défaut, ne référence pas «Eleve»
+	class Ecole {
+		/**
+		* @ORM\OneToMany(targetEntity="Eleve", mappedBy="ecole")
+		*/
+		private $eleves;
+	}
+
+
+_ en YAML, XML, dans le code PHP ...
+
+
+● DQL :
+$query->getQuery() peut fournir le résultat sous différentes formes :
+
+• tableau (¿ ou collection ?) d'objets :
+	->execute()
+• UN SEUL objet :
+	->getSingleResult()
+♦ un TABLEAU ASSOCIATIF tout court :
+	->execute(null, HYDRATE_ARRAY)
+	->getArrayResult();
+
+
+● security.yml :
+	la protection par CSRF n'est PAS nécessaire quand on utilise un jeton JWT !
+
+● ROUTES :
+Peut être appliquée à toute une classe ou juste une méthode ...
+
+• ne pas oublier les « use » adéquats pour les annotations utilisées :
+	use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+	use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+	use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
+
+•paramètres spéciaux :
+	_format		→ format de la réponse, armé via un entête content-type
+	_fragment	→ #fragment html
+	_controller	→ utilisé pour déterminer le contrôleur à appeler
+
+/**
+ * @Route(
+ *     "/articles/{_locale}/{year}/{slug}.{_format}",
+ *     defaults = {"_format": "html"},
+ *     requirements = {
+ *         "_locale": "en|fr",
+ *         "_format": "html|rss",
+ *         "year": "\d+"
+ *     }
+ * @method( { "GET", "POST" } )
+ * )
+ */
+
+• une route prenant paramètres :
+/**
+ * @Route("/{reservation_id}/flight/{flight_id}/planemodel/{planemodel_id}",
+		name="listing_index",
+		requirements={"reservation_id": "\d+"}
+	 *	)
+	 * @Method("GET")
+	 * @ParamConverter("reservation",
+			options={"mapping": {"reservation_id": "id"}}
+		)
+	 * @ParamConverter("flight", options={"mapping": {"flight_id": "id"}})
+	 * @ParamConverter("planemodel",
+	 		options={"mapping": {"planemodel_id": "id"}}
+		)
+	 */
+Dans cette annotation, dans l'option «mapping» :
+	la clé est le paramètre dans la route,
+	la valeur est le nom du paramètre fourni à la fonction du controlleur gérant cette route ...
+
+
+• ParamConverter pour un format spécifique de date :
+	/**
+	 * @Route("/blog/archive/{start}/{end}")
+	 * @ParamConverter("start", options={"format": "Y-m-d"})
+	 * @ParamConverter("end", options={"format": "Y-m-d"})
+	 */
+	public function archiveAction(\DateTime $start, \DateTime $end) {}
+
+
+
+
+• $this->redirectToRoute('nomSymboliqueDeLaPage'); ...
+	utilisé au sein d'un controlleur ...
+
+• routes dans twig :
+	{{ path('nomSymboliqueDeLaPage') }} ...
+path() est une extension symfony.
+
+
+
+● EXTENSIONS TWIG NOTABLES :
+	form(vue, assocVars = [ ... ] );
+	form_start(vue, vars = [ ... ] );
+	form_end(vue , vars[]);
+
+	form_widget(form.field, vars[]);
+		→ juste le widget du champs donné, ou toute la liste passée en param
+
+	form_row(form.field, vars[]);
+		→ label, widget et message d'erreur
+
+	form_errors(form.field);
+
+	form_rest(form.field, vars[]);
+
+	is_granted(...)
+		pour vérification de rôle ...
+
+	selectedchoice(val) :
+		pour les
+			<option {% if choice is selectedchoice(value) %} xxx {% endif %} >
+
+
+● dans les controlleurs, render() et renderView() :
+_ $this->render() :
+renvois un objet Response, avec ses entêtes HTTP en + du contenu (HTML ou autre).
+
+_ $this->renderView() :
+ne renvoit que le contenu.
+
+
+● FORMULAIRES :
+• dans twig :
+_ tout générer d'un bloc, façon standard :
+	{{ form(laVarFormulaire) }}
+
+_ générer le formulaire de manière plus fine :
+	{{ form_start(varForm) }}
+
+	{{ form_label(varForm.prénom) }}
+	{{ form_widget(varForm.prénom) }}
+	{{ form_errors(varForm.prénom) }}
+
+	{{ form_label(varForm.nom) }}
+	{{ form_widget(varForm.nom) }}
+	{{ form_errors(varForm.nom) }}
+
+	...
+
+	{{ form_end(varForm) }}
+
+
+• le module «form» peut être utilisé hors de symfony :
+comme twig ou fastroute.
+Cpd, beaucoup de dépendances et de contraintes ...
+	composer require symfony/form
+
+• ne pas oublier les use (ciblant la classe du formulaire) dans le controlleur !
+
+• créer un formulaire d'une certaine classe DANS UN CONTROLLEUR :
+	$this->createForm(UnFormulaireType::class, $entité, [ 'arg' => 'val' ] );
+
+• configurer symfony pour styler les formulaires :
+dans app/config/config.yml (ou autres fichiers de config),
+indiquer le nom d'un fichier de thème formulaire (ou un tableau) :
+	twig:
+		form_themes:
+			- bootstrap_4_layout.html.twig
+Il y en a d'autres sous vendor/symfony/symfony/src/Symfony/Bridge/Twig/Resources/views/
+
+• CHANGER LES ATTRIBUTS «METHOD» ET «ACTION» D'UN ÉLÉMENT «FORM» :
+_ via l'appel au FormBuilder, au même niveau que les ->add() :
+	$formBuilder->setAction($this->generateUrl('object_index'))
+				->setMethod('GET');
+
+_ en paramètres à createForm() :
+	$form = $this->createForm(
+		FormType::class,
+		$object,
+		[
+			'action' => $this->generateUrl('object_index'),
+			'method' => 'GET'
+		]
+	);
+
+_ dans twig :
+	{{ form_start(form, {'action': path('target_route'), 'method': 'DELETE'}) }}
+
+
+
+• pour que symfony puisse hydrater automatiquement un objet
+ via un formulaire :
+il faut respecter la convention de nommage des accesseurs/mutateurs
+/ getters/setters
+
+• un exemple de construction de formulaire :
+ici dans un contrôleur, mais c'est la même syntaxe dans un FormType
+
+	class UnControlleur {
+		public function addAction(Request $request) {
+			$obj = new Obj;
+
+			$formbuilder = $this->createFormBuilder($obj);
+
+			$formbuilder->add(
+				'lastName',
+				TextType::class,
+				[
+					'label' => 'Nom : ',
+			#↓ Les attributs à armer sur l'élément HTML sont stockés
+			#dans le tableau associatif «attr»
+					'attr' => [
+						'maxlength' => 255
+					]
+				]
+			)
+			->add(
+				'description',
+				TextAreaType::class,
+				# entre autres, «attr» == ATTRIBUTS DE L'ÉLÉMENT HTML !
+				[
+					'label' => 'Description : ',
+					'attr' => [
+						'maxlength' => 255,
+						'cols' => 5,
+						'rows' => '4'
+					]
+				]
+			)
+			->add(
+				'gender',
+				ChoiceType::class,
+				[
+					'choices' => [
+						'm' => 'man',
+						'f' => 'woman'
+					],
+					'required' => false,
+					'placeholder' => 'Choose your gender'
+				]
+			)
+		#AJOUT D'UNE ENTITÉ «USER»,
+		# réprésentée par une combo,
+		# utilisant un «queryBuilder», constructeur de requêtes émises par
+		# l'ORM, pour affiner l'ordre de tri des éléments affichés
+			->add(
+				'reviewAuthor',
+            	EntityType::class,
+            	[
+                	'label' => 'Auteur : ',
+                	'class' => 'AppBundle\Entity\User',
+                	'query_builder' => function(EntityRepository $er) {
+                    	return $er->createQueryBuilder( 'user')
+                    			  ->orderBy('user.lastName', 'ASC');
+                	},
+                	'choice_label' => 'lastName'
+            	]
+        	)
+		#FORMULAIRE IMBRIQUÉ : formulaire géré par la classe «WeaponType»
+		# → sera affiché au sein du précédent
+		# cf plus bas pour la persistence en cascade
+			->add('weapon', WeaponType::class)
+
+		#CRÉATION D'UN GROUPE DE CHAMPS via un formulaire "virtuel",
+		# avec sa propre légende, et un champs en dedans
+			->add( $builder->create(
+					'horaires',
+					FormType::class,
+					[
+						'inherit_data' => true,
+						'label' => 'Horaires désirés : '
+						]
+				)
+				->add(
+				'opertureTime',
+				TimeType::class,
+				['label' => 'À partir de : ']
+				)
+			) # add( $builder->create(...), ... )
+
+			# PAS à faire pour un formulaire externalisé/partagé ...
+			->add('save', SubmitType::class);
+
+
+			$form = $formbuilder->getForm();
+
+			# hydrate $obj avec les données du formulaire
+			$obj->handleRequest($request);
+
+			//si méthode POST appelée par une soumission de formulaire
+			// et si formulaire valide
+			if ( $form ->isSubmitted() && $form->isValid()) {
+				$em = $this->getDoctrine()->getManager();
+				## stocke dans une queue les modifications à effectuer :
+				# « à persister dans la base de données »
+				$em->persist($obj);
+				# « confirme ces changements en attente »
+				$em->flush();
+
+				# si on veut rediriger :
+				# on retourne à la page d'accueil – nom symbolique de la route
+				return $this->redirectToRoute('homepage');
+
+				# OU, si on veut juste récupérer les données :
+				# getData() les renvois APRÈS TRANSFORMATION en objet ...
+				$data = $form->getData();
+				# (... traitement ...)
+			}
+
+			# affiche le formulaire via la f° twig render() – extension symfony
+			return $this->render(
+				'FormBundle:Obj:add.html.twig',
+				[
+					'form' => $form->createView()
+				]
+			);
+			# ↑ ce createView() doit être appelé APRÈS le handleRequest(),
+			# afin que les changements provoqués par la requête soient appliqués
+			# à la vue
+		}
+	}
+
+• changer le nom du tableau contenant les valeurs dans les données renvoyées :
+dans la classe FormType, l'indiquer dans la méthode getBlockPrefix() :
+
+	public function getBlockPrefix()
+	{
+		return 'lePréfixeÀUtiliser';
+	}
+
+
+
+● EXTERNALISER LES FORMULAIRES :
+Afin de les réutiliser (méthodes addAction() et showAction() ...) :
+ ne pas créer le formulaire dans le controlleur, mais dans une autre classe.
+On peut profiter de l'héritage pour minimiser le code.
+
+• → imbrication de formulaires !
+
+• persistence en cascade :
+Dans le cas d'une relation OneToOne, ajouter dans l'annotation du champs de la classe référençant l'autre classe les informations nécessaires :
+via «cascade», on peut indiquer quand répercuter les changements à l'entité référencée :
+/**
+* @ORM\OneToOne(
+*	entity="xxx", cascade={"persist", "remove"}
+* )
+*/
+
+● ANNOTATIONS @Assert pour la validation des formulaires :
+plus exactement, validation de l'objet lié après hydratation par le formulaire.
+→ à assigner aux propriétés de la classe ...
+	use Symfony\Component\Validator\Constraints as Assert;
+	(...)
+
+	@Assert\Length()
+	@Assert\NotBlank(), ...
+
+	@Assert\Type("\DateTime")
+
+    /**
+     * @Assert\Range(
+     *      min = 120,
+     *      max = 180,
+     *      minMessage = "You must be at least {{ limit }}cm tall to enter",
+     *      maxMessage = "You cannot be taller than {{ limit }}cm to enter"
+     * )
+     */
+
+
+● méthode FormType::configureOption() :
+pour indiquer les options au résolveur du formulaire,
+par exemple les «data transformers» (p.ex, lier un champs du formulaire qui ne
+ correspond à aucun champs de l'object, à un/des champs de l'entité ...,
+ ou convertir tel champs en telle classe, ...)
+
+
+● DÉSACTIVER LA VALIDATION CÔTÉ CLIENT (POUR TESTER CELLE CÔTÉ SERVEUR) :
+• twig :
+	{{ form_start(edit_form, { attr: {novalidate: 'novalidate'} }) }}
+
+
+
+● VARIABLES DANS LES .yml :
+_ service :
+	@service
+_ constante :
+	'chaine', nombre, ...
+_ constante déclarée dans «parameters.yml», section «parameters» :
+	'%nomVariable%'
+_ variables d'environnement :
+	'%env(NOM_VAR)%'
+→ à chaque requête, la variable d'env est lue
+
+
+
+● GESTION DES SESSIONS :
+ On n'utilise plus $_GET, $_SESSION, etc. mais l'objet HttpFoundation :
+
+par exemple, pour récupérer l'entête User-Agent :
+	use Symfony\Component\HttpFoundation\Request;
+	(...)
+	$request = Request::createFromGlobals();
+	$request->headers->get('User-Agent');
+
+
+● MESSAGES FLASH :
+• gérés via les sessions :
+	SessionInterface $session injecté en dépendance
+	$session->getFlashBag->add(...)
+• via le controlleur :
+	$this->addFlash(...)
+
+
+• afficher les messages flash :
+	foreach ($session->getFlashBag()->all() as $type => $messages) {
+		foreach( $messages as $msg) {
+			echo '<div class="flash' . $type . '">' . $msg . '</div>';
+		}
+	}
+_ dans twig :
+	{% for label, messages in app.flashes %}
+		{% for message in messages %}
+			...
+		{% endif %}
+	{% endif %}
+
+● le QueryBuilder :
+ XXXXXXX à noter : nom des entités, alias.champs
+
+
+
+● BUNDLES NOTABLES :
+_ JMSserializer
+_ FOSUserBundle
+⊕ easyAdmin
+	administration facile de tables (ajout d'étiquettes, catégories, ...)
+	→ pour gérer une liste d'administrateurs p.ex
+_ VichUploadBundle
+	gestion de l'upload d'images
+⊕ doctrineMigrationBundle
+	génère des classes permettant la migration versionnée de BdD

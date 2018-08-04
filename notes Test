@@ -1,0 +1,53 @@
+Travis, Jenkins, ...
+
+• TDD « Test Driven Development »
+
+• Behat
+
+
+● TEST UNITAIRES :
+Pour valider le comportement d'UN composant (une classe, ...),
+ pas pour valider l'absence d'erreur.
+_ aucune dépendance entre eux ni avec les BdD, API, système de fichier, ...
+_ rapides à exécuter
+
+• par convention, tests placés dans une arborescence sous /.*Tests/
+
+● VOCABULAIRE PLUS-OU-MOINS BIEN DFINI :
+• mocks : «simulacres»
+	simulacres d'autres classe, avec des propriétés et des méthodes renvoyant des valeurs données pour des entrées données ...
+• stub :
+	simulacre d'un autre objet, doté de propriétés et de méthodes, mais
+renvoyant des valeurs fixes préprogrammées ne dépendant généralement pas
+des entrées.
+• dummy :
+	se contente d'exister en tant qu'un objet d'un certain type,
+	n'est jamais utilisé (pas de méthodes, etc) ...
+
+• pour  exécuter phpunit :
+_ une suite de test :
+	vendor/bin/phpunit --testsuite "Ma suite de test"
+_ un groupe de test :
+	XXXXXXXXXXx
+
+
+
+● LE TEST D'INTÉGRATION :
+Pour tester tout les composants assemblés, les accès à la BdD, le dialogue avec
+les API, ...
+
+
+● TEST FONCTIONNELS :
+Pour Vérifier les U.S. eet le comportement global de l'app ...
+• WebTestCase de symfony :
+	fournit un crawler (client headless) qui vérifie la présence et le comportement des éléemtns de la page ...
+
+
+● TESTS A/B :
+Un truc du marketting.
+	mettre en concurrence 2 verions de qqch pour en améliorer l'efficacité
+ en comparant 2 versions l ...
+
+
+●
+

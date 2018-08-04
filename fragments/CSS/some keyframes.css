@@ -1,0 +1,61 @@
+@keyframes pop {
+  from {
+    transform: scale(0);
+    }
+}
+
+
+
+@keyframes fall {
+  0% {
+    transform: translateY(-200%) scaleY(0.5);
+  }
+  90%{glowing effect.css
+    transform: scaleY(0.5);
+  }
+}
+
+
+
+@keyframes glow {
+  0% {
+    color: black;
+		text-shadow: 1px 1px 0px red, -1px 1px 0px red,
+			 1px -1px 0px red, -1px -1px 0px red;
+	}
+  25% {
+    color:  #99E164;
+		text-shadow: 1px 1px 15px red, -1px 1px 15px red,
+			 1px -1px 15px red, -1px -1px 15px red;
+  }
+  50% {
+    color: black;
+		text-shadow: 1px 1px 0px green, -1px 1px 0px green,
+			 1px -1px 0px green, -1px -1px 0px green;
+	}
+  75% {
+    color: #FF5B60;
+		text-shadow: 1px 1px 15px green, -1px 1px 15px green,
+			 1px -1px 15px green, -1px -1px 15px green;
+  }
+  100% {
+    color: black;
+		text-shadow: 1px 1px 0px red, -1px 1px 0px red,
+			 1px -1px 0px red, -1px -1px 0px red;
+	}
+}
+
+
+
+@keyframes left-coming {
+  0% {
+    transform: translateX(-100%) skewX(-45deg) ;
+  }
+  80% {
+    transform: translateX(10%) skewX(-45deg);
+ }
+  85% {
+    transform: translateX(10%);
+  }
+}
+

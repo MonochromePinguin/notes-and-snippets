@@ -1,0 +1,377 @@
+●● cf «notes BASH» pour ce language.
+
+
+♦ Pour un APU A8 d'AMD, gcc 4.6 accepte l'option «-march=amdfam10»
+ (qui correspond à la famille 10h, alors que le A8 est de la 12h ...),
+ou mieux « -march=native »
+
+● signaux SIGINT, SIGTERM, SIGQUIT, ... & SIGKILL :
+┌───────
+│  SIGTERM : demande polie de terminaison.
+│  SIGINT : Généré par Ctrl-C. demande de terminaison «immédiate».
+│  SIGQUIT : "	"   Ctrl-\. Contexte de débogage : génère un core dump.
+│	 La cible devrait se terminer ss nettoyage - ss refermer les fichiers
+│	 ouverts, ni supprimer les fichiers temporaires, ...
+│  SIGKILL : ...
+└───────
+
+
+
+●●● - "NULL" est utilisable via un #include <stddef.h> ou <stdlib.h>,
+le type "bool" via un #include <stdbool.h>,
+les "int32_t" & consorts via <stdint.h>,
+ ...
+
+● CONSTANTES EN C :
+ les constantes binaires débutent par le préfixe 0b !
+
+● manips de base :
+• Turn off the rightmost 1-bit :
+	(¿ pq pas « y = x & ~1 » ?)
+	y = x & (x-1)
+• Isolate the rightmost 1-bit :
+	(? pq pas y = « x & 1 » ?)
+	y = x & (-x)
+• Right propagate the rightmost 1-bit :
+	y = x | (x-1)
+• Isolate the rightmost 0-bit :
+	y = ~x & (x+1)
+• Turn on the rightmost 0-bit :
+ 	y = x | (x+1)
+et, bien sûr, « x ^ y » veut dire « x XOR y » !
+
+
+● CONVERSIONS CHAINE DE CARACTÈRE / NOMBRE en C :
+	«atoi()»,
+	«scanf()», «sscanf()» (qui sont plus complexes/souples que la précédente).
+
+•SSi on doit convertir UN SEUL octet dont on SAIT qu'il appartient à [0..9] :
+	« char car = nb  + '0'; » et « char nb = car - '0'; »
+(ceci est GARANTI par le standard C - les caractères '0' à '9' doivent ê consécutifs)
+
+
+● MACROS VARIADIQUES ET __VA_ARGS__ :
+	#define fonc(param1, ...) autreFonc( p, param1, ##__VA_ARGS__ )
+le double-dièse permet de supprimer la virgule précédente si la macro est
+ appelée avec un seul argument.
+
+
+●MODIFICATEURS NOTABLES DE printf() :
+ 	%.𝑛s	→ n'affiche que les 𝑛 premiers caractères de la chaîne.
+	%.*s	→ n'affiche d'une chaîne que le nombre de caractères indiqué par la
+	 variable passée en param :
+		printf("une chaîne : %.*s\n", nbCarAAfficher, chaîne);
+
+• afficher un nb hexa :
+ 	%x, %X	→ affiche un hexa en minuscules/majuscules,
+	%#x	→ avec le préfixe « 0x »,
+	%0𝑛X	→ sur 𝑛 colonnes (comblé de 0)
+	%𝑛X	→ sur 𝑛 colonnes (comblé d'espaces)
+ par ex :
+ 	%#016X == « afficher un hexa en majuscules sur 16 colonnes comblées par 0 »
+
+
+● il faut en théorie un "#define _REENTRANT" avant tout en-tête pouvant fournir
+ des fonctions réentrantes, à utiliser avec les threads ; cpd, cela est fait en
+ standard dans la glibc, d'où inutilité en pratique ...
+CEPENDANT, malloc() ne tient compte que des threads lancés par pthread.
+ À ne pas utiliser avec clone() donc !
+Même si _REENTRANT est défini, il y a des bogues si ut° de malloc() avec clone()
+ sans synchronisat° explicite !
+ → avec clone(), on peut par ex allouer la mém via mmap().
+
+
+● typedef struct { XXX } YY :
+Lors de la déclarat° de variables du type YY, pas de "struct",
+ sinon c'est considéré comme la déclaration d'un type incomplet !!!
+
+♦ structure autoréférencielle (avec pointeurs pour liste chaînée par ex.) :
+ « typedef struct XXX { aaa; struct XXX *ppp; } XXX »
+le «tag» (entre «struct» et les accolades) peut ê le même q l'id. de la structure ...
+
+
+● TRANSTYPAGE DE STRUCTURES POINTÉES :
+ struct { xxx } YY;
+ ZZ* pointeur;
+Accéder à un champ d'un ptr transtypé en YY se fait :
+ 	vv = ((struct YY*) pointeur)->xxx
+
+● TRANSTYPAGE POINTEUR/ENTIER :
+• pour passer d'un entier 32b à un pointeur 64b :
+	(char*) (intptr_t) entier;
+Le type « intptr_t » est défini dans « stdint.h »
+
+
+● STRUCTURE OU LISTE AD-HOC EN PARAMÈTRE DE FONCTION :
+écrire
+	fonc( (strucXXX) {aa, bb, cc} );
+p.ex :
+	execve( "nomProg", (char* []) {"nomProg", "param1", "param2", NULL}, NULL);
+	return( (recLien){.retour = FALSE} ); //ici, seul le champs "retour" du recLien est initialisé ...
+OU, dans le cas d'un pointeur vers une structure :
+ - avec la définition "getutid( struct utmp *ut );", il faut
+	p = getutid( & (struct utmp) {ut_type: RUN_LVL} ); //pareil, seul ce champ ...
+ - mais avec "fonc( recParams *params );", sans le mot "struct", il faut
+ 	fonc( & (recParams) {nom: blabla} );, sans le mot "struct" !!!
+
+● «INITIALISEURS» DE TABLEAUX :
+- Pour donner à un ou des intervalles d'entrées d'un tableau la même valeur :
+	tableau[nbEntrées] = { [0 ... n] = val1, [x ... y ] = val2 };
+- ou pour initialiser seulement certaines entrées (le reste étant mis à zéro) :
+	tableau[i] = { [a] = v1, [b] = v2 };
+
+● TABLEAUX DE LONGUEUR VARIABLE :
+«	void fonc( int a )
+	{
+		char tbl[ a * 2 ];
+		...
+»
+
+
+● VARIABLE DE TYPE "POINTEUR VERS FONCTION" EN PARAMÈTRE :
+écrire
+	fonc( typeRetr (*NomDeLaFonctionEnParam) (aa, bb, cc) );
+p.ex :
+	void chargeur(char* fic, void (*parseur)(char*, int), int v );
+
+
+●DÉFINITION DE FONCTIONS «INLINE» utilisée dans d'autres unités de compilation :
+«extern inline» dans le .h inclus dans les autres fichiers source,
+et simplement «inline» dans le .c où la fonction est définie ...
+
+
+● POUR COMPILER UNE BIBLIOTHÈQUE PARTAGÉE :
+• Utiliser «-shared -fpic» («-fPIC» peut, suivant la plate-forme, produire
+ un code moins efficient [mais soumis à moins de limitations] ...)
+
+• EXPORTATION DE SYMBOLES D'UNE BIBLIOTHÈQUE & OPTIONS DE COMPILATION DE GCC :
+Si l'option «-fwhole-program» est utilisée, les fonctions non référencées
+ dans le code seront éliminées ...
+                                            ┌───────────────┐
+ → les fonctions à exporter doivent avoir l'│attribut «used»│
+ pour être préservées !                     └───────────────┘
+♦ Pour limiter le nombre de symboles exposés dans la bibliothèque,
+ utiliser l'option GCC «-fvisibility=internal» (qui rend les symboles
+ «privés» par défaut), et indiquer
+                                    ┌────────────────────┐
+ les symboles à exporter par l'attribut «│visibility=("default")│»
+                                    └────────────────────┘
+
+● Au contraire, compiler avec l'option « -rdynamic » inclut les références à de
+ nombreux symboles ds le binaire, ce qui permet d'utiliser les f°s
+ d'affichage de stacktrace « backtrace() » et « backtrace_symbols() »
+ fournies par execinfo.h ...
+
+
+
+
+♦ CONVERSIONS TEXTE/ADRESSE IP :
+   inet_ntop, inet_pton  -  adresses IP4/IP6 binaire<=>texte ;
+
+
+ ┌────────────┐
+●│ NOTES GTK :│
+ └────────────┘
+- "gtk_ui_manager_set_add_tearoffs (ui_manager, TRUE);"
+	permet d'avoir des menus détachables; à placer après l'init du ui_manager,
+par ex à l'init de la classe de fen.
+
+• la moindre référence à un chaine d'un objet descendant de Gobject doit passer par une copie & g_free() !
+
+• on peut associer des données supplémentaires à n'importe quel widget :
+	g_object_set_data(obj, "nomPropriété", valeur);
+→ valeur retrouvée par
+	g_object_get_data(ob, "nomPropriété");
+
+
+• Quand on utilise "gtk_tooltip_set_text()", la chaîne passée en
+param ne doit pas être désallouée : il n'y a apparemment pas de copie interne.
+Donc PAS de g_free() si elle est obtenue, par exemple, via un
+ gtk_tree_model_get() ou assimilé renvoyant une chaîne copiée et
+ à désallouer ...
+
+• Le signal «notify» est émis lorsqu'une propriété d'un objet change ...
+ & pas forcément un widget (çà marche aussi sur les GtkTreeViewColumn)
+
+• Le signal «query-tooltip» d'un gtkTreeView est renvoyé à chaque mvt
+ du pointeur !
+Et il faut À CHAQUE FOIS armer le texte de la bulle, sinon elle apparait vide.
+
+• Le signal «keynav-failed» d'un GtkTreeView n'est pas envoyé qd la navigation
+ horizontale bute contre les bords - il l'est pd la navigu° verticale ...
+
+• « gtk_widget_has_focus(un GtkTreeView) » rv faux lorsqu'on est
+ dans la ligne d'entête.
+
+• les GError* doivent ê libérés par «g_error_free()» après usage !
+
+
+● NOTES SUR L'UTILISATION DES GIOChannel :
+La séquence de nettoyage correcte est
+	g_source_remove() s/ la ref-fournie-par-g_io_add_watch
+	g_io_channel_shutdown()	→ QUI FERME LE DESCRIPTEUR DE FICHIER SOUS-JACENT !
+	g_io_channel_unref()
+→ donc PAS de XCloseDisplay() final si on a obtenu le GIOChannel via
+	g_io_channel_unix_new( XConnectionNumber(disp) )
+
+
+● NOTES sur les éven. de «G_FILE_MONITOR» :
+«G_FILE_MONITOR_EVENT_CREATED» est renvoyé lorsqu'un fichier est créé
+ OU lorsqu'un fichier est déplacé vers notre répertoire surveillé,
+«G_FILE_MONITOR_EVENT_DELETED» lorsqu'il est détruit OU déplacé
+ vers un autre répertoire,
+et «G_FILE_MONITOR_EVENT_MOVED» lorsqu'il est renommé !
+
+
+
+● NOTES SUR  WAITPID() & GESTIONNAIRE DU SIGNAL SIGCHLD :
+	¿¿¿ Dans «lançeur-service» ,qui utilise à la fois waitpid() et un gestionnaire du signal SIGCHLD,
+le gestionnaire de signal est toujours appelé avant que waitpid ne rende la main ;
+	cependant, est-ce un comportement standard (c'est en tout cas le plus efficient), ou bien rien
+ n'interdit que waitpid() ne retourne AVANT que le gestionnaire de signal ne s'exécute ???
+
+
+
+● NOTES UTMP & RUNLEVEL :
+- Apparemment, il n'y aurait qu'un enregistrement de ce type ds utmp,
+et les niveaux y sont enregistrés sous forme de char dans ut_id :
+ le niveau actuel dans l'octet de poid faible ( ut_id % 256 ),
+ et le précédent dans le 2e octet ( ut_id / 256 ).
+
+
+
+● FONCTIONS NOTABLES EN C:
+_ malloc(), calloc(), alloca(),
+ valloc(), memalign()/posix_memalign(),
+ mincore() qui détermine les pages présentes en mém hysique,
+ sbrk()/brk() ;
+_ madvise() (qui ne fonctionne pas avec les projection MAP_ANONYMOUS) ;
+ mallopt() change le comportement de malloc() & Cie;
+_ posix_fadvise(), readahead(), fallocate() ;
+_ readv() & writev() - E/S en tampons fractionnés ;
+
+_ les timerfd(), eventfd(), signalfd(), ...
+
+
+
+● POUR CONNAITRE LES MACROS PRÉDÉFINIES par GCC :
+«touch tmp.h; gcc -dM -E tmp.h» (-dM AVEC un fichier liste toutes les macros qui y sont définies plus les macros déf' par GCC, SSI -E est aussi spécifié).
+
+
+● OPÉRATEURS EN C & Cie :
+ ~ x : complément à un == inversion bit-à-bit
+ x ^ y : OU EXCLUSIF / «XOR»
+ Et bien sûr |= &= etc.
+
+
+● AVERTISSEMENTS DE GCC :
+♦ «initialization discards `const' from pointer target type» :
+	un pointeur vers une chaîne «const» est utilisé en paramètre ; il faut redéfinir ce pointeur, bien sûr s'il ne sert pas à la modifier, comme «const char*».
+♦ «incompatible implicit declaration of built-in function XXX» :
+	il n'y a pas de prototype (pas d'entête .h inclu ! ) pour la fonction utilisée, et, sans prototype, le type de retour est implicitement défini comme "int".
+
+
+
+● NOTES MAKEFILE :
+• Les noms avec des espaces doivent être échappés :
+	"parseur\ config.h" est correct
+• pour utiliser des noms de fichier commençant par des espaces dans une var:
+définir une variable ne contenant rien
+	vide :=
+puis préfixer les variables contenant le nom de fichier problématique :
+	$(vide)$(fic)
+
+• cibles multiples d'une recette :
+	cible1 cible2 cible3 : [dépendances]
+		... recette ...
+• variable locale à une cible («target specific») :
+cible: VAR=valeur
+À PART de la déclaration de la recette
+
+♦ Chaque commande d'une cible (par ex, «uninstall») est exécutée dans un
+ sous-shell,
+ et donc les changements au sein de son environnement ne sont pas exportés.
+De ce fait, la commande «cd XXX» change bien de répertoire, mais la commande
+ suivante est effectuée ds le répertoire initial ...
+3 solutions :
+– utiliser une LISTE de commandes : «cd XXX; rm X Y Z»
+– mettre un « \ » à la fin de ttes lignes à joindre en 1 seule commande
+– définir .ONESHELL → un seul shell par recette
+
+•Substitution de commande shell : «$(shell <commande> )»
+•
+
+• ne pas afficher une commande shell :
+En la préfixant par un arobase !
+	@comm xxxx
+
+• définition des variables :
+ =
+	variable substituée à chaque invocation – si elle fait référence à d'autres
+	  variables, la variation des valeurs de celles-ci est prise en compte –
+
+ +=
+ =+
+	ces 2 opérateurs suffixent/préfixent la variable AVEC UN ESPACE
+ xxx_append = ...
+ xxx_prepend = ...
+	la même avec xxx, mais SANS espace
+ :=
+	variable substituée à l'assignation puis inchangée
+ ?=
+	valeur assignée si variable non définie ("unset"), mais pas si la variable
+	  existe mais est de valeur nulle
+ !=
+	HORS D'UNE RECETTE (car dans une recette c'est la syntaxe shell qui est
+	  utilisée ...), assigne le code de retour d'un programme à la variable
+	Dans une recette, mieux vaux utiliser $(eval VAR=prog...)
+• export VAR  exporte une variable du makefile vers les commandes exécutées
+
+
+	┏━━━━━━━━━━━━━┓
+●	┃ NOTES JAVA :┃
+	┗━━━━━━━━━━━━━┛
+┏━━
+┃•comparaison de chaines :
+┃	« == tests for reference equality. (useful for interned strings)
+┃	 .equals() tests for value equality. »
+┃
+┃• les nombres peuvent être formatés avec des soulignés en java ≥7 :
+┃	double v = 1_000_000d;
+┃• préfixes 0x (hexa), 0b (binaire) - comme en C ;
+┃
+┃• ne pas oublier la syntaxe «for( compteur : tableau )» :
+┃	int[][] tbl = { { 1, 2, 3}, {10, 20, 30} };
+┃	for ( int[] sousTableau : tbl )
+┃		for ( int entier : sousTableau )  ← la boucle englobante renvoit un
+┃			blablabla		    int[] dans «sousTableau»
+┃
+┃• modificateurs de visibilité des classes ... :
+┃	«par défaut» → tout le paquetage
+┃	public
+┃• ... et des attributs & méthodes :
+┃	private		→	privé à la classe
+┃	«par défaut»	→	tout le paquetage
+┃	protected	→	paquetage et descendance de la classe
+┃	public
+┃
+┃• static :
+┃	s/ membre ou méthode :	commun à la classe ;
+┃				pas d'accès aux champs d'instances.
+┃	s/ bloc d'initialisation - exécuté au chargement de la classe.
+┃	s/ classes internes : ↓↓↓
+┃
+┃• classes internes :
+┃	«par défaut»	→	chq instance est liée à une instance
+┃						 de la classe conteneur
+┃	static			→	comme membres statiques ...
+┃	classes locales & anonymes :
+┃			utilisables seulmnt ds le bloc de code de déclarat°
+┃
+┃• final :
+┃	s/ attribut	→	constante (pour objets : référence constante)
+┃	s/ méthodes →	ne peuvent être redéfinies par descendants
+┃	s/ classe 	→	elle ne peut être dérivée
+┃• static final → constante !
+┗━━
+

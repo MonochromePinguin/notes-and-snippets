@@ -1,0 +1,362 @@
+● (client MySQL ln2Comm) :
+mysql -u <user> -p<MdP, sans espace avant> -h <host> -P <n°Port>  <BdD>
+
+● le standard par défaut est de ne PAS stocker les chaînes en UTF8 :
+il faut donc à la création d'une
+
+● (sqlite) COMMANDES SPÉCIFIQUES À L'INTERFACE EN LN-DE-COMM :
+• EFFACER L'ÉCRAN :
+	ctrl+L ...
+• exécuter une commande du shell :
+	.shell <commande>
+
+♦(MySQL) commandes notables :
+	mysql -u <userW> -p		→ le «-p» sans param fait demander le MdP
+	source	\.
+♦(MySQL) changer le prompt :
+	prompt <chaîne>,
+	l'envVar $MYSQL_PS1,
+	l'option --prompt="..."
+	la configuration au sein d'un .cnf : prompt=
+
+♦(MySQL sous Debian) fichiers de config :
+MySQL lit tout les *.cnf sous /etc/mysql/ ;
+/etc/mysql/my.cnf : pour la config personnalisée
+
+
+
+♦(sqlite ?) formatage de la sortie de la commande SELECT :
+ 	.mode html|list|csv|column
+
+ 	.mode list ← .separator xxx (par ex : «\t» ou «~» ...)
+	.mode column ← .width [x1 x2 x3 ...] (largueur de chaque colonne possible ...)
+
+♦(sqlite ?) affichage des noms de colonnes :
+ 	.headers [on|off]
+
+♦(sqlite ?) redirection de la sortie vers un fichier :
+ 	.output <nomFichier>
+ puis
+	.output stdout
+		pour rétablir sortie vers l'écran ...
+
+• table cotennant des champs ;
+ enregistrements classés par «clés» (l'«id» est souvent la «clé primaire») ;
+ chaque ligne est un «tuple» ou un «enregistrement» ;
+
+• SQL / NoSQL :
+_ SQL : pour données structurées. Les clés des enregistrements relient les
+ différentes tables entre elles ; pas de redondance des données.
+_ NoSQL : pour données brutes – plus performant en lecture pour de gros volumes
+ de données, mais plus lent en écriture et en recherches sur les champs
+ "secondaires" → on y créée souvent plusieurs tables pour faciliter les
+ diférentes recherches.
+
+● CLÉ PRIMAIRE, CLÉ SECONDAIRE, CLÉ ÉTRANGÈRE :
+• clé primaire :
+	PRI
+Le champs (ou la combinaison de champs) permettant de référencer de manière
+ non-ambigüe l'enregistrement
+• clé secondaire :
+	SEC
+Une clé référençant un autre enregistrement de la même table
+• clé étrangère :
+  MUL pour «MULtiple», car plusieurs occurences d'une même valeur sont permises
+Une clé référençant un enregistrement d'une autre table
+
+
+
+● fonctions de traitement de texte :
+	replace(ch,de,vers)
+	ltrim(ch, àsuppr), rtrim(ch, àsuppr),
+		ou [lr]trim(ch) qui s'occupe des blancs
+	repeat(ch,nb)
+	substring(ch,pos,nb), substring(ch,pos), ...
+	upper(ch), lower(ch),
+	...
+
+● Texte comportant un mot-clef, ou des opérateurs, des caractères blanc,
+ ponctuation, accents, ... :
+• encadré par des apostrophes 'xxx' : c'est une chaîne litérale.
+	une apostrophe au sein de la chaîne sera doublée :
+		l'a	→	'l''a'
+• encadré par des guillemets "xxx" : c'est un identifiant.
+	de même, un guillemet dans la chaîne sera doublé.
+		a"b"	→	"a""b"""
+
+•(SQLite, µsoft – NON STANDARD) par des crochets [xxx] : identifiant.
+•(SQLite, MySQL – NON STANDARD) par des accents graves `xxx` : identifiant.
+Sous MySQL, cette technique ↑ est nécessaire pour tout caractère non ASCII.
+
+• (MySQL) limitations sur longueur et casse des identifiants :
+_ La plupart des identifiants sont limités à 64 caractères (sauf alias,
+ qui sont la plupart du temps à 256 cars).
+
+_Chaque BdD est un sous-répertoire du dossier de travail MySQL
+ (/var/lib/mysql par défaut), et chaque table correspond à au moins
+ un fichier ...
+→ en fonction des systèmes de fichier, les noms de tables et de BdD
+ seront ou non sensibles à la casse.
+
+_ noms de colonnes, fonctions stockées, noms d'événements sont
+ insensibles à la casse.
+
+
+● « SELECT LAST_INSERT_ID() » :
+Renvoit le 1er id en auto-incrément de la dernière requête INSERT ou UPDATE ...
+Unique par connection → pas de problème de concurrence lors d'accès parallèles !
+
+
+
+● COUNT([*|ALL|(DISTINCT)?expressionRenvoyantUneColonne]) :
+  * :			les lignes,
+  ALL :			ttes les valeurs (par défaut)
+  expr :		une colonne ou qqch chose assimilable
+  DISTINCT expr : les valeurs uniques de l'expression
+• les FONCTIONS D'AGRÉGATION COUNT(), SUM(), AVG(), ...
+ peuvent fonctionner avec un « GROUP BY »
+
+
+● GROUP BY, ORDER BY sont cumulables :
+p.ex	SELECT region, ville, COUNT(*) AS nbEleves FROM écoles
+		GROUP BY region
+		GROUP BY ville
+		HAVING nbEleves > 10
+		ORDER BY region ASC
+		ORDER BY ville ASC;
+
+
+● sous-requêtes : requête entre parenthèses !
+Utilisables dans les clauses SELECT, FROM, WHERE.
+p. ex :
+	SELECT nom FROM gens WHERE adresse IN ( SELECT nom FROM villes
+		WHERE population > 5000 );
+ou
+	SELECT nom FROM àCopier WHERE 1 = ALL(
+		SELECT name FROM from pragma_table_info('àCopier')
+			WHERE type="INTEGER" AND NOT name="typeCopie" );
+→ renvoit les noms des enregistrements dont toutes les colonnes de type
+ "ENTIER" (sauf typeCopie) valent 1.
+
+•(sqlite) sqlite n'a pas de ALL() !
+
+
+● VUES ≠ TABLE TEMPORAIRE :
+	VUE : en lecture seule, stockée ds la BdD
+	TABLE TEMPORAIRE : en L/E, stockée en mémoire ...
+
+
+♦ EXPRESSIONS RATIONNELLES dans le paramètre de «LIKE» :
+les expressions rationnelles s'écrivent entre guillements simples «'».
+	   % remplace *,
+	et _ remplace ?
+
+♦ SELECT sert aussi à afficher du texte brut.
+
+• SELECT expression AS nouveauNom ...
+
+● clauses notables :
+	ORDER BY "xxx" [ASC|DESC]	← «ascendant»/«descendant»
+	LIMIT 𝑛						→ pas plus de 𝑛  entrées renvoyées.
+
+
+● WHERE :
+	BETWEEN
+	IN
+	LIKE
+	=, <>, =>, <=, >, <
+AND, OR, NOT
+
+
+
+● DISTINCT :
+	SELECT DISTINCT(xxx) FROM yyy;
+
+
+● JOKERS :
+	%	→ équivalent *
+	_	→ équivalent ?
+
+
+● JOINTURE :
+• jointure par défaut :
+	SELECT * FROM élèves, écoles (...)
+est équivalent à
+	SELECT * FROM élèves JOIN écoles (...)
+
+• clause ON :
+ pour ne pas mettre la condition d'égalité de deux clés dans la clause WHERE.
+• clause USING( xxx ) :
+Quand le nom de colonne est le même dans les 2 tables, on peut s'en
+ servir de raccourci pour
+	ON ( tbl1.xxx = tbl2.xxx )
+
+•  SELECT h.prenom, h.nom,  s.nom,  r.date_et_heure, r.duree
+	FROM reservations AS r
+	JOIN salles AS s ON r.id_classe = s.id
+	JOIN humains AS h ON h.id = r.id_reservant;
+
+	SELECT * FROM élèves JOIN écoles ON élèves.id_école = écoles.id
+	  WHERE école.nom = 'Bordeaux';
+• elles sont imbricables :
+récupère les noms d'élèves apprenant le PHP,
+ au sein d'une BdD contenant les tables éleve → école → language :
+ 	SELECT nom FROM élèves
+		JOIN école ON élève.id_école = école.id
+			JOIN language ON école.id_lang = language.id
+				WHERE language.nom = 'PHP';
+• différents types :
+[INNER|] JOIN	→ retourne les enregistrements pour lesquels la condition
+ du ON est remplie dans les 2 tables droite et gauche
+LEFT JOIN →	affiche aussi les enreg de la table de gauche ne remplissant
+ pas la cond°
+RIGHT JOIN → affiche aussi les enreg de la tbl de droite ne remplissant pas ...
+
+
+● UNION :
+	union de 2 requêtes, sans doublons.
+● UNION ALL :
+	on laisse les doublons.
+
+
+● FONCTIONS :
+	length()
+	replace()
+	substring()
+	concat()
+	...
+• fonctions mathématiques :
+	COS(), EXP(), LOG(), PI(), ...
+• fonctions de géolocalisation,
+• de date :
+	NOW()	→ rv la date actuelle,
+	YEAR(), MONTH(),
+	DATEDIFF() → différence entre 2 dates,
+
+• fonctions travaillant sur des aggrégats :
+	COUNT(), SUM(), MAX(), MIN(), AVG(), ...
+
+
+
+●(sqlite) « pragma table_info(tbl) » :
+	renvoit une table listant les colonnes de «tbl» et leurs attributs :
+		cid	/ name / type / notnull / dflt_value / pk
+
+●(sqlite) compter le nb de colonnes d'une table:
+	SELECT COUNT(*) FROM pragma_table_info("nomTable");
+Le nom de la table doit être encadré de guillemets (simples ou doubles),
+ car pragma_table_info() est une f°.
+
+
+●SQLite understands the following binary operat	ors,
+ in order from highest to lowest precedence:
+ [sans oublier les parenthèses ...] ( xxx )
+    || (CONCATÉNATION de chaines !)
+    *    /    % (modulo)
+    +    -
+    <<   >>   &    |
+    <    <=   >    >=
+    =    ==   !=   <>   IS   IS NOT   IN   LIKE   GLOB   MATCH   REGEXP
+    AND
+    OR
+Supported unary prefix operators are these:
+    -    +    ~    NOT
+
+
+
+♦des exemples que j'ai utilisés :
+« SELECT filename, entry_title, releaseDateObj FROM item
+	WHERE filename LIKE '%ITEMA%' AND feed_id = 7958 ORDER BY filename; »
+« select entry_title from item where feed_id = (select ufeed_id from rss_feed_impl
+	where title = 'Sur les épaules de Darwin'); »
+
+
+
+● CRÉATION / SUPPRESSION D'UNE TABLE EN MySQL :
+  CREATE TABLE <table>
+  (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+			→ clé primaire numérique : plus rapide pour les recherches
+	nom VARCHAR(tMax),
+	date DATE,			→ au format AAAA/MM/JJ
+	info	TEXT		→ texte de taille arbitraire
+  );
+
+La taille des champs doit être bien pensée – les champs consomment de la place.
+
+  DROP TABLE <table>;
+  DROP DATABASE <Bdd>;
+
+●(MySQL) COMMANDES ADMINISTRATIVES :
+  CREATE USER [IF NOT EXIST] <user> IDENTIFIED BY 'MdP'...
+	→ il y a de nbx options pour spécifier les droits, la fréquence de renouvellement du MdP, ...
+	 Penser à NE JAMAIS UTILISER «root» en tant qu'utilisateur !
+  DROP USER;
+  SET PASSWORD [FOR <user>] = PASSWORD('MdP');
+
+  SHOW GRANTS [FOR CURRENT_USER];
+
+• octroi de droits aux utilisateurs :
+  GRANT ...		→ gestion des droits d'accès
+				→ aussi pour lister les utilisateurs.
+	GRANT SELECT, UPDATE ON [ <BdD> | <BdD>.<tbl> ] TO <user@hôte>;
+
+Les droits de création & suppression de table au sein d'une BdD sont alloués
+ un-à-un :
+ 	GRANT CREATE ON <BdD>.* TO <user@hôte>;
+	GRANT DROP ON <BdD>.* TO <user@hôte>;
+
+• spécifier l'utilisateur :
+	testeur@localhost
+	'testeur'@'localhost';
+	'user'@'192.13.25.45';
+_ % : joker pour « toutes adresses IP » ;
+	'user1'@'%';
+
+  SHOW DATABASES;
+  SHOW TABLES [ FROM <BdD> ];
+
+  SHOW [FULL] COLUMNS FROM [<BdD>.]<table>;
+	→ montre la structure logique de la table
+  DESCRIBE <table>;			→ itou
+
+  ALTER TABLE <table> [ ADD ... | DROP ... | MODIFY ... ];
+
+
+•(MySQL) EXPORTER UNE BdD :
+	mysqldump -u <user> [-p|] --databases <BdD> > <fic.sql> #avec un «S»
+•(MySQL) et l'importer :
+	mysql -u <user> [-p|] --database <BdD> < <fic.sql>
+
+
+● réinitialisation du MdP root :
+_ arrêter le service
+_ mysqld_safe --skip-grant-tables :
+	redémarrer le démon en mode sûr, SANS charger la table de droits
+	→ AUCUN contrôle d'accès !
+_ use mysql;
+  UPDATE user SET password = PASSWORD(MdP) WHERE user = 'root';
+	↑ ceci ne tient pas compte du nom d'hôte ...
+_ flush privileges;
+_ redémarrer mysql en mode normal
+
+● ENCODAGE DE CARACTÈRES («CHARACTER SET») ET ORDRE DE TRI («COLLATE») :
+  SHOW CHARACTER SET [LIKE ...];
+  SHOW COLLATION [LIKE ...];
+• obtenir encodage et ordre de tri utilisés par une BdD :
+	SELECT @@character_set_database, @@collation_database;
+• modifier l'encodage d'une BdD ou d'une table :
+	ALTER [TABLE|DATABASE] <id> CHARACTER SET utf8mb4
+	  COLLATE utf8mb4_general_ci;
+
+
+
+● métacommandes SQLite & Cie :
+«.tables» == «SELECT name FROM sqlite_master» → liste les tables présentes
+
+┌── la même chose à peu de choses près :
+│«.schema <nomTable>» → liste commandes ayant créé la table
+│«pragma table_info(<nomTable>)» → affiche la structure d'une table
+└──
+
+.databases → liste des BD ouvertes

@@ -1,0 +1,49 @@
+«REpresentational State Transfert »
+
+architecture SOA :
+	«Service Oriented Architecture»
+
+• BASÉ SUR HTTP – méthodes GET, POST, PATCH, PUT, DELETE
+
+• chaque ressource est identifiable via une URI unique
+
+● Règles API REST :
+• client-serveur
+• sans état / stateless
+• cachable :
+	les réponses du serveur donnent des indications sur la possibilité de
+ mise en cache des réponses ;
+	le serveur ne s'occupe pas de la mise en cache
+•
+•
+
+● niveaux REST :
+• 1 :
+	la requête renvoit un simple contenu XML/JSON/whatever
+• ≥ 2 :
+	_ on utilise un point d'entrée pour chaque ressource
+	_ une méthode HTTP par action
+	_ statut dans la réponse dépendant de la réussite de la requête
+		(200 OK, 409 conflict, 201 created, ...)
+• ≥ 3 :
+	_ HATEOAS
+		"Hypermedia As The Engine Of Application Structure"
+	_ Les possibilités d'actions sont renvoyées dans la réponse,
+	 et non mises en place côté client.
+Assez peu utilisé.
+
+
+
+● GET /api/resource HTTP/1.1
+	  ~~~~~~~~~~~~~ ← "EndPoint" : c'est juste l'URI de la ressource
+
+● AVEC SYMFONY, on peut utiliser la classe JsonResponse :
+	return new JsonResponse( [
+		'name' => $name,
+		'email' => $email
+	]);
+• JMSSerialize :
+	sérialisateur d'objets
+• FOSRestBundle :
+
+

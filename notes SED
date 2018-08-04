@@ -1,0 +1,166 @@
+● cf §4.2 et §5 de «SED and AWK (2nd Edition), O'Reilly» !
+
+● OPTIONS :
+  -i : pour travailler sur des fichiers.
+  	« sed -i 's/xx/yy/g' fichier » va travailler dans «fichier»
+  -n : par défaut, ne rien afficher sauf si demandé.
+  -r : utilise les expressions rationnelles par défaut.
+	→ plus besoin d'échapper les opérateurs (, ), | !
+
+
+● octet null dans une expression SED :
+	Tout simplement écrire \x0 ...
+
+
+●SÉLECTEUR D'ADRESSE :
+  /xxx/		→	toutes les lignes contenant le motif xxx
+  /xxx/!	→	toutes celles ne le contenant PAS (le drapeau s'applique
+					à toutes sélections d'adresse)
+/xxx/,/xxx/	→	toutes les lignes de la 1e à contenir le 1er motif à la 1e
+					contenant le 2nd
+  𝑛			→	ligne 𝑛 (à partir de 1)
+  𝑛,𝑛		→ 	lignes 𝑛 à 𝑛
+  $			→	dernière ligne du texte
+
+on peut bien sûr faire des mélanges avec 𝑛,𝑛 :
+  /aaa/,$	1,/bbb/
+
+• on peut imbriquer des sélecteurs d'adresse via un bloc d'instructions :
+	/^BEG.*END/,/^BEG/ {
+		# b («branch») → saute à la fin du script si on est en section «xxx»
+		/^BEGxxxEND/b;
+		[commandes à réaliser dans une section xxx]
+	}
+	/^BEGxxxEND/,/^BEG/ {
+		[commandes à réaliser dans une section non-xxx]
+	}
+
+● QUELQUES COMMANDES :
+q	→ quitter
+
+d	→ supprimer la ligne
+
+N	→ ajouter la ligne suivante au tampon d'entrée puis redémarre l'analyse
+
+n	→ imprime la ligne, "	"	"	"  puis continue l'analyse,
+ 	  sans revenir au début du script
+
+:𝑛𝑛	→  label 𝑛𝑛
+b𝑛𝑛	→	branch 𝑛𝑛
+b	→	branch à la fin du script
+
+ a\ₙₙₙ	→ ajoute ₙₙₙ après la ligne correspondante
+ i\ₙₙₙ	→ insère ₙₙₙ avant la ligne
+ c\ₙₙₙ	→ replace la/les lignes
+		/^aaa/,/zzz$/ c\ttt	→ remplace toutes les lignes entre la 1ère à contenir aaa en début de ligne et la 1ère à contenir zzz en fin de ligne par UNE SEULE occurence de ttt
+		/aaa/ { c\xxx \n
+
+  y/abc/ABC/	→ transforme comme tr !
+  =
+  r
+  w
+
+•commandes de tampon :
+h/H		copier/ajouter espace de motif vers retenue
+g/G		copier/ajouter retenue vers espace de motif
+x		échanger les 2 espaces
+
+
+● drapeaux de la commande s:
+  g
+  p
+ mais aussi
+  gp 		(combinaison de g & de p)
+  𝑛 (1 à 255)	→ ne remplacer que la 𝑛ième occurence
+  w fic		→ imprimer l'espace de motifs (la ligne sur laquelle on travaille actu') dans «fic»
+
+
+● CARACTÈRES SPÉCIAUX :
+Les expressions rationnelles de SED sont un (grand) /s-ensemble des BRE
+ («Basic Regular Expression» de POSIX).
+• dans la partie remplacement de la commande s :
+  &	→ toute la correspondance
+  \𝑛	→ "la 𝑛ième sous-chaîne (partie entre parenthèse) de la correspondance"
+
+• dans la partie motif :
+  $	→ fin de ligne,
+  ^	→ début de ligne,
+
+• Classes de caractères / expressions entre crochets :
+	[α-β]	→	chaque caractère de l'intervalle de α à β
+  _ et classes de caractères
+ (ici au sein d'une classe englobante, d'où les crochets supplémentaires) :
+	[[:alnum:]]   [[:cntrl:]]   [[:lower:]]   [[:space:]]
+	[[:alpha:]]   [[:digit:]]   [[:print:]]   [[:upper:]]
+	[[:blank:]]   [[:graph:]]   [[:punct:]]   [[:xdigit:]]
+  (plus d'autres dépendantes de la locale)
+
+
+
+● parenthèses permettant de retenir une partie de l'expression  :
+si l'option -r n'est pas utilisée, les parenthèses doivent être ÉCHAPPÉES,
+comme le numéro de correspondance (qui, lui, l'est toujours) :
+	sed -n	's/.*IPAddress:\([0-9\.]*\).*/\1/p'
+ou
+	sed -rn 's/.*IPAddress:([0-9.]*).*/\1/p'
+ → l'ensemble de la ligne lue est remplacé par la correspondance n°1,
+ qui est l'adresse IP découverte après «IPAddress:», puis imprimé.
+
+
+
+● exécuter plusieurs commandes après une condition :
+	les mettre entre accolades.
+
+
+
+● imprimer 1e occurence trouvée puis quitter :
+	sed -rn '/^PIDFILE=(.+)/ { s//\1/p; q }'
+rechercher ligne contenant le motif, puis exécuter le bloc d'instructions contenant
+	" remplacer rien par la sélection, imprimer, quitter ".
+
+
+● BOUTS DE CODE :
+
+•	sed -n '/name:.*usb.*/ s/\(.*name: <\)\|>//g p'
+est équivalent à
+	sed -rn '/name:.*usb.*/ s/(.*name: <)|>//g p'
+et transforme
+	name: <x.usb.y>
+en
+	x.usb.y
+
+• entourer un élément HTML <img> PRÉCÉDÉ UNIQUEMENT DE BLANCS SUR SA LIGNE
+ par un élément <script> :
+_ La conservation de l'indentation (via l'utilisation de 2 groupes de recherche)
+ ne marche QUE si <img> n'est précédé que de blancs
+_ la balise peut s'étendre sur plusieurs lignes
+_ l'indentation est aménagée
+	sed -r '/<img/ {
+				:bcl
+				N
+				/<img[^>]+>/ {
+					s/\n([[:blank:]]+)/\n\t\1/g
+					s/([[:blank:]]+)(<img[^>]+>)/\1<script>\n\t\1\2\n\1<\/script>\n/
+					b
+				}
+				b bcl
+			}' <fichier> > <nouvelleVersion>
+_ en bref :
+	boucle «:bcl» : addition de la dernière ligne lue tant que la balise en
+tampon n'est pas fermée par son '>',
+	1er s/.../.../g : on rajoute une tab en début de chaque ligne
+	2e s/.../.../ : les balises englobantes sont correctement indentée
+grâce au 1er groupe de recherche.
+
+
+• imprime la liste des utilisateurs du système ayant une session X11 à leur nom :
+ck-list-sessions
+ | sed -rn "s/[[:blank:]]//g;
+	    s/$/\+/g;
+	    s/.*:\+($)|realname='([^']*)'|x11-display=('[^'].*')/\1\2\3/p;"
+ | tr '\n' '+'
+ | sed -r "s/[^'+]*\+\+\+/\n/g; s/\++/ /g"
+
+le 1er sed supprime les blancs, ajoute un plus à chaque fin-de-ligne, puis affiche un saut de ligne pour chaque entrée, son identifiant utilisateur, son display X11,
+le tr suivant remplace les sauts de ligne par des plus,
+et le dernier sed remplace les id n'étant pas suivis par un n° de display entre apostrophes par un +, puis supprime tout les plus.

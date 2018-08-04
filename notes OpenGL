@@ -1,0 +1,58 @@
+● L'ORDRE DES OPÉRATIONS D'INITIALISATION EST TRÈS IMPORTANT.
+
+● pour accéder à une texture d'entiers (par ex, « format interne GL_R32UI,
+ format GL_RED_INTEGER, type de composante GL_UNSIGNED_INT ») dans un shader :
+Il faut un usampler2D/usampler2DRect (pour entier),
+ isampler2D/ isampler2DRect (pour entier signé) ...
+Et on doit utiliser un champs de texture() :
+		val = texture(tex,coo).r dans le cas ↑ de «GL_RED_INTEGER».
+
+● la plupart des fonctionnalités doivent être activées :
+ pour oGL < 3 :
+	glEnable(GL_TEXTURE_2D)
+	glColorPointer()/glEnableClientState(GL_COLOR_ARRAY),
+	glTexCoordPointer()/glEnableClientState(GL_TEXTURE_COORD_ARRAY)
+	etc.
+
+• glXMakeCurrent() doit être appelé avant les f° de manipulation des matrices
+de transformation ( glOrtho(), glLoadIdentity() etc.) ;
+
+● Par souci d'économie de mémoire, il faut détacher & détruite les objets shaders
+ une fois qu'ils ont été compilés & liés en un programme, à moins qu'ils ne
+ doivent servir à nouveau.
+
+
+• pour utiliser un Vertex Buffer Object avec Vertex Array Object, il faut
+ d'abord lier le VAO, puis lier/charger les données du VBO :
+ l'état résultant du VBO dépend du VAO lié au moment de sa création !
+→ donc :
+ 	glBindVertexArray
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ...)
+	glBufferData(	""		""		"", ...)
+	glBindBuffer(GL_ARRAY_BUFFER, ...)
+	glBufferData(	""		""		"", ...)
+	glVertexAttribPointer/glEnableVertexAttribArray x 𝑛
+• les VAO ne sont pas partageable entre contextes, au contraire des VBO et des IBO.
+
+
+• extensions utiles (intégrées aux versions > 2.1) :
+	_ GLX_SGI_swap_control	(pour attendre le rafraichissement vertical)
+	_ GL_ARB_debug_output	(permet d'enregistrer, via glDebugMessageCallbackARB(),
+	 une cb rappelée en cas de problème etc.)
+	_ GL_EXT_compiled_vertex_array
+		(verrouille un VAO et permet certaines optimisations)
+	_ GL_ARB_clear_texture
+
+● extensions à examiner :
+	GL_AMD_pinned_memory
+	ARB_get_program_binary (pr mettre en cache les programmes compilés)
+	GL_ARB_copy_image (copie rapide entre buffers non liés)
+	NV_texture_barrier
+	GL_ARB_texture_storage
+	GL_ARB_separate_shader_objects
+	GL_ARB_cl_event (synchronisation avec openCL)
+	GL_ARB_draw_indirect
+	GL_ARB_draw_buffers
+	GL_ARB_direct_state_access
+
+

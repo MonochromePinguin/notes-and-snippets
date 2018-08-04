@@ -1,0 +1,32 @@
+/*this is needed to position the menu relatiely to the page */
+body {
+    position: relative;
+}
+
+.contextmenu {
+    position: absolute;
+    display: none;
+
+    box-shadow: 3px 3px 5px #888888;
+    border: 1px solid grey;
+    border-radius: 2px;
+
+    padding: 0.2em 0.5em;
+
+    background-color: #3e3e3e;
+    color: green;
+}
+
+.contextmenu > hr {
+    margin: 0.3em;
+    border-color: lightgrey;
+}
+
+.menuitem {
+    display: block;
+}
+
+.menuitem:hover {
+    background-color: lightgreen;
+    cursor: pointer;
+}

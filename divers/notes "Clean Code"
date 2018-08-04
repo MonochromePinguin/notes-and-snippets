@@ -1,0 +1,59 @@
+sho a ri ...
+
+bouquin à lire : « Clean Code » par Robert C. Martin
+
+● CODE PROPRE :
+ « Le code est-il lisible par tous ? »
+en plus de : « pas de bug, lisible, portable, facile à maintenir ... »
+
+
+● QUELQUES PRINCIPES :
+• variables :
+_ bien nommer les variables (le nom doit porter l'intention)
+_ utiliser des mots connus des dév, des  besoins métier, du contexte
+_ éviter les nombres magiques
+_ fuir la désinformation («userList» n'est pas une *liste*)
+_ pas de blagues et Cie
+_ pas de doublons, de mots rares ou pédants
+
+• fonctions :
+_ simple
+_ une seule action par fonction,
+_ un seul niveau d'abstraction par f°,
+_ un seul return par f°
+_ nom == action/verbe
+_ f° monadique (dont f° pure  == sans effet de bord),
+	 dyadiquele dir :
+		si l'un des paramètres est un drapeau, essayer de la convertir en plusieurs fonctions :
+			log(level, msg) → warn(msg) / error(msg) / info(msg)
+	 triadique : à refactoriser !
+
+_ effets de bords :
+	l'indiquer dans le nom de la f° !
+_ éviter la surcharge !
+_ éviter les commentaires inutiles
+
+
+● POO / SOLID :
+• SINGLE RESPONSIBILITY / Cohérence des classes :
+Peu de variables , et des fonctions connectées (utilisant) ces variables :
+si on peut découper la classe en plusieurs, il faut le faire.
+
+• éviter un couplage fort entre classes
+
+• OPEN / CLOSED :
+ _ LA LOI DE DEMETER :
+ 	une méthode f de la classe C ne dois pouvoir appeler que :
+ 		_ les méthodes de C,
+ 		_ celles des objets créées par f,
+ 		_ celles des paramètres de f
+
+● DÉFAUTS ≠ BUGS :
+défaut (→ « pas lisible »)
+	rends le code moins lisible
+bug → erreur
+
+● « bad smells » :
+_ taille
+_ complexité : mesurée par le nombre de chemins dans la f°
+_ définir les seuils ...

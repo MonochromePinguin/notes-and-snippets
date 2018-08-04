@@ -1,0 +1,74 @@
+Parmi d'autres moteurs de template (pas que PHP) :
+	Smartu, Haml, Blade, Pug, etc.
+
+● twig :
+intégré à Symphony
+
+meilleure séparation des couches MVC,
+INDÉPENDANCE vis-à-vis de PHP,
+
+système d'héritage de templates
+templates stockables dans des variables
+
+sécurisation des variables – pas besoin de htmlspecialchar()
+
+● le cache doit être vidé quand on change le template ;
+→ indiquer dans la config de ne pas l'utiliser en mode dév
+
+
+$loader = new Twig_Loader_Filesystem('/chemin/vers/templates');
+$twigEnv = new Twig_Environment($loader,
+									[ 'cache' => '/chemin/vers/cache', ... ] );
+
+echo $twigEnv->render('fic.html.twig', [
+					'nom' => 'bla',
+					'prenom' => 'blu' ]
+				);
+↑ permet de générer la page à partir du template «fic.html.twig»
+ ET de la stocker en cache
+_ Le 2e paramètre est un tableau associatif de variables / valeur
+
+
+● armer une variable :
+	{% set var=<val> %}
+	{% set v1, v2 = <val1>, <val2> %}
+• et pour récupérer le résultat d'un bloc twig (avec ou sans instructions) :
+	{% set var %}
+		boucles, texte, etc.
+	{% endset %}
+
+● tester existence variable ou contenu :
+	{% if var is defined %}
+	{% if var is not null %}
+
+● SYNTAXE :
+ {{ ... }}		→ afficher
+ {{- ... -}}	→ afficher en supprimant les espaces (y compris hors variable)
+ {% ... %}		→ exécuter qqch
+ {# ... #}		→ commentaire
+
+
+	{{tbl[clé]}}		{{tbl.clé}}
+	{{obj.content}}						<?php echo $obj->getContent(); ?>
+
+• filtres :
+même concept qu'en ln-de-comm :
+	{{varCh|lower|title}}
+équivalent à
+	<?php ucwords( strtolower( $obj=>getContent() ) ); ?>
+
+tableau | length → taille du tbl
+
+p.ex :
+	upper,length,sort, ...
+	raw							→ ne pas échapper le contenu HTML
+	nl2br				→ajouter un <br> après chq \n
+	date						→ formater une date
+
+	{% <texte>|upper %}
+		texte affiché en maj.
+	{%
+
+• opérateur de concaténation :
+	tilde ENTOURÉ D'ESPACES !
+

@@ -1,0 +1,106 @@
+● préprocesseur SCSS et SASS :
+
+• SASS :
+	« Syntaxically Awesome Styles Sheets »
+syntaxe basée sur l'indentation ...
+
+comme ça ne marchait pas, syntaxe modifiée pour ressembler d'avantage à CSS :
+→
+
+•SCSS :
+ « Sassy CSS »
+
+
+● grâce aux @import, feuilles de style généralement structurées :
+	main.scss
+	vars.scss
+	...
+
+
+● ajouts à CSS :
+variables,
+mixins (fonctions),
+boucles, conditions
+import, extend,
+
+
+● mixins :
+	@mixin bla($var) {
+		...
+	}
+
+
+● extends :
+Pour réutiliser un bout de style
+	.style1 { ... }
+	.style2 {
+		@extends .style1
+		...
+	}
+
+
+● calculs :
+Comme en CSS3 sans le « calc() »
+	width: 100% - 30 px;
+
+
+● calculs :
+@if, @for, @while, ...
+	$i: 3;
+	@while $i > 0 {
+		.item-#{$i} { border-radius: $i px }
+		$i: $i -1;
+	}
+
+
+● couleurs :
+	darken( coul, 𝑛% )
+	lightten()
+	saturate()
+	desaturate()
+	complement()
+	invert()
+...
+
+
+● imbrication :
+• styles :
+	.btn {
+		border-radius: 0.5em;
+
+		.btn-warning { color: orange }
+
+		.btn-danger { color: red }
+
+		&::after { ... }
+		# ↑ le «&» reprend l'élément parent
+
+	}
+
+• media-query :
+	article {
+		...
+		@media( min-aspect-ratio > 1 ) {
+			...
+		}
+	}
+
+• parents/enfants :
+	nav {
+		background: black;
+
+		> li {
+			padding: 0.5em;
+		}
+	}
+
+
+● compilation du SCSS :
+	via plugins dans les IDE,
+	en ln de comm' (compass / ruby, etc.)
+• scssphp :
+	script de conversion en PHP
+• webpack encore :
+	fork de webpack utilisable avec symfony
+
+

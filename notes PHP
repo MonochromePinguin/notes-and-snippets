@@ -1,0 +1,510 @@
+PHP ' né en 94
+« PHP Hypertext Processor », conçu à la base comme language côté serveur
+extension POO en 2004 avec PHP5
+nouveau moteur de Zend (société) en 2015 avc PHP7
+
+• utilisable au sein de pages web, interprété par un serveur,
+ou en CLI – souvent pour des tâches CRON.
+peut servir à générer du JSON, XML, ...
+
+
+● BONNES PRATIQUES :
+_ définir les constantes spécifiques à un domaine
+ dans un fichier inclus via require
+_ suivre une/des PSR,
+  la faire vérifier et corriger via codeSniffer ( p.ex « --standard=PSR2 »).
+→ Voir §§ «composer» et «codesniffer» :
+
+• et principes plutôt généraux :
+_ DRY : «Don't Repeat Yourself» : héritage plutôt que copier/coller de code
+_ KISS
+_ SOLID :
+pour rendre le tout plus facile à maintenir et à faire évoluer ...
+  Single responsability : une seule action par fonction → code court
+  Open / Closed :
+	 «OPEN to extension, CLOSED to modification»
+	 étendre une classe plutôt que de la modifier, si possible,
+	 pour éviter de casser qqch
+  Liskov substitution :
+	 une instance de I doit pouvoir être remplacée par une instance de
+	 J, classe descendante de I, sans que quoi-que-ce-soit casse (ce qui est
+	 rare avec la programmation par contrat)
+  Interface segregation :
+	 plusieurs petites interfaces plutôt qu'une seule grosse
+  Dependency Inversion :
+	 Dépendre de l'abstraction (du modèle) plutôt que de l'implémentation
+
+
+
+• quelques directives php utiles :
+  max_execution_time (en s)
+  memory_limit
+
+Les modules utilisables sont listés dans le dossier « mods-available » ;
+les modules activés sont liés dans le dossier « conf.d »
+
+• PHP en CLI :
+	cd <racine de l'arborescence>; php -S [nom DNS d'écoute:port]
+	php -S [nom d'hôte] -t <dossier-cible servant de racine>
+
+ 	php -v
+	php -i		infos, modules activés
+	php --ini	liste les .ini utilisés
+
+
+● ESPACES DE NOMMAGE :
+La 1e instruction du fichier PHP, avant même le code (encore plus le code HTML),
+ doit être
+ 	namespace xxx\yyy\zzz;
+→ toutes les classes ou fonctions utilisées seront alors cherchés
+ dans l'espace de nom actuel
+• pour utiliser des classes d'un autre espace de nom :
+Pour l'espace de nom global, par exemple Exception :
+	throw new \Exception;
+et pour la classe Common\Collections\Proxy :
+	use \Common\Collections\Proxy;
+	prox = new \Common\Collections\Proxy;
+ou encore
+• via un alias
+	use \Doctrine\Common\Collections\Proxy as leProxy;
+	(...)
+	prox = new leProxy;
+
+
+● modules utiles :
+_ mbstring	: pour chaînes multi-octets.
+_ xdebug	:
+ facilite la stylisation d'une page HTML contenant la sortie
+ d'un var_dump( var1, var2, ... );
+
+
+● FONCTIONS NOTABLES :
+	dump_var()
+	die()		fin d'exécution
+• fonctions de mitigation d'attaques par injection (SQL ou autre) :
+	addslashes()
+	escapeshellarg(), curl_escape(), ldap_escape(), ...
+	htmlspecialchar()
+	sqlite_escape_string(), mysql_real_escape_string(), ...
+• utilitaires pour $_GET et $_POST :
+_ extract($tbl)
+	génère une variable (dans la table des variables actuelle) pour chaque
+	 clef du tableau associatif $tbl.
+_ sort( &$array ),
+_ ksort( &$array )	→	tri sur les clés et non les valeurs
+
+_ array_count_values(&tbl) → renvoit un tableau associatif Valeur / Nb occurences
+_ array_key_exists() :
+	on ne peut exécuter un if (isset($assocArray[$key])) ...
+	il faut donc utiliser  if (array_key_exists($key, $assocArray))
+
+
+● MÉTHODES MAGIQUES :
+appelées automatiquement dans certains contextes :
+__construct()
+__destruct()
+__toString()
+__clone()
+__sleep()
+ → appelée par serialize() ; pour nettoyer l'objet, valider des opérations en
+ attente ; doit renvoyer un tableau contenant les noms de toutes les propriétés
+ devant être linéarisés.
+__wakeup()
+ → appelée par unserialize() ; pour reconstruire toutes ressources utilisées
+ par l'objet.
+
+● SURCHARGES MAGIQUES :
+Ces méthodes sont appelées lors de tentatives d'accès à des propriétés
+ inexistantes , ce qui permet de les armer ou d'appeler trigger_error() :
+public __get()
+public __set()
+public __isset()
+public __unset()
+
+● CONSTANTES MAGIQUES :
+__DIR__		: le dossier contenant le fichier actuel.
+__FUNCTION__
+__METHOD__
+__CLASS
+__FILE__
+__LINE__
+__NAMESPACE__
+...
+
+
+● POUR INCLURE UN FICHIER .PHP :
+inclusion ponctuelle :
+	require '<fichier>';
+• spl_autoload_register()
+
+
+• code PHP terminant le fichier :
+	On peut ne pas fermer la balise PHP.
+
+● utilisation conditionnelle de code HTML via php :
+	<?php if (cond°): ?>
+		HTML si vrai
+		...
+	<?php else: ?>
+		HTML si faux
+		...
+	<?php endif ?>
+
+● opérateur de concaténation :
+le point .
+et .= qui équivaut au += de BASH
+
+● autres opérateurs :
+	$ch ?? xxx	équivaut à  isset($ch) && ( $ch != NULL ) ? $ch : xxx
+
+• opérateur de contrôle d'erreur :
+	@	→	supprime l'affichage des messages d'erreurs générés par la f° préfixée
+		@unlink($nonexistentFile) → pas d'erreur renvoyée
+
+● fonction variable :
+Variable stockant un nom de fonction.
+	$fonc = 'strlen';
+	$fonc($ch1);
+
+● méthodes variables :
+•au sein de l'objet :
+	$fonc='méthode';
+
+	$this->$fonc(); #dynamique
+	$this::$fonc(); #statique
+
+• méthodes d'un objet :
+	$fonc = [$objet, 'nomMéthode'];
+	$fonc();
+• méthodes statiques :
+	$fonc = ['nomClasse', 'nomMéthode'];
+	$fonc();
+
+● et variables indirectes :
+	$$a
+	$obj->$nomChamps
+
+● stocker dans un tableau des références aux méthodes statiques d'un objet :
+$methodList = [
+	'one' => [object::class, 'functionOneName'],
+	'two' => [object::class, 'functionTwoName']
+];
+
+
+
+● CONSTANTES :
+	define( 'NOM', 'VALEUR');
+
+
+● syntaxe courte de echo :
+	<p>Il y a <?= $var ?> trucs.</p>
+peut se montrer problématique en cas de génération de XML.
+
+● chaîne entre guillemets simples :
+	un guillemet simple ou un antislash y seront échappés !
+
+	echo 'il n\'y a ...'
+
+
+
+● HEREDOC : comme en shell (l'identifiant de terminaison doit débuter la ligne),
+ à la différence qu'un point-virgule est nécessaire pour terminer l'expression :
+	print( <<<EOF
+		blablabla
+		afficher variable: { $variable }
+		ou encore : "$variable" ← les variables sont à encadrer de guillemets
+									ou d'accolades
+	EOF
+	);
+ounotes PHP
+	echo <<< "EOF"
+		blablabla
+	EOF;			← noter le point-virgule pour terminer la commande
+• noter comment les variables doivent être « sorties » de la chaîne via des
+ guillemets ou des accolades :
+ une chaîne heredoc est traitée comme une chaîne encadrée de guillemets doubles.
+
+
+● NOWDOC :
+semblable au heredoc, mais sans interprétation des variables & échappements ;
+avec guillemets simples autours du mot.
+	print('EOF'
+		blabla $BLA
+	EOF );
+
+
+● Variables superglobales notables :
+Celles-ci sont des tableaux :
+	$_GET[], $_POST[]		armées qd la méthode correspondante est utilisée
+	$_SESSION[]			variables de session
+						(stockées s/ le serveur le temps de ... la co' HTTP ?)
+	$_COOKIE[]		valeurs des cookies enregistrés sur le poste client
+		$_REQUEST[]  contient $_GET, $_POST et $_COOKIE
+
+	$_ENV[]			envVars
+	$_SERVER[]	valeurs renvoyées par le serveur (p.ex, $_SERVER['REMOTE_ADDR']
+					qui stocke l'IP du client)
+
+
+● les sessions PHP, côté serveur :
+Existent grâce à un cookie généré par PHP, « PHPSESSID », lui-même
+ retrouvable dans $_COOKIE[] ...
+session_start(), (avant toute production de sortie)
+session_unset() / session_destroy() (pour bouton d déconnection) ou timeout ...
+session_write_close() : écriture des données en cache et fin de session
+
+la constante SID contient l'identifiant de session.
+
+• bien penser à appeler périodiquement  session_regenerate_id()
+ ( contre le «cookie hijacking»)et à la déconnection après inactivité ...
+
+• par défaut, le serveur PHP (sous symfony ou non, apache, ...) stockera un
+ fichier par cookie :
+dans var/sessions/{prod,dev}/sess_*
+
+
+
+● session_start(),
+● setcookie(),
+● HEADERS ET COOKIES doivent être générés avant TOUTE sortie !
+ La moindre ligne blanche avant le code PHP provoquerait une
+sortie / affichage de la part du script, donc la génération automatique
+ d'entêtes ...
+
+● HEADERS :
+les options d'entête HTTP sont générées via (avant toute sortie)
+	header('chaîne'[, bool replace [, codeDeRetHTTP]])
+• 2 cas spéciaux :
+	header('HTTP/...') :
+		p.ex header('http/1.0 404 Not Found')
+		→ pr générer un code d'erreur précis
+	header('Location:...')
+		→ en plus d'envoyer ce header-ci au client,
+		 retourne un code d'erreur 302.
+• « http_response_code() » :
+	arme ou lit le code de retour comme header('HTTP/...'),
+ mais sans armer le texte
+
+● COOKIES :
+le serveur fournit dans la réponse au GET un entête «Set-Cookie» ...
+
+• propriétés possibles :
+Name, Valu, Expire,
+Path (chemin concerné par le cookie), Domain (domaine concerné).
+
+• 
+  bool setcookie( $name [, $value = '' [, int $expire = 0 [, $path = '' [,
+ $domain = '' [, $secure = FALSE [, $HTTPonly = FALSE ]]]]]] ),
+ setrawcookie()
+– avant toute sortie lui aussi.
+	$path : chemin au sein du site sur lequel le cookie est disponible.
+			'/' → s/ l'ensemble du domaine.
+	$domain : domaine au sein duquel l'accès au cookie est possible :
+			'www.exemple.org', 'articles.www.exemple.org', 'exemple.org', ...
+	$secure : le client ne doit renvoyer ce cookie vers le serveur que s'il
+ estime que la co' est sécurisée ( HTTPS, crypté : oui ; HTTP, cookie
+ envoyé en clair : non).
+	$expire : un timestamp UNIX.
+	$HTTPOnly : le cookie n'est PAS accessible via JS → pas de XSS.
+
+• conseillé d'armer httpOnly à VRAI pour éviter les failles XSS !
+
+
+
+●REDIRECTIONS :
+•(apache) via un .htaccess : contenant ...
+	RedirectPermanent <URL> <URLcible>
+• 	header('Location: ...') :
+Pour une redirection permanente :
+	header('Status: 301 Moved Permanently', false, 301);
+	header('Location: <URL>')
+• balise META dans l'élément <head> :
+	<meta http-equiv="refresh" content="nbSecondes;url=<URL>/" />
+• via JS :
+	redirection('URL');
+
+
+
+● PHP & FORMULAIRES :
+	Formulaires : seul moyen de comm' hors JS et ses AJAX/webSockets ...
+On utilisera généralement la méthode POST (GET est limité en taille de
+ requête ...).
+	htmlspecialchar() et addslashes()
+ protègent des attaques par injection de code HTML ou SQL !
+
+
+● tester si une requête est une AJAX :
+• « if(!empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+& strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') » ...
+	MAIS cette méthode n'est PAS sûre :
+l'entête de requête « X-Requested-With » n'est PAS envoyé par tout les
+ frameworks JS ; la seule manière d'en être sûr est d'envoyer un drapeau booléen et de tester sa présence côté serveur.
+
+
+
+● PHP orienté objets :
+Très semblable à java.
+• classes :
+	extends
+	final
+• interfaces :
+	interface
+	extends
+pour les classes en implémentant :
+	implements
+• portée :
+	private, protected, public.
+• static :
+	les méthodes statiques sont appelées via la syntaxe
+	<objet>::<méthode>
+_ propriétés statiques :
+	<objet>::$variable
+
+• constructeurs & destructeurs :
+	public function __construct(...),
+	public function __destruct()
+
+• héritage (extends) ;
+• interfaces (implements) : « programmat° par contrat »
+
+
+● AFFICHAGE DU TEMPS LOCALISÉ :
+L'information de localisation est armée *par processus*, non *par thread*.
+→ en cas d'exécution multithreadée, il *faut* armer setlocale() avant chaque
+ appel s'en servant ...
+	#needed by strftime to output localized time to **system's current locale**
+	setlocale(LC_ALL, null); #→ toutes les catégories LC_ sont armées,
+							 # null → à partir des envVar de même nom
+
+	$dateStr = strftime('%A %d/%B/%Y à %Hh%Mm%Ss ', $f['timestamp']);
+
+cf les classes DateTime,
+			   DateInterval
+time()	→	renvoit un timestamp unix
+gmtdate($format,$timestamp): string	→ formate un timestamp
+
+● PARCOURT D'UN DOSSIER : avec un DirectoryIterator !
+	$dir = new DirectoryIterator(dirname(__FILE__));
+	foreach ($dir as $fileinfo) {
+		if (!$fileinfo->isDot()) {
+		    var_dump($fileinfo->getFilename());
+		}
+	}
+
+• lecture d'un fichier :
+ file_get_contents() → avec projection mémoire
+_CSV :	fgetcsv($hnd, $Tmax, $delim, $enclosure, $escapeCar);
+	$hnd = fopen("fruits.csv", "r");
+	if ($hnd !== FALSE) {
+		while( ! feof($hnd) ) {
+			$data = fgetcsv($hnd, 1000, ",");
+			print_r($data);
+		}
+	}
+	fclose($CSVfp);
+
+_ XML :
+	avec simpleXML : $struct = simplexml_load_file(<fic>);
+_ JSON :
+	avec json_encode() json_decode()
+
+
+● passer des données au JS côté client :
+	echo '<script> varJS = ' . json_encode($varPHP) . ';</script>'
+et si on veut passer une chaîne contenant un chemin de fichier :
+	json_encode($var, JSON_UNESCAPED_SLASHES);
+
+
+
+● ut° des BdD :
+Via des bibliothèques comme
+	Mysqli (approche procédurale, spécifique à MySQL),
+	PDO (approche POO, SQL générique donc facilitant le changement de SGBD)
+
+• Mysqli :
+  $BdD =  mysqli_connect( SERVER, USER, MDP, BdD ); #gettype($BbD) =='ressource'
+  $res = mysqli_query( $BdD, 'requête' );
+  while( $data = mysqli_fetch_assoc($res) ) #rv chq ligne ds un tbl associatif
+    ...
+
+• PDO :
+Couche d'abstraction largement indépendante de la BdD sous-jacente,
+ orientée objet → MySQL, SQLite, PostGRE, ...
+
+	#DSN : « Data Source Name »
+	$DNS = 'mysql:host=localhost;dbname=nomBdD;';
+	$pdo = new PDO( DSN, USER, MDP );
+	$res = $pdo->query( "SELECT xxx" ); # query() : récupération d'infos
+	$res = $pdo->exec( "SELECT xxx" );	# exec() : modifications ; Rv un booléen.
+
+	while ( $uneInfo = $pdo->fetch() )
+	{
+		...
+	}
+
+	$toutesInfos = $pdo->fetchAll();
+
+  Ces 2 fonctions peuvent prendre comme 1er paramètre :
+	PDO::FETCH_ASSOC	→ tableau associatif, indexé par noms de colonne
+				utiliser FETCH_NAMED s'il y a des colonnes de même nom ...
+			  _NUM		→ tableau numérique, indexé par n° de colonne
+			  _BOTH
+			  _OBJ		→ Renvoit un objet non typé
+			  _CLASS	→ Renvoit une instance de la classe passée en param, donc avec toutes les méthodes de la classe utilisables
+			  etc.
+
+
+
+_ requêtes préparées :
+	moules de requêtes, avec placeholders.
+	→ performances, sécurité (injections SQL).
+
+	$prep = $pdo->prepare( 'SELECT nom FROM humains WHERE id=:id AND ecole=:ecole;' );
+	$prep->bindValue( ':id', $valeur, PDO::PARAM_INIT );
+	$prep->bindValue( ':ecole', $valeur, PDO::constante_de_type );
+	$prep->execute();
+	éventuellement un $res = $prep->fetchAll() ...
+
+
+● COMPOSER :
+Un gestionnaire de dépendances pour PHP.
+• installation système, globale (à l'utilisateur), locale (à un projet) :
+ téléch le composer-setup.php,
+ l'exécuter,
+ puis éventuellement copier le composer.phar résultant ds un dossier du $PATH.
+
+_ peut générer une f° d'autoload mentionnée plus haut ↑
+	composer dump-autolog
+
+  composer init : créé le fichier «composer.json»,
+ contenant nos souhaits de config (versions acceptées : sous forme de plages).
+		require{} et require-dev{}
+  composer require <ref/paquet> <refVersion>
+  composer global require (...) : installation globale (dans ~/.config/composer/)
+  composer remove <ref/paquet> : supprime une dépendance
+  composer install
+	→ ↑ «composer.lock», donnant état actuel (la version installée est indiquée)
+
+
+● CODESNIFFER :
+Si installation globale par composer :
+ binaires trouvables ds ~/.config/composer/vendor/bin/ :
+	phpcs --standard=<STD>
+	phpcbf	--standart=<STD>
+		pour «Bug Fix» : corrige automatiquement les déviances.
+
+
+
+● FICHIERS DE CONFIG DE PHP :
+	/etc/php/<version>/apache2/
+	/etc/php/<version>/cli/
+
+• exécuter le serveur de test php :
+	php -S [adresse d'écoute] [-t dossier racine|]
+p.ex :
+	php -S localhost:8000	→ écoute requêtes venant de localhost seulement
+≠	php -S apache.virtuel:8000	→ écoute sur ce nom-là !
+
+• php -S [adresse] -t [dossier] :
+	utilise les fichiers de [dossier] sans qu'on ai besoin de taper l'adresse.
+

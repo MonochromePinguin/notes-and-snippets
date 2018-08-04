@@ -1,0 +1,42 @@
+● NOTES SERVICES EN SYMFONY :
+
+Un service est une classe fournissant une/des méthodes destinée à être
+ utilisée en plusieurs endroits du code (DRY !)
+
+_ Dans symfony, un service est injecté dans le conteneur de service :
+	symfony < 3.3 : tout doit être déclaré dans app/config/services.yml
+			≥ 3.3 : c'est automatique
+
+• conteneur de service :
+	gère les dépendances de chacun,
+	fournit du lazy loading – services instanciés au moment du besoin
+
+
+● CRÉER UN SERVICE :
+	la raison principale des services est d'organiser le code ...
+_ classe déclarée dans le dossier src/AppBundle/Service/,
+	dans l'espace de nommage AppBundle\Services,
+_ avec ... 1 classe par fichier,
+_ éventuellement des paramètres pour __construct(),
+_ des méthodes fournissant les fonctionnalités, ...
+
+
+● utilisation d'un service :
+_ ne pas oublier le
+	use AppBundle\Service\blablaService;
+
+
+● app/config/services.yml :
+	Attention à la conversion
+	 camelCase (nom de classe) → snakeCase (nom de service en yml)
+
+● lister les services :
+	bin/console debug:container
+
+XXXXXX
+
+
+● TAGS :
+	un moyen d'étendre des classes sans en modifier le code ...
+	comme p.ex ajouter des filtres à twig ...
+

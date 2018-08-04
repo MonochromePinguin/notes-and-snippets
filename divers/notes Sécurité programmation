@@ -1,0 +1,29 @@
+• microsegmentation : pour l'isolation fine d VM sur un serveur mutualisé ...
+Solutions de Cisco et VMware ...
+
+• sondes (écouteur de traffic capable de le bloquer en cas de comportement anormal)
+
+• H.A. : « High Dispobibility » :
+Tout le matériel en double ;
+ le doublon démarre et prends le relai en cas de problème du matos actif, et reçoit des sauvegares régulières.
+
+• OWASP :
+« Open Web Application Security Project »
+Open Source, accessible.
+_ liste de failles et bonnes pratiques, exemples de code ...
+_ pentests, scanners, ...
+_ filtres et « CRSF Guard » ...
+
+_
+
+
+→ cf leur wiki http://ww.owasp.org ...
+
+Firewall, proxy, sondes  – IDS et IPS (Intrusion Protection System, qui ne se contente pas de détecter mais va aussi bloquer l'intrusion)
+
+• « Secure by design »
+
+
+• cf le « PHP Type jogging »
+• sites d'entrainement au hacking :
+	« root.me.org », puis quand qualifié « hack the box »

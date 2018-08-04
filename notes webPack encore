@@ -1,0 +1,39 @@
+• WebPack encore :
+	fait tout et n'importe quoi ;
+	peut être utilisé pour la conversion automatique du SCSS en CSS
+
+• dépends de node.js → utiliser npm (ou autres)
+
+
+●
+	npm init
+	npm install webpackencore → génére un «node_modules/», équivalent du «.vendor» de composer.
+	node_modules/.bin/encore xxxx
+
+• → inclure node_modules/ dans .gitignore
+  → on peut aussi inclure le dossier de fichiers généré :
+		web/build
+
+• générer le CSS minifié/modifié :
+	node_modules/.bin/encore production
+
+
+XXXXXX
+package.js
+
+• pour générer du SCSS et s'occuper de la compatibilité avec les classes CSS expérimentales (préfixées : moz-xxx, etc) :
+
+_ créer un webpack.config.js à la racine du projet :
+
+	var Encore = require('@symfony/webpack-encore');
+
+	Encore.setOutputPath('/build')
+		  .cleanupOutputBeforeBuild(xxx)
+		  .
+		  .setPublicPath('xxxx')
+		  .enableSassLoader()
+	XXXXX
+
+
+_ importer le fichier dans main.js via un :
+	require('../css/main.css');

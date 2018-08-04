@@ -1,0 +1,83 @@
+I18n, puis ensuite L10n («Localisation»)
+Internationalisation nécessaire pour la «Localization»
+
+fr_BE ...
+
+
+• entête HTTP :
+	$_SERVER["HTTP_ACCEPT_LANGUAGE"] prenant la valeur du
+	« Accept-Language: fr_FR,fr;q=0.9,en-US;q=0.5,en »
+
+• bibliothèques de géolocalisation :
+p.ex GeoLite :
+	$_SERVER['REMOTE_ADDR']
+
+• laisser décider google :
+	mettre dans le nom de domaine un ".fr" ou dans l'URL un /fr/ ...
+
+• utiliser l'API javascript de géolocalisation :
+
+
+● LOCALISATION via gettext : pour PHP simple
+gettext a besoin de la locale, du domaine (pour contextualiser les chaînes
+ à traduire), de la chaîne à traduire.
+
+Même procédure qu'en C :
+un système de dictionnaire (clef/valeur) dans les .PO
+	outils de génération automatique des .PO : «poedit»
+	puis compilation en .MO binaire ...
+
+	echo gettext('Hello Word!');
+	echo __('Hello World!');
+	__e('Hello World!');
+
+
+	if (!empty($_GET['lang'])) {
+		$lang = $_GET['lang'];
+	}
+	setlocale($lang);
+	...
+	__e('XXXXXXXXX)
+
+●LOCALISATION VIA SYMFONY :
+_définir la locale
+	parameters:
+			locale: fr
+_ activer le service de traduction :
+	framework:
+		translator: { fallbacks: ['%locale%'] }
+		default_locale: '%locale%'
+
+• injecter la locale dans les routes :
+_ routing.yml :
+pour que les routes débutent par un /fr, /de, ...
+	app:
+		resource: '@AppBundle/Conroller/'
+		type: annotation
+		prefix: /{_locale} XXXXXXXX ← NOM RÉSERVÉ OU LIBRE ?
+		requirement:
+			_locale: en|de|fr
+
+• dans les contrôleurs :
+	$translatedPhrase = $this->get('translator')->trans('phrase');
+
+• dans la vue twig :
+_ mots ou des phrases isolées :
+Via le filtre (symfony) «trans» (après activation du service d'internationalisation)
+	{{ 'blablabla' | trans }}
+_ domaine de traduction :
+	{{ 'blablabla' | trans( {}, catalogueUntel ) }}
+_ avec  placeholders :
+	{{ 'salut %untel%' | trans( { %untel% } ) }}
+_ en f° de la quantité :
+	{{
+	XXXXXXXXX
+	}}
+
+• extraire de la BdD un contenu différent en f° de la langue :
+Via une extension Doctrine ... utiliser les annotations.
+
+_ blocs de texte :
+	via un id :
+		{% trans %} aurelia.surname ou AURELIA_SURNAME ... {%trans%}
+

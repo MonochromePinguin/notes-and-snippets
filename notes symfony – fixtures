@@ -1,0 +1,26 @@
+composer require --dev doctrine/doctrine-fixtures-bundle
+
+
+● remplir la BdD :
+	bin/console doctrine:fixtures:load
+→ lançe toutes les classes de AppBundle/DataFixtures/ étendant Fixture,
+vide les tables concernées et les charge à nouveau.
+
+	bin/console doctrine:fixtures:load --append
+→ les ajoute sans suppression préalable.
+
+
+● dans le cas d'entités dépendant d'autres (clés étrangères) :
+La classe doit implémenter DependantFixtureInterface
+XXXXXXXXXXXXXX
+
+
+● GÉNÉRER DES JEUX DE DONNÉES FICTIVES :
+*Faker*, AliceBundle, symfony Bundle, ...
+
+composer require --dev fzaninnotto/faker
+
+• $faker->sentence(6)
+  $faker->text;
+  $faker->name;
+

@@ -1,0 +1,398 @@
+● cf «notes commandes» pour les commandes externes ...
+
+
+● entrer une tabulation en ligne-de-commande BASH :
+	Ctrl-V puis TAB (ça marche avec ttes autres touches que TAB sauf entrée)
+
+
+● DIFFÉRENCES ENTRE DASH & BASH :
+•pour extraire une sous-chaîne de $var débutant en x et de y caractère :
+	 ${var:x:y}		(x débute à 0)	avec Bash,
+	 expr substr $var x y	(x débute à 1)	avec Dash (commande externe)
+•comparaison de chaînes :
+	if [ $var == 'xxxxxx' ] est possible sous Bash,
+	if [ $var = 'xxxxxx' ] seule option sous Dash (pas de double-égual «==» !)
+•pas de [[ ]], de $(( )), ...
+
+
+
+● [[ ]] Vs [ ] :
+• d'une manière générale (cf mes tests ds « docs & notes »),
+ [[ ]] est plus rapide que [ ].
+
+• Pas de découpage en mot ni d'expansion des chemins avec [[ ]]
+• les opérateurs || et && dans [[ ]] sont l'équivalent de -o et -a dans [ ], 
+_ à la différence qu'avec [[ ]] l'évaluation est court-circuitable ;
+_ tandis qu'avec [ ], les expressions séparées par des -a et -o produiront
+ systématiquement leurs effets secondaires.
+
+
+
+● COMMANDES INTERNES BASH – HISTOIRE:
+•history -w  enregistre l'historique
+
+• l'option shopt «histverify», quand activée, fait que le résultat d l'expansion
+des commandes bang est affiché pour édition au lieu d'être exécuté directement.
+
+•les commandes «bang» :
+ 	!$				Dernier argument de la dernière commande
+	!^ ou !:1		Premier "	"	"	" (raccourci de !!:1)
+	!*				tout les arguments	"	" (raccourci de !!:*)
+
+ 	!!	affiche la dernière commande (utile dans « $(!!) » ).
+	!-𝑛	"	" 𝑛ième précédente commande
+	!𝑛	"	" 𝑛ième commande de l'historique (0 == la plus ancienne)
+	!<ch>	affiche la dernière commande commençant par <ch> ...
+	!?<ch>	"	"	"	"   contenant le texte <ch>.
+	^<chO>^<chR>^	"	"	", en remplacant <ch0> par <chR>
+
+• modificateurs pour ces raccourcis ↑↑↑ :
+	:𝑛	extrait le 𝑛ième argument de ...
+	:$	"  "  "  " dernier argument de ...	(raccourci :	!$ )
+	:*	"  "  " tout les arguments de ...
+	:%	"  "  " le mot correspondant à la dernière recherche !?<ch>?
+		(par ex. : « cd !?Man?:% » →→ cd C/serveurMan si on a précedemment
+		 utilisé « ls C/serveurMan »)
+
+
+● CONTRÔLE DE TÂCHES ( «jobs», en arrière-plan / stoppées ) :
+• «ps» Vs «jobs» :
+_ ps liste les PID des proc' en cours d'exécut° rattachés au terminal courant,
+_ jobs affiche les n° de tâche et les listes de commandes correspondantes
+
+  Ctrl-Z stoppe un proc. (PID ou n° de tâche %𝑛) pr le mettre en arrière-plan,
+  Ctrl-Y le stoppe dès qu'il attend une entrée,
+  et "fg %n"/"bg %n" (re)placent le job n°"n" en avant-plan / arrière-plan
+   (ou %- [job précedent], %<nom_exact>, %?<partie_du_nom>)
+_ kill -STOP %n,
+  kill %n		marchent tout aussi bien
+
+_ disown %n	retire une tâche du contrôle de BASH :
+ n'est plus soumise à bg / fg, invisible à jobs,
+ et ne reçoit PAS de SIGHUP à la fermeture du terminal.
+
+_ shopt ±huponexit	contrôle si BASH envoit ou non ce signal à sa terminaison,
+ qd celle-ci est provoquée par l'interpréteur lui-même – par par le terminal !
+
+
+● COMMANDES INTERNES BASH :
+♦ le programme «env» liste les variables d'environnement que son parent
+ lui a transmis,
+♦ mais la commande interne «set» liste TOUTES les variables & procédures ;
+
+♦ c'est «alias» qui liste les alias définis ...
+• unalias
+
+
+● contourner les alias de BASH :
+par exemple pour «grep» :
+	/usr/bin/grep
+	$(which grep)
+	\grep
+	"grep" ou 'grep'
+	command grep
+
+
+● déclaration de variables via «declare» :
+• au sein d'une f° elles sont locales par défaut (sauf si «-g» spécifié).
+declare -i		→	entier
+declare -r		→	L/S			≠ readonly, qui crée des variables globales
+"	"	-a		→ tbl[]
+etc.
+
+
+● évaluation arithmétique entre $(( )) et (( )) :
+Il y a D'ABORD le développement des paramètres, ENSUITE l'évaluation arithm'.
+Avec
+	(( 1 + 1 == 2 ? 1 : $(echo "toujours affiché !") ))
+le message sera donc TOUJOURS affiché !
+
+● CALCUL AVEC $(( )), expr ET bc :
+•ATTENTION ! Seul bc affiche les résultats en virgule flottante ...
+ si on lui ordonne « scale=𝑛 » !!! OU si on exécute « bc -l » (précision : 20)
+•ex :
+faire la moyenne ligne par lignes de colonnes de nombres, stockées chaqu'une dans un fichier :
+	 { echo scale=2; paste -d+ rés.* | sed 's/,/./g' | while read ln; do  echo "($ln)/10"; done } | bc
+_ paste insère des + entre les nombres, pour que ce soit interprété comme addition par bc ;
+_ et sed remplace les virgules par des points pour que bc comprenne :-( ...
+
+
+
+● Autant que possible, mettre l'argument spécial «--», qui indique la fin des
+ options d'un programme, entre les options & les noms de fichiers passés
+ en paramètres, pour éviter les problèmes inhérents aux noms de fichiers
+ du genre «-rf» passés à des commandes telles que «rm» ...
+• De même, /s bash, si «nullglob» est activé,
+ il est plus sûr d'utiliser «./*» à la place de «*», pour éviter le même
+ problème avec les programmes n'acceptant pas «--» ...
+
+•	shopt -s nullglob	→ si le glob «*» ne correspond à aucun fichier,
+ il est développé en chaîne vide.
+•	shopt -s lastpipe	→ la dernière commande d'une tuyauterie est exécutée
+ dans le shell au lieu d'un processus dédié, SAUF si elle est exécutée
+ en arrière-plan.
+• extglob	→ syntaxe des globs étendus : [+?*]\(motif(|motif)*\) ...
+
+
+● guillemets & assignations :
+•Les guillemets ne sont pas nécessaires pour 
+	var=f*
+	var=$v0
+ car le découpage en mots et le développement des chemins n'ont pas lieu.
+• MAIS ils sont nécesssaires quand il y a des espaces dans la valeur assignée 
+	v=" a b c"		sinon : exécution de «a» avec paramètres «b» et «c»
+	var="a b c"		sinon : «b» est exécuté avec en paramètre «c» et l'envVar
+ «var» armée à «a»
+• Et pour la commande :
+	export var="a"
+•Et quand on veut éviter le développement du tilde :
+	var=~/rép		→	var == $HOME/rép
+	var='~/rép'		→	var == ~/rép
+
+
+● expressions rationnelles de BASH :
+• globs, BRE, ERE !
+  globs : * ?
+	 en conjugaison avec les ensembles et intervalles [...] et les listes {...}
+  extended globs : activés par «shopt -s extglob»
+	?(a|b|c) *(...) +(...) : ces préfixes ont la même significat° qu'en tant que
+		suffixes ERE
+	!(...)	: négation de la liste donnée
+
+•	les comparaisons [[ x =~ ]] utilisent des ERE :
+	* . x? x* x+ x{𝑛} x{m,𝑛} x{𝑛,} [:digit:] [:alnum:] ([ 	]|^)   etc. etc.
+	Mais aussi \< et \> (début/fin de mot), \b, \B
+_ pour comparer l'expression rationnelle à la totalité de la chaîne cible,
+ il faut l'encadrer des métacaractères début/fin de ligne : ^𝑛𝑛𝑛𝑛$ ;
+ sinon, le test ne fait que rechercher l'ERE au sein de la chaîne cible.
+
+
+● TABLEAUX:
+	tbl=(v1 v2 v3 ...)
+	tbl2=([0]=v1 [2]=v3 [1]=v2)
+	tbl[𝑛]=v𝑛
+	echo ${tbl[𝑛]}
+
+• Attention à $IFS !
+
+• ajout d'un nouvel élément à un tableau :
+	tbl+=(v𝑛)
+Attention cependant, car si le tableau a été RAZ via tbl=, le NULL compte
+ comme un premier élément.
+Pour démarrer à l'indice 0 avec un ajout +=,
+ il faut réinitialiser le tableau via tbl=() !!!
+
+mais :
+	tbl+=𝑛	→	concatène 𝑛 à tbl[0]
+	tbl[3]+='aa' concatène 'aa' à tbl[3]
+
+• taille d'un tableau :	${#tbl[@]}
+• accès au dernier indice d'un tableau :	${tbl[-1]} !
+
+• cf man bash, section «Tableaux» !
+
+● traitement d'un tableau en masse :
+		tblRes=(  "${tblSrc[@]//de/vers}"  )
+Le traitement de "${tbl[@]}" est similaire à celui de "$@" :
+ chaque élément du tableau sera fournit protégé de guillemets, après
+ modification éventuelle – ici par «//».
+
+• ce bout de code :
+	liste=•${tbl/%''/•, •}
+	echo "liste : ${liste%, •}"
+affiche tt les éléments du tableau encadrés de petits disques et séparés par
+ des virgules. Jouer des modificateurs de variable /% et /# !
+
+
+● remplacer wc -w avec un tableau (en particulier s'il faut traiter
+ une variable) :
+	v=( $ch )
+	nbMots=${#v[@]}
+● et ${#var} pour connaitre la longueur de $v !
+
+
+● printf est une commande interne !
+et le format s'applique à tout les arguments suivant :
+	printf '«%s» ' "${tbl[@]}"
+affiche tt les éléments du tableau encadrés de guillemets.
+
+
+● IFS= ou IFS=$'\n' : INDISPENSABLE quand on traite une liste de noms
+ de fichiers («ls -1 | while read -r ...») & que l'un d'eux commençe ou finit
+ par un espace ou une tabulation (éliminés par bash à la lecture
+ de la variable !)
+•CEPENDANT, dans tout shell moderne, on DOIT utiliser la version plus sûre 
+	for f in "$rép"* ...
+• ma syntaxe préférée pour armer IFS : $'chaine', qui traite
+ correctement les codes échappés (\t, \n, ...). cf ↓↓↓.
+
+
+● MUTEXES : avec flock() !
+
+
+● CODER CARACTÈRES EN HEXA :
+ _ sauf pour \00 :
+	varA=$'\x1F'
+	varB=$'\x127\x1F'
+ _ avec \00, il faut utiliser $"" :
+	varA=$'\x41'
+	varB=$'\x42'
+	varC=$varA$"\0"$varB
+	echo $varC | od -c	→	A   \   0   B  \n
+● ECRIRE UN OU DES CARACTÈRES SPÉCIAUX :
+	avec $'xxx' :
+		$'\n',
+		echo $'coucou RetLn\n\n↑ là !'
+
+• afficher VALEUR HEXADÉCIMALE D'UN CARACTÈRE (par ex. ●) :
+	echo -n ● | hexdump
+
+
+●« seq 1 100 » est profitablement remplaçable par « {1..100} »
+ dans les boucles ...
+  !!! SANS ESPACES !!! (spécifique à Bash).
+MAIS on ne peut pas utiliser de variables dans l'expression.
+
+
+● traitement des chaînes de caractères :
+ elles travaillent sur des motifs glob :
+	var=/aa/bb/cc/dd/fic; echo ${var#/*/*/*/}		}→ affiche «dd/fic»
+• ${var^^}  ${var,,}	→	conversion en MAJUSCULE & MINUSCULE
+• ${var#préfixe}  ${var##préfixe} → suppress° du préfixe après développement :
+	# → la plus courte correspondance, ## → la plus longue
+• ${var%suffixe}  ${var%%suffixe} → suppress° du suffixe après développement :
+	% → la plus courte, %% → la plus longue
+• ${var:pos}			→	sous-chaîne débutant à «pos»
+• ${var:pos:longueur}	→	"	"	" de cette longueur
+• ${var/de/vers }, ${var//de/vers }
+	→	remplace la 1e occurence / toutes les occurences de «de» par «vers»
+ 	S'applique également sur les éléments des tbl indexés par [*] ou [@] !
+	tblRes=( ${tblOrig[*]/de/vers } )
+
+● Un bashisme utile :
+	echo aa{bb,cc} produit	« aabb aacc »
+
+
+● EXTRACTION DE MOTIFS D'UNE CHAÎNE DE CARACTÈRES :
+•Avec [[ <chaine> =~ <motif> ]] :
+		expression de droite == EXPR. RATIONNELLE ÉTENDUE ÉTENDUE,
+ dont chaque membre entre parenthèses est renvoyé ds BASH_REMATCH[𝑛≥1] :
+	ch="/media/rép1/doss2/caca/rép3/doss4"
+	[[ "$ch" =~ /media/([^/]+/)([^/]*/)..../(.*) ]]
+	echo "${BASH_REMATCH[0]} - n°1 : ${BASH_REMATCH[1]} - n°2 :\
+		${BASH_REMATCH[2]} - n°3 : ${BASH_REMATCH[3]}"
+ affiche
+	"/media/rép1/doss2/caca/rép3/ - n°1 : rép1/ - n°2 :  doss2/ - n°3 : rép3"
+ $BASH_REMATCH → toute l'expression concordante (sans les autres parties
+ de la chaîne !)
+ ${BASH_REMATCH[𝑛]} → la 𝑛ième partie entre parentèses (𝑛 ≥1)
+♦CEPENDANT, il faut utiliser «$'\n'» en tant que symbole de fin de ligne
+ dans ces expressions rationnelles, pas «$» ...
+
+• ${#var}	→ 	longueur var
+
+
+● EXÉCUTION CONCURRENTIELLE :
+	for x in {1..10}; do
+		{ cd "rép$x"; ls *.sqlite; } &
+	done
+	wait
+→ Pas de «;» après le «&»
+→ la commande «wait» permet d'attendre que tous les processus-fils s'achèvent.
+
+• la COMPARAISON DE CHAÎNES basée sur une expression rationnelle se fait
+ via les doubles crochets :
+	par exemple [[ "$f" != *'Qui?'* ]]
+ou en employant l'opérateur =~ pour utiliser des expressions
+ rationnelles étendues.
+
+• les DOCUMENTS «HERE» VERSION 1-LIGNE :
+ par exemple,
+	commande <<< "texte"
+ ou, avec des substitutions :
+	var=$( commande <<< "$texte" )
+ qui marche aussi.
+
+• LA REDIRECTION D'ENTRÉE MARCHE BIEN SÛR EN LIGNE DE COMMANDE !
+	sort << STOP
+lira tt les lignes jusqu'au texte STOP ...
+
+
+
+● REDIRECTIONS NOTABLES :
+La commande interne «exec» peut appliquer les redirections à l'interpréteur
+ en cours !
+	« exec &>6 » redirige sortie standard & sortie d'erreur de l'interpréteur
+	en cours vers le descripteur de fichier n°6 ...
+• &> : redirection des sorties standard et d'erreur simultanément.
+  d <& s : le descripteur de fichier «s», ouvert en lecture, est dupliqué
+ dans «d»
+• d >& s : "	"	"	"	", ouvert en écriture, est dupliqué dans «d».
+ → rediriger le descripteur de fichier «n» vers l'entrée standard du
+ programme «prog» :
+		«prog» <& «n»
+ → rediriger la sortie standard de «prog» vers le descripteur de fichier «n» :
+		«prog» >& «n»
+→ écrire s/ la sortie d'erreur standard : avec « >&2 » !
+
+
+● CAPTURER LA SORTIE D'ERREUR MAIS AFFICHER LA SORTIE STANDARD :
+	{ sortieErr="$( commande 2>&1 1>&3 )"; } 3>&1; 3>&-
+_ stderr de «commande» est redirigé vers l'ancien stdout, et stdout
+ vers le DF n°3,
+puis sortieErr capture la sortie-d'erreur-redirigée-vers-stdin
+_ le DF n°3 de la liste de commandes est redirigé vers stdin
+_ enfin, le DF n°3 est fermé
+
+• au sein d'une conduite, chaque commande est exécutée dans son
+ sous-interpréteur, sauf pour la dernière si l'option lastpipe est activée ET
+ si elle est en avant-plan.
+ Donc,
+	var="A"
+	commande | while read x
+	do
+		...
+		var="Z"
+		...
+	done
+	echo $var
+affichera "A" ! car $var est modifiée dans le processus-fils.
+→ utiliser un tuyau nommé ou une substitution de processus :
+	commande > $unFIFO
+	while read x
+	do
+		...
+	done < $unFIFO
+
+
+● surveiller un fichier en tâche de fond :
+tail se termine dès que le fichier de nom <fic> est supprimé ou déplacé,
+ ou si le PID $pid se termine ; grep renvoit 0 dès que <motif> est trouvé,
+ et le script se termine de lui-même (enfin, la commande à utiliser dépends de
+ l'état du réglage «lastpipe» et de l'exécution en avant- / arrière-plan) ...
+	(
+		pid=$BASHPID
+		tail --follow=name -n+1 --pid=$pid <fic> | {
+			grep --line-buffered -q <motif>
+			<autres commandes ...>
+			#Si j'ai bien pigé, dans cette situation,
+			# la dernière commande de cette conduite sera TOUJOURS exécutée
+			# dans son propre processus ?!
+			kill $pid
+		}
+	) &
+	... suite du script ...
+
+
+● obtenir la VALEUR DE RETOUR D'UN PROCESSUS-FILS ASYNCHRONE :
+	commande &		#lancement d'une commande ou d'une fonction ...
+	PIDcommande=$! #stocke le PID du dernier processus lançé
+	...
+	wait PIDcommande
+	ValRet=$?		#«wait» fournit la valeur de retour du processus
+ou encore
+	...
+	wait %texte #attendre processus invoqué par «texte» (mais çà ne marche
+	ValRet=$?	# pas avec les fonctions lançées dans des sous-shells !)
+
+

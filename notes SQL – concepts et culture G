@@ -1,0 +1,120 @@
+
+
+● ACID :
+• Atomicité :
+	transaction effectuée entièrement, ou pas du tout.
+• Cohérence :
+	chaque transaction doit amener à un état valide – selon les règles définies.
+• Isolation :
+	Toute transaction doit d'effectuer comme si elle était la seule sur le
+ système – en cas de transactions parallèles, le résultat doit être équivalent à
+ une exécution sérielle.
+	En cas de duplication de données (plusieurs serveurs contenant les mêmes
+ données), cette contrainte là devient gourmande → NoSQL !
+• Durabilité :
+	persistance des données face aux incidents. Mias là on se limite à l'aspect
+ logiciel du terme ...
+
+
+
+● conception de la BdD :
+- Les 2 méthodes les plus utilisées :
+	MERISE, et UML dans le monde anglo-saxon ...
+- Suivre les standards & conventions de l'entreprise / projet / whatever ...
+- modéliser la table de la manière la plus pertinente pour l'utilisation qui
+ en sera faite.
+• méthode MERISE :
+ méthode de conception et de développement de projets informatiques ...
+
+_ MCD – Modèle Conceptuel de Données :
+	représentation des données, définition des dépendances fonctionn
+elles
+ de ces données entre elles.
+- entités et leurs données ; relations entre elles
+	("appartenir", "inscrit à", ...)
+
+→ cardinalité : nb min et max de lients entre 2 entités
+pour chaque bout de la relation, on aura une paire de nombres ;
+  pour une association de 2 entités, il y a 4 cardinalités à indiquer.
+
+Il peut y avoir ou non une «table intermédiaire» dans une « relation complexe »
+( ≠ «relation simple», sans table intermédiaire) entre entités ...
+	one to one,
+	one to many,		→ on n'aura pas besoin de table intermédiaire
+	many to many,		→ table intermédiaire systématique
+	...
+
+• faire en sorte que les données soient récupérables en le moins d'accès aux
+ tables possibles ...
+
+
+_ MLD – Modèle Logique de Données :
+	Transformer les relations logiques en tables, ajouter les clé étrangères
+
+- une clé primaire peut être une paire de champs !
+
+
+_ MPD – Modèles Physiques de Données :
+	Tenir compte des particularités de la BdD cible.
+
+• contraintes d'intégrité :
+	pour éviter les enregistrements orphelins, on peut spécifier des contraintes
+("ne pas supprimer un enreg tant qu'il y a des enregs d'une autre table la
+ référençant", "supprimer tout ceux y faisant référence") lors de la création
+ de la table ...
+
+
+● noSQL :
+_ Not Only SQL.
+_ PAS *ACID*
+_ partitionnable («sharding»), et réplicable (en 𝑛 sauvegardes),
+_ mas PAS relationnel – pas de JOIN ...
+ → beaucoup de duplication de données comme paliatif
+ → «rapide à l'ajout de données, lent à la modification de données ».
+
+• MongoDB, Redis, Cassandra, ...
+
+• Redis est souvent utilisé comme cache de données.
+
+• types de NoSQL :
+_ document (paires clé/valeur non typées),
+_ clé-valeur,
+_ graphDB (chaque enregistrement est lié à une quantité données d'autres,
+ à la manière d'un graphe),
+_ column family
+
+• concept° de la BdD : en fonction du besoin ...
+enbedding ? referencing ?
+→ en général, on fait des insertions multiple lors de l'ajout d'une
+ infos liées à d'autres ...
+
+● Neo4j :
+	noSQL / données sous forme de graphe :données reliées à qlq voisines (cf
+réseaux sociaux ...).
+
+
+● MongoDB :
+_ parmis les noSQL, est dans la catégorie "partitionable" et "données cohérentes".
+_ l'une des rares ajoutant des indexes secondaires, ce qui permet de faire du
+ « fulltext » (indexer tout les mots des documents pour la recherche de mots-clés dans les documents),
+ du « GeoJSON », qui est standard, (coo' spatiales indexées) ...
+_ « BdD de type document » : ensemble de paries clé/valeur-non-typée – il
+ n'y a pas de structure de table.
+_ utilise un FS distribué – données réparties sous forme de "chunk"
+_ utilise les données sous forme de JSON.
+_ MEAN stack : mongoDB/Angular(ou autre)/Node.js car le JSON sert de
+ langage commun.
+
+• utilisation :
+ db.<collection>.insertOne()
+				.insertMany()
+				.find(
+					{ age: { $gt: 18 } }, ...
+				)
+on ajoute des enregistrements JSON de structure libre.
+_ opérateurs :
+	$gt, $lt, $or, $and, $in,
+	$where, $elemMatch ... → pas rapide en noSQL !
+
+● map/reduce :
+	.map().reduce() en tâche de fond ...

@@ -1,0 +1,317 @@
+┌───────┐
+│● Rhino│ possède un débogueur intégré :
+└───────┘
+•	java -jar rhino.jar
+•	java org.mozilla.javascript.tools.debugger.Main \
+				[options] [filename.js] [script-arguments]
+
+
+
+● où placer la balise <script> dans un fichier HTML ?
+•La méthode moderne est de la placer ds l'élément <head> avec une propriétés :
+• async :
+_ script exécuté dès son chargement dans un ordre quelconque, ne bloquant pas
+ le traitement du HTML
+_ réservé aux scripts externes
+• defer :
+script chargé en //e,
+_ exécutés dans l'ordre d'apparition, APRÈS le chargement du document,
+	mais AVANT l'éven DOMContentLoaded
+→ il faut utiliser « document.addEventListener('DOMContentLoaded', f°, ...) » !
+
+
+
+● exécuter du code à la fréquence de rafraichissement de l'écran :
+  requestAnimationFrame(cbRappel) : peut recevoir une valeur max,
+ et doit être appelé pour chaque trame – par ex en fin de f° de MàJ.
+ 	La cb recoit en param un horodatage epoch ;
+   window.performance.now() permet d'obtenir un 1er horodatage de référence.
+
+•à comparer avec window.setTimeOUt().
+
+
+● objet Window :
+• Window : la fenêtre (ou l'onglet)
+• Window.document : le DOM y étant contenu.
+• document.defaultView : la Window contenant le DOM.
+
+
+
+● insérer plusieurs nœuds en une seule fois (pour éviter les réarrangements
+à chaque insertions) :
+	frag = new DocumentFragment();
+insérer les nœuds dans «frag» via frag.appendChild(), puis l'insérer dans
+ le futur parent des nœuds.
+• insertion d'éléments :
+	préférer insertAdjacentHTML() à .innerHTML (ne modifie pas les éventuels éléments déjà présents dans le conteneur),
+	voire un DOMParser.
+• document.createTextNode(<chaîne>) ...
+
+
+● armer la position d'un élément :
+	elem.offsetLeft = 𝑛
+	elem.offsetTop = 𝑛
+et non elem.style.{top,left} = 𝑛 !
+
+
+
+● PROPRIÉTÉS ET MÉTHODES REMARQUABLES :
+elem.getBoundingClientRect(),
+elem.offsetLeft, elem.offsetTop,
+
+elem.id,
+form.action,
+...
+
+•elem.classList :
+	elem.classList.add()/remove()
+	elem.classList.toggle(anc,nouv)
+				  .contains()
+				  .replace()
+
+•elem.setAttribute(),
+•elem.style.removeProperty()/setProperty(), ...
+
+
+• window.innerHeight
+		.innerWidth
+• window.prompt(texte, valeurRéponseParDéfaut)
+		.scrollTo(x,y)
+		.scrollBy(Δx, Δy)
+• window.open( URL [, '_blank'|'_parent'|'_self'|'_top'|NOMFEN] [, options] )
+
+
+•évenements souris :
+ev.button	→ 0 = bouton principal, 1 = molette/milieu, 2 = b. droit,
+				3 et 4 = précédent / suivant
+
+
+document.getElementById(),
+		.getElementsByName(),
+		.getElementsByTagName(),
+		.querySelector(),		→ 1er élém rencontré
+		.querySelectorAll(),	→ TOUT les éléments
+
+
+● listes notables du DOM :
+document.forms[]
+formElem.elements[]
+elem.classList[]
+
+
+● element :
+elem.childNodes[],
+	.firstChild,
+	.lastChild
+
+elem.getAttributes()
+	.appendChild()
+	.prependChild()
+	.removeChild()
+etc.
+
+
+● attributs de données :
+définits comme les autres attributs HTML
+– Leurs noms démarrent par «data-»
+– accessibles par :
+	element.getAttribute(data-xxxx)
+	element.dataset.xxx
+
+
+● VARIABLES CSS :
+_ Si armée via elem.style.setProperty(),
+ récupérables via elem.style.getProperty()
+• via getComputedStyle :
+	getComputedStyle(elem,null).getPropertyValue('--var');
+
+
+● en HTML < 5, Il fallait :
+• Insérer <meta http-equiv="Content-Script-Type" content="text/javascript" />
+dans l'entête pour éviter d'indiquer le type de script à chaque déclaration
+ d'action, comme dans
+	<body onload="javascript: document.forms[0].texte.focus(); testAccesG;">
+ou dans
+	<script language="javascript">
+
+
+● elem.addEventListener(ev, fonc° ) :
+	pour bloquer l'action par défaut / la propagation de l'éven par bullage :
+	 fonc° doit appeler ev.preventDefault()
+
+
+
+● LA VALEUR DE RETOUR D'UN GESTIONNAIRE D'ÉVÉNEMENT joue un rôle :
+•Si le gestionnaire renvoit «FAUX» l'action par défaut n'est pas exécutée
+•s'il renvoit «VRAI» (ou ne renvoit rien), 
+	l'action par défaut sera exécuté ensuite !
+
+• <form action="[URL|javascript:fonc()]"> ou form.onsubmit="" :
+	de même que ↑, la f° doit renvoyer un booléen indiquant s'il faut ou non
+ envoyer le formulaire (à l'addresse spécifiée, par la méthode indiquée ...)
+
+
+
+● ATTENTIONS AUX PORTÉES quand on arme un gestionnaire d'évènement ds une bcl !
+	for ( x = 0;  x < l;  x++ )
+	{
+		elem.onclick = function() { fonc(x) }
+	}
+→ «fonc» est liée à la portée du bloc "for..." – donc TOUTES les instances
+liées à onclick verront le MÊME x – et sa dernière valeur stockée, celle de l !
+→ utiliser une closure :
+remplacer le corps de la boucle par un appel de fonction, tel que :
+	for (x = 0;  x < l;  x++ )
+		modifieOnclick( elem, x );
+
+
+● AJAX :
+	via l'objet XMLHttpRequest
+→ simple requête GET, POST, ... dirigée vers le serveur,
+  qui renvoit une réponse (en HTML, XML, JSON, ...)
+→ requête asynchrone
+
+
+---------------------------------- PUR JAVASCRIPT -----------------------------
+
+● (ES6) patron de chaîne :
+• avec le guillement inverse.
+pour générer une chaîne incluant des variables :
+	v1 = 'chat';
+	v2 = 'mammifère';
+	res = `le ${v1} est un ${v2}`;
+
+
+● boucles «for of» et «for in» :
+• « for ( v of tbl )» :
+	parcourt les valeurs ; i reçoit une copie de la valeur
+• « for ( p in obj )» :
+	parcourt les propriétés
+	→ on accède à la valeur via « obj[i] » ...
+
+● pour toutes les boucles «for» :
+préférer for (const ...) à for( let ... ) quand on ne modifie pas le compteur !
+
+
+• pr savoir si un objet X possède la propriété Y :
+« if ( Y in X ) »
+  ...
+≠ « if ( X.hasOwnProperty(Y) ) »,
+ qui teste si Y est une propriété personnelle de X == PAS une propriété
+ héritée du prototype.
+≠ « if ( X.Y ) »
+ qui teste si la propriété est VRAIE, NON-NULLE, ... → renvoit «FAUX»
+ s'il s'agit d'une chaîne vide ("") !
+
+• propriété personnelle d'un objet → propriété héritée par ses descendants,
+ de valeur partagée par tte les instances des descendants,
+ sauf si une de ces instances arme la valeur de cette propriété
+ → nouvelle propriété personnelle de même nom !
+
+• les opérateurs ===, !== ne sont pas ==, !=   !
+
+● FONCTION AVEC UN NOMBRE VARIABLE D'ARGUMENTS :
+Comme on peut appeler une f° avec un nombre indéfini de paramètres, on peut
+ utiliser l'objet «arguments» :
+	fonc() {
+		for (let i = 0; i < arguments.length; i++)
+			...;
+	}
+_ «arguments» n'est pas disponible dans les fonctions fléchées.
+
+•en ES6, il y a les paramètres de reste («rest parameter») :
+	fonc(a, b, ...args) {		→	args sera un tableau
+		//réutilise les mêmes paramètres – ici sans a et b
+		otherFunc(...args);
+		//chaque élément du tableau est accessible
+		fonc2(args[0], args[1]);
+
+	}
+_ le paramètre de reste est aussi décomposable en variables distinctes :
+	fonc(...[a, b, c] )
+→ les 3 premiers paramètres sont nommés et accessibles – mais pas les suivants !
+
+
+● FONCTIONS FLÉCHÉES (ARROW FUNCTIONS) – ES6 :
+- pas d'objet «arguments»
+- le «this» sera celui du contexte de déclaration
+- ne peuvent servir de constructeur
+- ne peut utiliser «yield»
+• attention à la syntaxe :
+– renvoyer un objet :
+	a => ( {val: a} )
+Les parenthèses évitent l'interprétation des accolades comme bloc de code.
+– armer une variable à une fonction si cette variable est nulle :
+	var = var || fonc() {};
+	var = var || ( () => {} );	//nécessite des parentèses englobantes !
+• décomposition des variables et valeurs par défaut :
+	fonc = ( [a, b] = [1, 2], {x: c} = {x: a + b}) => a + b + c;
+
+
+● UN EXEMPLE DE SYNTAXE TORDUE MAIS LÉGALE :
+findMissingLetter= (a) => (
+		s = 'harCode',
+		t = 'map',
+		n = a[t]( c => c['c'+s+'At']() ), //== c[charCodeAt]() == c.charCodeAt()
+		m = Math.min(...n),
+		String['fromC'+s]( m + n[t]( n => n-m ).reduce( (x,n,i) => x^n^(1+i),
+														0
+													  )
+						 )
+)
+
+----------------------------------------JQuery----------------------------------
+
+● jquery notable :
+• animations :
+	.smoothScroll()
+	.hide()/.show()
+
+	.prop(propriété, valeur) ← prop' d'un élément html
+
+
+• tester si une option particulière a été choisie dans un élément <select> :
+On ne peut pas faire confiance à la propriété «value» quand la liste d' <option>
+ est générée à partir de sources variables ...
+Donc on peut attribuer un id à l'<option> :
+	if ( 'id-attendu' == $('#id-du-select option:selected').attr('id') ) {...}
+
+• jouer sur la visibilité d'une modale boostrap :
+	$('#id-modale').modal(['hide'|'show'|'toggle']);
+
+
+•AJAX :
+_ requête GET :
+provoqué par l'emploi d'une f° en 2e param'
+	$('...').load('page.html', function {
+		... modifications de code ...
+	});
+
+_ et POST :
+provoqué par l'emploi d'un tableau de valeurs à passer en paramètres au POST
+	$('...').load(url, [ param1: 'val1', param2: 'val2' ] );
+
+• les méthodes $.ajax(), $.get() et $.post() acceptent toutes j'ajout de
+ callbacks supplémentaires :
+	$post( url, données, function(datas, status) {
+		...
+	}).done( function() {
+		...
+	}).fail( function() {
+		...
+	}).always( function() {
+		...
+	});
+
+• AJAX avancé :
+	$.get('page.html', function(dataToInsert) {
+		$('...').html(dataToInsert);
+	});
+
+	$.post('page.html', function(dataToInsert) {
+		$('...').html(dataToInsert);
+	});
+
+	$.javax(url, options)
+		→ la méthode la plus avancée mais la moins simple à utiliser
+

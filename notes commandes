@@ -1,0 +1,1077 @@
+● cf docs «docs divers/Xwindow, XTerm, glX/Codes de Contrôle» ...
+
+●● cf «notes BASH» pour les trucs relatifs au shell !
+
+
+• [temporaire] commandes à retenir :
+	realpath
+	whereis
+
+● contourner les alias de BASH :
+par exemple pour «grep» :
+	/usr/bin/grep
+	$(which grep)
+	\grep
+	"grep" ou 'grep'
+	command grep
+• supprimer un alias : unalias
+
+
+● CALCUL AVEC $(( )), expr ET bc :
+ATTENTION !
+Seul bc affiche les résultats en virgule flottante ...
+ si on lui ordonne « scale=𝑛 » !!! OU si on exécute « bc -l » (précision : 20)
+
+•ex :
+faire la moyenne ligne par lignes de colonnes de nombres, stockées chaqu'une dans un fichier :
+	 { echo scale=2; paste -d+ rés.* | sed 's/,/./g' | while read ln; do  echo "($ln)/10"; done } | bc
+_ paste insère des + entre les nombres, pour que ce soit interprété comme addition par bc ;
+_ et sed remplace les virgules par des points pour que bc comprenne :-( ...
+
+
+
+● cd :
+	cd tout court → cd $HOME
+	cd -	→	cd [précédent dossier]
+	cd ~<user>	→ $HOME de <user>
+
+• pwd -P : donne l'emplacement hors liens symbolique
+
+● cp :
+ 	cp --parents r1/r2/r3/FIC dest/
+		→ recréée l'arborescence menant à FIC dans dest/
+	cp -L <unLien> dest/
+		→ copie la cible de unLien, au lieu de dupliquer le lien
+cp -u, -s, ...
+
+
+● «xargs <COMMANDE>» :
+Exécute la commande avec chaque élément de la liste fournie en entrée.
+
+● 
+  lsblk	liste les périphériques bloc présents & leurs points de montage !
+  lscpu	fait de même avec les processeurs ...
+  lsusb, lspci, ...
+
+
+● kill & Cie :
+• signaler une arborescence de processus :
+  pkill -STOP -P $(pidof parent)	-P → tt les processus ayant pour parent ...
+  htop : tagger tt l'arborescence, puis kill/F9 ...
+
+
+● ps :
+• ps -o : indique les colonnes d'info à afficher s/ les processus
+Sont disponibles :
+	comm,
+	tid, tgid,
+	pid, ppid, pgid,
+	sid,
+	etc. etc. ...
+_ ps -o comm,tid,tgid,pid -u self
+_ ps -A -o uid,pid,time,args
+etc. ...
+
+● FIND :
+• opérateurs logiques : -o, -a, -not
+• permission:
+	-perm <permissions exacte>
+	-perm /<permissions> → certaines des permissions indiquées
+	-perm -<permissions> → toutes les permissions indiquées
+• propriétaire, groupe :
+	-user <nom>
+	-group <nom>
+• type :
+	-type [f,l,d]
+		(«f» exclue les liens symboliques)
+• négation : option préfixant d'autres opérateurs
+	-not	ou	!
+• modifié depuis :
+	-mtime +30		depuis au moins 30 jours
+	-mtime -30		depuis au plus 30j
+	-mtime 30		il y a 30 jours
+-mtime, -atime,
+et -ctime pour les modifications de statut
+• plus récemment modifiés que :
+	-cnewer [ficDeRéférence]
+
+• lister les fichiers modifiés aujourd'hui, d'extension (insensible à la casse) html :
+	find -mtime 0 -iname '*.html'
+• lister les fichiers dont l'UID/GID ne correspond à aucun utilisateur présent :
+	find / -nouser -o -nogroup
+• ... ceux que leur propriétaire a droit d'exécuter, entre autres :
+	find / -perm -u=x
+• ... que leur propriétaire ne peut PAS exécuter :
+	find / -not -perm -u=x
+• ... ayant exactement telles permissions :
+	find / -perm u=rwx,go=rx
+• ... possédés par root, pouvant être exécutés par les autres mais pas par root :
+	find /usr/bin -user root -type f -not -perm -u=x -perm /go=x
+
+	find [options] -exec [cmd] '{}' +
+
+
+● ls & stat :
+• Options de ls :
+  -1	1 fichier par ligne,
+  -h	taille plus lisible ( avec séparateurs de milliers),
+  -t	tri par ordre de modification,
+  -r	inverse ordre de tri, quel qu'il soit
+
+• affichage pratique par stat :
+ «stat --format="nom = %n - dernier accès = %x - dernière modif = %y"» par exemple ...
+
+
+● lsof :
+• lsof -p $(pidof XXXX) -a -d ^txt» :
+Fichiers ouverts par le processus ayant tel PID,
+	« -a » : ET,
+	« -d ^txt» : «-d» filtre l'affichage,
+				 «^» → négation, «txt» → fichiers de code
+• lsof XXX | grep ZZZ :
+Si le fichier ZZZ a été effaçé mais est encore ouvert par un programme,
+ on peut y accéder via /proc/<PID de XXX>/fd/<n° renvoyé par lsof> ...
+
+
+● grep et less :
+•pour coloriser plusieurs motifs mais afficher tt le texte :
+<commande> | grep --color=always 'motif|motif|motif|$ ' | less -R
+  less -R		utilise les codes de contrôle terminal
+  grep --color=always		utilise systématiquement les codes de coloration
+							quelque soit le fd en sortie du programme
+• grep multiline :
+	grep -Pz ...
+ -P → utilise des PCRE
+ -z → transforme les \n en \0 avant examen
+
+
+
+● tee + substitution de processus de BASH
+ pour diriger la sortie d'un programme vers plusieurs autres :
+• tee >(prog1)  >(prog2) : utilise des tuyaux (ou des /dev/fd/𝑛) pour les
+ fournir en entrée des programmes invoqués.
+	tee >(prog1)  >(prog2)  >(prog3)	→ en stdOut et vers les 3 programmes
+	tee >(prog1)  >(prog2) >/dev/null	→pas de stdOut
+p.ex : afficher le nb de processus correspondant à root, UID 1000, tt le reste,
+le tt trié par qté croissante :
+  ps --no-header -A -o uid | tee \
+	>( grep '[[:blank:]]1000' | wc -l | { read n; echo "UID 1000: $n"; } ) \
+	>( grep '[[:blank:]]0' | wc -l | { read n; echo "root: $n"; } ) \
+	>( egrep -v '[[:blank:]](0|1000)' | wc -l | { read n; echo "autres: $n"; })\
+		> /dev/null \
+	| sort -k2 -n
+→ la sortie standard de tee est redirigée vers /dev/null,
+mais les 3 conduites en substitution de proc' écrivent s/ la même sortie,
+ on peut donc trier le résultat.
+
+
+●COMMANDES DIVERSES :
+• cf guide de référence debian, table 1.26 pr bouts de code
+ (cut, seq, uniq, xargs, ...)
+
+  column	formate texte en 𝑛 colonnes
+  join, paste, ...
+
+  truncate	retaille un fichier ( en + ou en - ),
+  dirsplit	découpe un répertoire en n dossiers de tailles éguales,
+
+	« du -s * | sort -rn | head -1 »,
+	« lsmod | cut -d' ' -f1 | tail -n +2 | sort"
+	ou "lsmod|cut -d' ' -f1|egrep -v Module|sort »,
+...
+
+  tr	sert à remplacer des caractères
+ (par ex: « tr -s ' '» remplace tt les espaces par un seul → «tr -s ' '|cut -d' ' -f2» ...)
+
+  ps, top, pmap,
+  lsof, fuser,
+  xargs,
+  pkill, pgrep, pidof,
+  « pidof -x ... » liste également les pid des scripts - ce qui n'est
+ PAS le cas par défaut !
+  wall, ...
+
+  watch [-n intervalle] <commande> répète indéfiniment la commande,
+  timeout <durée> <commande> la tue si elle dépasse la durée autorisée (1h, 1.5m, ...),
+
+  «time <commande>» mesure le temps d'exécution de la commande.
+
+  nohup <commande>
+
+  dd if=/dev/urandom ... est plus bcp rapide qu'avec /dev/random
+ ( & moins sécurisé ) !
+  od permet d'afficher sous forme numérique son entrée :
+ «od -An -N$taille -i /dev/urandom», par ex, affiche un
+ entier aléatoire («-i») de $taille octets ;
+  « echo $RANDOM » est cpd plus simple (valeur == [0..32768]) :
+ $(( $RANDOM % $limite )) représente un nb entre 0 et $limite ...
+
+  « xclip -o -selection clipboard -t TARGETS »
+ Affiche la liste des types de données («-t TARGETS») que le presse-papier
+ («clipboard») peut fournir
+
+  xvinfo (paquet x11-utils)renseigne sur capacités XVidéo
+ (mise à l'échelle & accélération matérielle),
+  xdpyinfo (itou) sur le serveur X,
+  vainfo (paquet vainfo) sur le pilote va-api,
+  fglrxinfo -x liste les extentions GL/GLX,
+  gst-inspect-0.10,
+
+  « genisoimage -V <NOMDUVOLUME> -iso-level 4 -JRl -o <IMGDESTINATION> <FICHIERS SOURCE> » : Crée une image Joliet/RockRidge/Iso9660niv.2 ...
+
+
+● EXÉCUTER UN PROGRAMME AVEC UN GID PARTICULIER :
+ sg [-] <groupe> -c "<commande>" ← «-» réinitialise l'environnement
+ newgroup → change le gid & ouvre un shell ...
+
+● GKSU :
+	La ligne de commande à exécuter est à placer après un " -- " !
+ l'option -m (pour afficher un message d'invite) accepte les textes formatés façon pango en XML :
+	"<span weight=\"bold\">Shell Compileur</span>\nBlaBlaBla",
+ ou encor
+	"<span foreground="blue" size="x-large">Blue text</span> is <i>cool</i>"
+
+
+
+●● DÉBOGUAGE :
+  strace → appels systèmes & signaux,
+  ltrace → appels de bibliothèques, appels systèmes & signaux ;
+  ldd <Fichier>	liste les bibliothèques nécessaires au chargement de <Fichier> ;
+
+  catchsegv	+++ : du paquet libc-bin
+  « libtool --mode=execute gdb <exécutable> »	sert au moins pour le déboguage
+	 des appliquettes des barres d'outils gnome & maté,
+
+  « readelf --syms <FICHIER>» montre la table des symboles «.dynsym» du fichier,
+  nm montre les symboles déclarés - pas la «.dynsym» ! - ceux qui sont effaçés par «strip».
+
+  addr2line -e <FICHIER> <adresse> <adresse> (...)
+	 se sert des infos de déboguage du binaire pour convertir
+	 les adresses (au sein du code machine) en fichier source & n° de ligne.
+  backtrace() / backtrace_symbols() : fonctions à utiliser ds le code source !
+
+● afficher les évenements UDEV :
+  udevadm monitor
+  udevadm monitor --env	pour voir les envVar associées
+
+
+●● COMMANDES LIÉES À LA SÉCURITÉ :
+  tripwire	(vérifier l'intégrité des fichiers),
+  unhide	(recherche de processus cachés),
+  chkrootkit	(recherche de rootkits),
+  lynis		(tests de vulnérabilité divers)
+
+●● ... ET AUSSI :
+  ophcrack	craqueur de MdP windows utilisant une table arc-en-ciel
+  yersinia	testeur de vulnérabilités réseau
+  goldeneye	testeur vulnérabilités réseaux
+  siege		tests de performances serveur HTTP
+
+
+●●RÉCUPÉRATEURS DE FICHIERS EFFAÇÉS :
+  testdisk & photoRec (paquet testdisk),
+  extundelete,
+  ext4magic,
+  foremost
+
+
+●●(DÉ)COMPRESSEURS DISPONIBLES :
+  tar	(-xzf / xjf / xJf pour .tgz / .bz2 / .xz)
+  gzip / gunzip
+  bunzip2
+  rar/unrar
+  7za / 7z → supporte l'encryption de la liste de fichiers :
+	7z a -mhe=on -p<MdP> <archiveDest> <fichiers>
+  xz/unxz
+  lzma
+  lzop
+   etc ...
+
+●● PROGRAMMES NOTABLES EN TTY/FRAMEBUFFER :
+_ w3m (navigateur en mode texte)
+_ w3m-img (greffon w3m pour afficher les images)
+⊕ fbi	(visionneur d'images)
+
+●● UTILITAIRES SYSTÈMES NOTABLES /s X11 :
+⊕ assogiate (modifier les associations type-de-fichier/icône)
+⊕ eiciel (BdDial pour modifier attributs étendus)
+⊕ gcdemu (émulateur CD/DVD virtuel)
+_ isomaster (éditeur d'images .iso [ou autres])
+⊕ QasMixer (réglages volume ALSA),
+_ alsamixergui ( "	" )
+_ paman (contrôleur/ navigateur propriétés PulseAudio),
+_ padevchooser (sélecteur de périph' PulseAudio),
+⊕ CopyQ ( presse-papier élaboré scriptable),
+_ ClipIt (gestionnaire de presse-papier simpliste),
+_ xclip (liste contenu/formats du presse-papier, en ligne-de-commande),
+_ xclip-{copy,cut,paste}file (copier/coller d'arborescences entières via
+ le presse-papier),
+_ galternatives (alternative graphique GTK+	à update-alternatives),
+⊕ Gtk-ChTheme
+
+_ xte (paquet « xautomation» : simule évenements X11, tels que boutons de
+ souris & touches clavier)
+⊕ D-feet (inspecteur DBus)
+_ avahi-discover
+⊕ Handbrake
+⊕ EasyTag
+⊕ haguichi (GUI pour hamachi)
+
+●● IDE notables :
+_ eclipse (java & autres)
+_ anjuta (pesante ...)
+_ code::blocks
+_ sublime text	(source externe)
+_ visual studio code (source externe)
+
+● vimtutor !
+
+●● NAVIGATEURS DE DOC notables :
+⊕ Zeal	(fournit avec docs variées & étendues)
+⊕ DevHelp
+_ DHelp	(navigateur de doc standard de Debian)
+
+
+
+● FORMATAGE DE L'AFFICHAGE :
+  pr -mT <xxx> <yyy>	affiche les fichiers xxx, yyy, ...,
+ en colonnes contigües,
+  tee <x> <y> <...>	route son entrée vers la sortie standard
+ ET les fichiers indiqués
+  tout les petits utilitaires unix sont ds le paquet «coreutils»,
+ pr mettre en colonnes, rogner, aligner, fusionner des textes, ...
+  uniq -c		affiche aussi le nb d'occurences de chq ligne
+  sort -nr	trie par ordre numérique & décroissant
+  sort -n -k𝑛	par ordre numérique, 𝑛e colonne
+
+● CHANGER LA LARGEUR DES TABULATIONS DU TERMINAL :
+  tabs -𝑛	défini la taille de chaque tabulation du terminal à 𝑛 caractères
+  expand -𝑛	est utilisable en sortie de tuyau pour convertir les tabulations
+ en 𝑛 espaces chacune.
+
+
+● INFORMATIONS ET CONTRÔLE DU TERMINAL :
+• tput :
+  tput cols		: renvoit le nb de colonnes du terminal
+  tput lines		"		"	lignes	"	"
+  tput colors		"		"	couleurs disponibles
+
+  tput bold, tput smso, ... cf «man terminfo»
+
+
+• infocmp :		liste les capacités de la console d'après la BdD terminfo
+_ toe [/usr/share/terminfo] :
+		liste les différents terminaux connus de terminfo
+_ setterm	arme certaines capacités
+
+
+● TRIER DU TEXTE FORMATÉ EN FONCTION D'UNE DES ENTRÉE NUMÉRIQUE :
+  cat [fic] | sort -n -t [sép] -k <n°Champs>[|.n°caractère]
+	-n : tri numérique
+	-t [sép] : spécifie le séparateur de champs («fin des car. blancs» par déf.)
+	-k [n°Champs] : n° du champs ; numérotation débutant par 1.
+	-k <n°Champs>.<n°Caractère> : la clé démarre au champs 𝑛 / caractère 𝑛
+ D'après la doc info, il est possible d'utiliser plusieurs champs pour trier
+ d'après des clefs secondaires, tertiaires, ...
+
+● UN REMPLACEMENT À UNIQ POUR FICHIERS NON TRIÉS :
+« nl "$f" | sort -k2 | uniq -f1 | sort -k1 | cut -c8- > "$f.unik" »
+nl préfixe les lignes de leur numéro,
+uniq -f1 ne compare pas le 1er champs (séparateur : espaces),
+cut -c8- affiche de la colonne 8 à la fin de la ligne.
+
+
+● CONVERSION BINAIRE/HEXA/ASCII À L'AFFICHAGE :
+• « xxxx | od -c » → affiche tt les caractères, même les invisibles ...
+• afficher une chaîne en binaire brut :
+	le «moins pire» est « xxd -b -g0 -c 256 <<<TEXTE | cut -d' ' -f2 »
+• convertir du binaire brut en ascii :
+	while read -n8 x
+	do
+		echo $x | ascii2binary -b2
+	done <<< [TEXTE]
+• convertir une chaîne hexa ss espaces en ascii (avec bash) :
+	echo xxxxxxxxxxxxx | while read -n 2 v
+	do
+		echo -n $v
+	done | ascii2binary -b h
+( «read -n 2» ne lit que 2 caractères, «echo -n» n'émet pas de RetLn ; «-b h -t sc » == "base: hexadécimal, taille : short char" )
+
+• hexdump
+• od
+• « echo [TEXTE] | hexdump -v -e '/1 "%02X "'; echo » 
+ affiche du texte /s forme d'octets en hexa ...
+• xxd affiche du texte en hexa ou binaire,
+• xxd -r fait un «hexdump inverse» (affichage en caractère d'un texte composé de codes hexadécimaux) ;
+• ascii2binary du paquet homonyme fait la même chose avec une
+ représentation binaire. ATTENTION : faire qqch comme : 
+	for x in XXXXXXXXXXX do
+		echo $x |ascii2binary -b2
+	done
+ pr éviter que d'éventuels RetArr effaçent du texte ...
+
+
+● CONVERSION D'ENCODAGE DE CARACTÈRES :
+	iconv -f UTF-8 -t ISO-8859-15 in.txt > out.txt
+
+
+● OUTILS .PDF :
+_ ps2pdf
+_ pdfchain : modification simple de pdf (ajout/extraction de pages, rotations,
+	mise-à-l'échelle, ...) sous X11
+_ qpdf : itou en ln-de-comm'
+
+
+
+● DÉCODAGE DE TEXTES MIME, XML, ENTITÉS HTML :
+  qprint pour MIME (paquet qprint),
+  xmlstarlet (un)escape pour XML (paquet xmlstarlet),
+ ET SURTOUT
+  ascii2uni -aQ  en tant que filtre pour traduire les entités HTML en unicode
+ (paquet uni2ascii) !
+
+
+● RECHERCHER & SUPPRIMER LES DOUBLONS :
+	fdupes, du paquet du même nom.
+
+
+●HORODATAGE EPOCH (stat, date, touch) :
+	L'horodatage d'un fichier renvoyé par stat, ou la date (via «date +%s»),
+peuvent être affichés en Δt depuis l'epoch. Et ...
+•Pour le passer en paramètre à «touch» ou à «date -d 𝑛𝑛𝑛𝑛»,
+ il faut le préfixer de @ (arobase).
+• armer l'hordatage d'un fichier à celui d'un autre :
+  touch -m -d @$(stat -c %Y <ficOrg>) <ficDest>
+  -m : ne modifie que le temps de Modification
+• convertir une date epoch en date calendaire :
+  date -d@𝑛𝑛𝑛
+
+
+● SURVEILLER UN FICHIER :
+ 	tail -f <fic> affiche les ajouts en temps-réel !
+	 Mais ne terminera jamais.
+	tail -f --pid=<pid>  se terminera après le PID <pid>,
+	tail --follow=name <fic>  terminera à la suppression de <fic>
+• « tail -f | grep --line-buffered » !
+«tail -f» peut n'écrire qu'une seule ligne sur la sortie de temps en temps,
+ mais grep a tendance à tamponner sa sortie quand il n'écrit pas dans un tuyau
+→ l'option «--line-buffered» permet d'afficher un résultat
+ à chaque sortie de tail !
+
+
+
+● SSH - raccourcis clavier :
+⏎~.		→	déconnection
+Ctrl D		→	 "	"
+exit, logout	→	 "	"
+
+⏎~
+
+_ et bien sûr, « ssh utilisateur@hôte commande »,
+	     « ssh utilisateur@hôte < listeCommandes »,
+	     ...
+
+
+●ADMINISTRATION SYSTÈME & UTILISATEURS :
+• Pour lister les utilisateurs définis, pas de commande spéciale ! Donc :
+«cat /etc/passwd|cut -d':' -f1»
+• Et pour lister les groupes définis :
+«cat /etc/group|cut -d':' -f1» ...
+
+•groupadd <groupe>, groupdel <groupe>
+
+• usermod -a -G <groupesSupplémentaires> <utilisateur>
+• adduser et deluser <utilisateur> <groupe>
+ pour ajouter/supprimer un utilisateur à un groupe,
+
+_ who	indique qui est connecté,
+_ w		indique en plus qui fait quoi (processus actif) ds chq session,
+_ last/lastb	indiquent les dernières connections,
+		& les échecs de connection pour «lastb»
+_ lastlog	la dernière connection de tous les utilisateurs existants.
+
+• «chsh» : changer le shell par défaut d'un utilisateur,
+  «add-shell», «remove-shell» : gestion liste shells autorisés
+
+
+● lister les liens entre fontes et fichiers :
+	fc-list
+
+
+● les options disponibles à sysctl sont listables via :
+_	« sysctl -a »
+_ le dossier «Documentation» des sources du noyau (... en partie seulement)
+
+
+● afficher température(s) interne(s) :
+	sensors (paquet lm-sensors)
+
+
+● commandes administratives :
+•«logger», «notify-send» & leurs options,
+•«write», «mesg», «wall» en console texte
+
+•«fakeroot»
+
+• "taskset <commande>" défini l'affinité processeur de <commande> ...
+ (cf "ionice <commande>", "nice <commande>")
+• «chrt <prio> <commande>» défini la priorité d'ordonnancement
+ (batch, temps-réel, ...) de la commande
+
+• «openvt» (en tant qu'administrateur) ouvre un nouveau terminal.
+ -slc num <commande> :
+	-c num pour ouvrir le terminal n° num,
+	-l exécuter "commande" en tant que login (et non un shell par défaut)
+	-s bascule aussitôt vers le VT)
+• «deallocvt» libère les données des VT inutilisés (sans programme les utilisant)
+
+• «/proc/filesystem» contient la liste les pilotes de système de fichiers en mémoire - PAS la totalité de ceux supportés !
+
+
+
+● GROUPES DE CONTRÔLE :
+• création statique via cgconfigparser et /etc/cgconfig.conf 
+paquet «cgroup-tools» :
+_ cgcreate
+_ cgdelete
+_ lscgroup
+
+• paquet cgmanager :
+  cgm create [cpu|memory|freezer|...|all] <nomSousGroupe>
+	→ création d'un sous-groupe [nomSousGroupe] dans le groupe courant
+  cgm chown [nomSousGroupe|all] $UID $GID
+	→ les fichiers «tasks» et «cgroup.procs» reçoivent ces $UID et $GID,
+	 autorisant l'utilisateur à placer des processus dans ce groupe.
+  cgm movepid [cpu|memory|...]  <nomGroupe>  $PID
+
+
+● STATISTIQUES SYSTÈME :
+•«top», «powertop», «iotop»
+• «iostat» (statistiques d'E/S pour un périphérique donné).
+
+_ tload affiche la charge système en ln-de-comm'
+
+• htop : «top» avec interface améliorée (ncurses)
+• glances : similaire à top & htop. Peut fonctionner en mode serveur.
+• atop : «top» avancé – plus d'infos système.
+	Utilisable en mode démon : infos s/ processus de courte vie et décédés.
+• collectl :
+	démon de surveillance & de rapport de performances système.
+
+• «mpstat -P ALL» → stats utilisat° CPUs
+
+• mémoire :
+	free, vmstat ;
+
+• quelques raccourcis «top» :
+(Son écran peut ê divisé en plusieurs fenêtres ...).
+_	Bascules :
+ 	V		liste / arborescence des processus
+	c		nom de l'exécutable / ligne de commande (champ COMMAND)
+	S		colonne «TIME» : durée de chq processus / cumul de ses descendants
+	x	surlignage colonne de tri
+	y	surlignage tâches « en exécution » au moment de l'échantillonnage
+	b	pour x et y : gras/surbrillance
+	i	toutes les tâches / tâches actives
+_ colonnes de tri :
+	P	processeur
+	M	mém
+	T	temps consommé
+	N	PID
+_ raccourcis :
+ 	L &	recherche de chaine, suivante (+ désactive surbrillance)
+	s	change le délai de rafraichissement
+	E	changer unité d'affichage de la mém ds la zone de résumé (Ko→Mo→...Eo)
+	e	"	"	"	"	" ds la liste des processus
+	fF		configurer les champs affichés (nbx possibilités)
+	< >	 changer colonne de tri
+	uU		sélectionner processus d'un utilisateur
+	t		Displays summary information off and on.
+	m		Displays memory information off and on.
+	A		Sorts the display by top consumers of some resources.
+			Useful for identification of performance-hungry .
+	oO		Enables you to interactively select the ordering within top.
+	l	basculer entre charge moyenne et temps d'activité
+⊕	W	sauver la config'
+⊕	Z	changer la palette de couleur
+_commandes par PID :
+ 	r		renice
+	k		kill
+
+• qlq raccourcis htop :
+ 	s	strace processus
+	l	lsopen processus
+	I	inverser ordre de tri
+	t	basculer affichage linéaire / arborescence
+	f	suivre un processus, quelque soit l'ordre de tri
+	espace, U	armer / désarmer étiquettage (pour action sur groupe de proc')
+	< >		changer colonne de tri
+	u		afficher processus d'un utilisateur
+	k		kill
+	F7 F8	nice-- nice++
+
+
+• pmap <PID> → carte-mémoire d'un processus
+
+
+
+●INFOS SYSTÈMES :
+• «dmidecode --type 17»
+  donne les infos fournies par le BIOS à propos des modules mémoires
+
+• "modinfo" pr connaitre les params possibles d'un module ;
+pour les utiliser : par ex, « modprobe ath9k ps_enable=1 ».
+
+• «udevadm info --query=all --name=<DEV-sous-/dev/>»
+  ou «udevadm info -a -n <DEV-sous-/dev/>»  (forme plus compacte)
+donne les infos plus détaillées, notamment
+la liste des attributs («ATTR{xxx}») utilisables ds les règles udev.
+• on peut aussi utiliser l'option -p [chemin-sous-/sys/] à la place de --name=
+
+• tandis que
+ «udevadm test <DEV-sous-/sys/class/qqch>» donne en fin d'affichage la liste
+ des variables d'environnement («ENV{xxx}») utilisables
+
+♦ «udevadm control --log-priority=debug»
+ est très utile pour voir ce qui se passe ! (sortie verbeuse dans les journaux)
+
+• "getconf -a"
+ liste les macros/variables de configuration du sytème & de la libC,
+
+• /proc/$(pidof <NomProcessus>)/status  donne entre autre les UID/GID du processus
+
+• «ps axu» (ss tiret, options "à la BSD")
+ liste tt les processus du système avec leurs params ...
+
+
+
+●INFOS S/ UN VOLUME :
+  blkid <DEV>	donne des infos s/ un périphérique (label, UUID),
+
+  blkid -o <value> -s UUID <DEV>»,
+  grub-probe -d /dev/<DEV> -t fs_uuid : donnent l'UUID d'un FS.
+
+  hdparm -I <xxx>
+  sdparm --all <xxx>
+  u3-tool -D <xxx> : infos s/ le support d'U3.
+
+
+
+● host / dig / getent :
+_ host <AddrIP>|<nomHôte> :
+	fournit le nom de domaine ou l'IP via une requête DNS
+_ nslookup :
+	pareil – programme & algorithme dépréciés.
+_ dig :
+	comme host, plus d'infos de bas-niveau.
+_ getent ahosts <nomHôte> :
+	«getent ahosts», par contre, interroge la BdD donnée (ahosts) du NSS,
+ et donc consulte /etc/hosts ...
+
+
+●INFOS RÉSEAU :
+•"ip address show", "ip link list", "ip neigh show" :
+ fournit les addresses IP/les liens/ le cache ARP de nos interfaces
+
+• iw dev wlan0 station dump	:
+ liste les clients connectés par wlan0
+• iw dev wlan0 scan :
+ liste capacités matérielles de wlan0
+
+
+• mii-tool -v <inteface>	:
+ fournit les principales caractéristiques de l'interface physique
+• ethtool <iface>		: itou en plus lisible
+
+•«route» fournit la table de routage du noyau,
+ dans laquelle on peut voir le nom DNS du routeur-modem local ...
+
+• arp liste les addresses MAC & IP du réseau
+
+• « ping -t [nbDeSauts] [IPcible] » qui joue sur le TTL, on peut trouver
+ l'adresse de chaque point de passage vers l'IP cible ...
+
+• netstat : liste les sockets ouvertes
+  netstat -an : "" ttes les sockets
+  netstat -n : pas de résolution de nom -> plus rapide
+  netstat -pn : "" les programmes ayant ouvert des connections TCP
+  netstat -tulpn : "" les sockets ouvertes «en écoute» & leur propriétaire
+
+  lsof -Pnl +M -i4 : liste les ports ip4 ouverts
+  lsof -Pnl +M -i6 : '' ''	'' ip6
+
+• nmap est un outils de scan de ports :
+nmap -p<port(s)> <hôte> ...
+nmap --script broadcast-dhcp-discover -e eth0	→ recherche tt les serveurs DHCP
+	répondant à une requête sur le segment de broadcast
+
+• tcpdump :
+	tcpdump -i <iface>
+
+• TRACEROUTE & IPTABLES :
+«traceroute» utilise l'UDP par défaut
+ - donc bloqué par défaut par mon pare-feu.
+Mais en autorisant l'utilisateur λ à ouvrir une socket ICMP via /proc/sys/net/ipv4/ping_group_range
+ou son équivalent sysctl, on peut utiliser
+	« traceroute -I »
+qui passe mon pare-feu actuel !
+
+• lister ttes les adresses IP accessibles d'un sous-réseau :
+_ nmap -sn
+_ ping -b <adresse broadcast du sous-réseau>; arp -a :
+	liste tt les hôtes ayant répondu d'une manière ou d'une autre au ping.
+
+
+●CONFIG RÉSEAU :
+• ifconfig <Interf> : donne infos, spé addresse MAC (ds "HwAddr")
+  ifconfig <interf> <adresse>	: arme adresse IPv4
+  ifconfig <interf> down			: supprimer config IPv4
+  ifconfig <interf> del <adresse>	:'' '' IPv6
+
+• ifconfig a été déprécié à la faveur de «ip» (plus récent, plus capable).
+
+• renouveler le bail d'adresse IP :
+  dhclient -r, dhclient -r <iface> :
+ pour toutes les interfaces / pour une seule
+
+  ifdown <iface>, ifup <iface>
+
+  nmcli con down <iface>, nmcli con up <iface>
+
+● nmcli : RTFM !
+  nmcli con show --active	liste les connections actives
+  mcli wifi [on|off]
+ et d'autres commandes pour créer/supprimer/configurer connections ...
+
+• armer addresse passerelle :
+  route add default gw <addrIP4> dev <interf>
+
+• ajouter une route pour une adresse IP :
+ex : « route add -host 192.168.200.10 metric 5 dev wlan0 »
+ → le trafic vers 192.168.200.10 est routé vers wlan0,
+ avec une affinité de 5
+	(affinité : autre route de métrique inférieure choisie en priorité)
+
+•«iwconfig wlan0 txpower [on|off]» (dé)inhibe la comm' radio.
+joue au même niveau que l'applette network-manager
+
+•« rfkill list/block/unblock » liste/bloque/débloque les périph' radio.
+(cf page man') - mais au niveau matériel, pas celui de NM !
+
+• macchanger : permet de changer l'adresse MAC d'une interface !
+
+
+● SAMBA / CIFS :
+• «net usershare add/remove/list» pr les partages CIFS
+• «smbtree» affiche les domaines CIFS & partages du réseaux.
+• monter partage :
+	modprobe cifs
+	mount -t cifs -ousername=[nom],password=[mdp],domain=[workgroup]\
+		//[serveur-ou-IP]/[partage] [pt-de-montage]
+Il y a bien sûr d'autres options, pour se connecter en tant que «guest»,
+ pour spécifier uid et gid par défaut si le serveur ne fournit pas les infos,
+ etc ...
+
+
+● TRANSFERT DE FICHIERS EN LN-DE-COMM' :
+• netcat :
+	côté récepteur, on écoute sur un port particulier :
+		netcat -l [n°port] > [fichierDest]
+	côté émetteur :
+		netcat [adresseDest] [n°port] < [fichier]
+• BASH :
+	côté émetteur :
+		cat [fichier] > /dev/tcp/<adresseDest>/<n°Port>
+	côté récepteur :
+		¿ l'inverse ?
+
+
+● GESTION CUPS EN LN-DE-COMM :
+  lpinfo -v		→	liste les protocoles existants accédant à une imprimantes
+
+  lpstat -s				→ liste les imprimantes
+  lpoptions -d <impr>	→	 défini l'imprimante par défaut
+
+  lpstat -p  <impr>		→	afficher statut impr'
+
+  lpq				→	affiche le statut de la queue d'impression
+  lprm					→	supprime la dernière entrée de la queue
+  lprm -				→	vide la queue
+
+  lpadmin -p <NomImprimante> -E -v <périph> -P <ppd>	→ ajoute une imprimante
+ ex : « lpadmin -p HP_DESKJET_940C -E -v "usb://HP/DESKJET%20940C?serial=CN16E6C364BH" -P /usr/share/ppd/HP/hp-deskjet_940c.ppd.gz »
+
+  lpotions					→	affiche les options disponibles ("lp -o...")
+									de l'imprimante par défaut
+  cupsdisable, cupsenable	→	(dés)activer une imprimante
+
+ 	cupsreject <impr> ;		\
+	cupsdisable <impr> ;	\→	désactive puis supprime une imprimante.
+	lpadmin -x <impr>		\
+
+• impression :
+_ lpr – le plus ancien et plus simple (BSD)
+_ lp – plus récent, plus d'options et de possibilités pour gros systèmes (classes d'imprimantes ...)
+_ CUPS les a supplantés et fournit les 2 commandes pour la compatibilité
+
+	lpr <fichier>						lp <fichier>
+	lpr -P <imprimante>  <fichier>		lp -d <imprimante>  <fichier>
+
+•options d'impression notables de lp : cf «man lp»
+	lp -n [nbCopies]
+	   -o number-up=[nbPagesParCôté]
+	   -o landscape
+	   -o two-sided-long-edge
+	   -o cpi=[caractèresParPouce]
+	   -o lpi=[lignesParPouce]
+
+
+● GESTION PAQUETS :
+• update-alternatives ( avec les options --auto, --config ou --install )
+ par ex : « update-alternatives --install /usr/bin/java java_vm /usr/share/java-sun/jre1.7.0_07/bin/java_vm <priorité numérique> »
+
+• apt-cache madison <paquet>
+ 	liste les différentes versions disponibles d'un paquet
+• apt-cache rdepends <paq>
+ 	liste les paquets dépendants de <paq>
+• dpkg-reconfigure <paquet>
+
+• dpkg -I <paquet.deb>
+ 	affiche les infos du paquet, comme dpkg -s <paquetInstallé>
+
+• « dpkg --force-depends -P <xxx> » permet de désinstaller le paquet "XXX" même s'il casse ainsi des dépendances ! cf «man [dpkg|dpkg-xxx] --force-<qqch>»
+
+•« lesspipe <nompaquet> | less » affiche le résumé (contenu dans le .deb) !
+•«dpkg-deb» permet de dépaqueter/rempaqueter une arborescence en .deb (cf les «notes systèmes»)...
+
+● le paquet «java-package» fournit la commande «make-jpkj» permettant de
+ fabriquer un .deb à partir d'une archive .tar.gz de Oracle,
+ à la manière de «googleearth-package» ...
+
+
+● «mimeopen -d <fic>» permet de choisir en ligne de commande
+ l'application par défaut pour un type de fichier
+ mais hélas çà ouvre aussi ce fichier ! -
+
+
+● ATTRIBUTS ÉTENDUS & ATTRIBUTS DE SÉCURITÉ DES FICHIERS :
+ 	setfattr/getfattr,
+	setfacl/getfacl,
+	setcap/getcap		(voir « man cap_from_text » pour la syntaxe des ACL)
+•à propos d'ACL,  les ACL sont prioritaires sur le MAC traditionnel.
+
+● ABANDON DE CAPACITÉS PAR UN EXÉCUTABLE :
+Passer par la surcouche «capsh» (qui appelle «sh» après avoir abandonné les
+ capacités spécifiées ...)
+
+
+● GÉRER LA PARTITION u3 D'UNE CLÉ :
+Pour la supprimer, la retailler, changer son contenu : «u3-tool»
+ du paquet du même nom.
+
+● VIDER LES TAMPONS DISQUE :
+« sync; echo [1|2|3] > /proc/sys/vm/drop_caches »
+Pr le sens du chiffre, cf «man proc» !
+
+
+● MONTER UN NOUVEAU FS TEMPORAIRE :
+• en tant qu'admin : « mount -t tmpfs tmpfs <Point de montage> » !
+• en tant que simple utilisateur, «/run/shm» est utilisable :
+ un simple «mkdir /run/shm/XXX» suffit,
+ éventuellement suivi de la modification des droits d'accès ...
+
+● MONTER UN DOSSIER VIRTUEL «AUFS» :
+	« mount -t aufs -o dirs=rép1:rép2:(...):rép𝑛  none /RÉP »
+_ «none» car il n'y a aucun périphérique bloc
+_ rép𝑛  peut être de la forme «rép=[ro|rw]» ; par défaut, seul le 1er rép
+ de la liste est en L/E.
+
+● MONTER SOUS «/media/$USER» UN PÉRIPHÉRIQUE SANS SE CASSER LA TÊTE :
+	avec udisks : « udisks --mount /dev/XXX »
+	avec udisks2 : « udisksctl mount -b /dev/XXX »
+	« gvfs-mount -d /dev/XXX »
+en tant que simple utilisateur ; la commande s'occupe de créer le rép. /s /media/ & des droits d'accès !
+● éteindre un DD USB :
+	avec udisks2 : « udisksctl power-off -b /dev/sdb1 »
+en tant que luser
+
+
+● MONTER UNE IMAGE CD/DVD :
+	« mount -t [udf|iso9660|vfat|...] -o loop=/dev/loop  [img] [rép.dest] »
+	« gnome-disk-image-mounter [IMG] » (du paquet «gnome-disk-utility» ;
+ utilisable ds menu du navigateur «ouvrir avec»)
+ → montage similaire à «gvfs-mount» ...
+
+● CRÉER IMAGE DISQUE UDF :
+	truncate -s [taille] [fichier]		→	créer un fichier image creux
+	mkudffs				→	formate l'image. le type de support est important
+							(sinon, écriture impossible ...)
+	mount -t udf -oloop [fichier] [rép]
+	(...)
+	umount !
+	growisofs [dev] [fichier]
+
+
+• INFORMATIONS SUR UN CD/DVD :
+	« cdrecord -toc -v dev=/dev/sr0 »
+	« dvd+rw-mediainfo /dev/sr0 »
+• INFORMATIONS SUR LE LECTEUR CD/DVD :
+	« cdrecord -prcap »		→	types de médias, vitesses de L/E, ...
+	« eject -X /dev/sr0 »	→	vitesses de L/E disponibles
+
+
+● EXAMEN DU CONTENU D'UN INITRD :
+• lsinitramfs <fichier>
+• se placer ds un répertoire pour recevoir l'arborescence extraite,
+ 	décompresser l'image initrd (lzop -x <fic>, gunzip <fic.gz>, ...),
+	puis extraire l'archive cpio par «cpio -i < <FICHIER>» !
+
+
+
+● PROGRAMMER L'ALLUMAGE À UNE HEURE DÉTERMINÉE : «rtcwake» !
+
+
+● npm :
+• dossier d'installation des modules node.js :
+	npm root -g		# «-g» pour "global"
+(sinon dans ./nodes_modules ; on peut armer NODE_PATH pour spécifier le chemin)
+• lister modules installés :
+	npm list, npm list -g
+
+
+
+●CHANGER LES MÉTADONNÉES GVFS :
+• Par exemple, pour afficher & changer l'icône d'un rép' :
+	« gvfs-info -a metadata::custom-icon <RÉP> »
+et	« gvfs-set-attribute -t string <RÉP> metadata::custom-icon file:///usr/share/pixmap/ICÔNE.xpm »
+• Pour lister tous les attributs modifiables :
+	« gvfs-info -w <FIC> »
+
+
+●CONVERTIR UN DOCBOOK .XML EN HTML :
+«xsltproc -o <FIC_SORTIE> /usr/share/xml/docbook/stylesheet/docbook-xsl/xhtml/docbook.xsl  <FIC_ENTRÉE.XML>»
+Le .xsl indique comment formater la sortie ...
+
+
+●CONCATÉNER DES .XPM :
+ l'en-tête est de 105 octets & uniquement ds le 1er fichier, donc :
+	"tail -c +105 <fic1> > <res> && cat <fic2> >> <res>"
+
+
+●DL DE VIDÉOS :
+  youtube-dl,
+  get_flash_videos,
+  rtmpdump
+
+● wget :
+• options utiles : « -rkpE -l 𝑛 -nc -nH --cut-dirs=𝑛»
+  -r (téléch' récursif),
+  -l <n> (limite la profondeur de récursion à <n>),
+  -p (s'assure de téléchargé tout le nécessaire à l'affichage d'une page
+ ss tenir compte de la limite précitée),
+  -k (convertit les liens contenus dans les pages téléchargées
+ en liens relatifs à l'arborescence locale),
+  -H (autorise le téléchargement de contenu présent sur d'autres hôtes que celui de la page de départ),
+  -E (ajuste l'extension des fichiers),
+  -nc (évite les téléchargements multiples d'une même ressource) ;
+  --cut-dirs=<n> (supprime la création de «n» niveau d'arborescence lors de la sauvegarde),
+  -np ou --no-parent (ne télécharge que les fichiers descendants de la page
+courante)
+  --wait=𝑛 --random-wait
+  --header "User-Agent: Mozilla/5.0 (Android 4.4; Tablet; rv:41.0) Gecko/41.0 Firefox/41.0"
+• ne sauver que certains fichiers :
+	-A [expressionRationnelleSimple] - pex : -A "*.jpg,*.png,[0-9]??"
+• et en rejeter certains :
+	-R [expressionRationnelleSimple]
+• mettre à jour le dossier : -N (qui en fait active la comparaison d'horodatage ; ne PAS utiliser avec -nc)
+○ « wget -Nr <Addresse> » : mise-à-jour récursive d'une arborescence
+○ « wget -q --output-document=- » : wget silentieux, doc écrit s/ sortie standard.
+
+
+● FIREFOX - adresses internes utiles :
+	about:config		about:robots		about:plugins
+	about:buildconfig	about:memory		about:serviceworkers
+	about:profiles
+	about:support (caractéristiques matérielles & logicielles activées,
+		lien vers la liste des service workers actifs, etc. etc.)
+• vider le cache local persistant (HTML5) de firefox :
+utiliser en console web
+	localStorage.clear();
+
+● couper une vidéo sans recodage :
+	ffmpeg -i <ficOrig> -ss <tempsDépart> -t <durée> -codec copy <ficDest>
+  -ss : temps de départ, donné en [h:mn:s.cs|s]
+  -t :	durée – même notation
+● EXTRAIRE UNE (SÉRIE D')IMAGE FIXE D'UNE VIDÉO :
+_ ffmpeg -ss <temps de départ en seconde (p.ex : 93.140)> -i <vidéo> -t <nb de cadres à extraire> <format nom de sortie (p.ex : img n°%d)>
+● CRÉER UN TIMELAPSE en 2 commandes :
+	ffmpeg -i <vidéoOrig> -r <vitesse finale> -f image2 <répTempo>/%05d.png (← « créer noms à 5 chiffres »)
+	avconv  -i <répTempo>/%05d.png -codec:v <codec> -r <img/s> <vidéoDest>
+
+
+● CHANGER UN FLUX DE CONTAINER :
+	ffpmeg -i <entrée> -acodec copy -vcodec copy <sortie>
+• pourquoi -i avant les options de copie ? Car toutes les options placées
+ avant «-i» concernent l'entrée (qui n'a pas de codec «copy»),
+ tout ce qui est placé après concerne la sortie.
+● CONCATÉNER PLUSIEURS FLUX (de même codec) :
+	avconv concat:fic1|fic2|...|fic𝑛   -avec «|» éventuellement échappé)
+● AFFICHER/MODIFIER LES TAGS DE FICHIERS MULTIMÉDIAS :
+_ easytag en GUI,
+  & «mplayer -vo null -ao null -nomsgcolor -nomsgmodule -frames 0 -noidx -identify -nocache -noidle» en ligne de commande,
+
+  mais aussi :
+_ mid3v2 pour les fichiers (¿principalement audio ?) supportant les tags id3 (v2) - tel que les .mp3 - (paquet «id3v2»),
+_ mp4tags pour les .mp4 (paquet «mp4v2-utils»),
+_ exiftool pour (surtout) afficher/modifier les tags des images/audio/vidéo (notamment .m4v et .avi ! mais aussi .pdf) - (paquet «libimage-exiftool-perl»)
+
+_ convert/mogrify -strip "$f" efface toutes les métadonnées
+
+
+● TRAITEMENT D'IMAGE :
+ 	pngcrush, pngquant,
+	jpegexiforient, jpegoptim,
+	rdjpgcom, wrjpgcom, ...
+
+  jpegtran	rotation sans perte d'infos
+  convert / mogrify : rotation, retaillage, découpage, ...
+ (paquet «imagemagick»)
+
+  convert / mogrify -resize XxY [img]
+→ l'image sera plus petie que XxY : les proportions sont préservés.
+  mogrify -colors 16 [img]
+→ réduit l'image à 16 couleurs. très efficace pour textes monochromes !
+
+
+● SON & PÉRIPHÉRIQUES AUDIO :
+  aplay -L 	→	liste les noms utilisables en options de «aplay -D XXX»,
+ càd les différentes sorties avec/sans convertion
+  aplay -l 	→	liste uniquement les périphériques matériels
+ les n° leur correspondant sont utilisables avec «alsamixer -c XXX»
+
+
+●CLAVIER & périphériques d'entrée :
+  xev	affiche le contenu des év. venant de sa fen' ...
+  « xmodmap -pke » sous X11,
+ (par ex. : « xmodmap -e "keycode 61 =  exclam section exclam section exclamdown exclamdown exclamdown exclamdown" »)
+  « setxkbmap -rules XXX -model XXX -layout XXX -variant XXX -option XXX »
+
+  «dumpkeys» & «showkey» en console
+  «showkey -s|k» affiche les codes bruts, lus directements depuis
+		le pilote clavier (s → scancodes, k → codes touches),
+  «showkey -a» affiche les codes après traitement
+		→ utile pr cf les séquences d'échappement des touches Fxx !
+
+  "getkeycodes", "setkeycodes" encore en console,
+  "setupcon" (du paquet «console-setup») :
+		«setupcon --save-only» écrit la config ds /etc/ à partir
+		de «/etc/default/console-setup»),
+  "loadkeys" ;
+
+  "xset -r|r <keycode>" pr activer/désactiver la répétition d'une ou qlq
+		touches (pr un ~/.xinitrc par ex.)
+  «xinput --list», «xinput --list-props <nom périph>» est utile pour
+		régler le pavé tactile (paquet «xinput») ;
+
+  «evtest» (paquet «evtest») affiche les codes d'év. renvoyés par un périph' d'entrée (tel que /dev/input/input𝑛 ...)
+

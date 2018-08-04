@@ -1,0 +1,267 @@
+● Vim, utilisant terminfo, se sert de $TERM pour déterminer, entre autres, le
+ nombre de couleurs disponibles ...
+Mais si $TERM=xterm, alors que le terminal supporte 256 couleurs ?
+• pour le signaler à vim :
+	:set &t_Co=256
+• pour tester les couleurs sur le terminal actuel :
+	:runtime syntax/colortest.vim
+
+
+● recharger la config (ou un thème de couleurs modifié) :
+	:so ~/.vimrc
+
+
+● toutes les commandes sont préfixables par un nombre :
+  3dd		→	« supprime 3 lignes » !
+
+• Ctrl-O <cmd>:		exécute UNE commande du mode normal en mode insertion
+
+
+● FICHIERS & FENÊTRES :
+:e	<fic>		éditer un nouveau fichier
+
+  Ctrl+^		reviens au fichier précédemment édité
+
+• les commandes suivantes peuvent ê précédées d'un nombre spécifiant
+la taille souhaitée :
+:𝑛split			nouvelle vue du fichier ds fen horiz'
+  :𝑛split <fic>
+
+:close		ferme la fen'
+:only		ferme tt les autres fen'
+
+:𝑛new		nouvelle fen' horiz vide
+  :𝑛new <fic>
+
+:𝑛vert new <fic>
+:𝑛vnew <fic>
+:𝑛vsp <fic>			édite <fic> dans nouvelle fenêtre verticale
+
+• le suffixe «all» :
+:qall		:a	ttes fen'
+:wall		:w	"		"
+:wqall		:wq	"		"
+
+
+• explorateur de fichier :
+:Explore
+
+:Vexplore		explorateur ds fenêtre Verticale
+:Hexplore		"		"		"		Horizontale
+
+:Texplore		ds onglet
+
+• créer nouveau fichier depuis l'explorateur de fichiers :
+%		→ demande nouveau nom
+
+
+•déplacement entre fenêtres & onglets :
+  gt		onglet suivant
+  gT		onglet précédent
+ 
+Ctrl-W Ctrl-W		naviguer entre fenêtres
+Ctrl-W [hjkl]
+Ctrl-W [tb]			fen' du haut / du bas
+
+:q					fermer fenêtre
+
+• retailler fen' :
+Ctrl-W 𝑛+		augmenter de 𝑛 lignes la hauteur de la fenêtre
+Ctrl-W 𝑛-
+Ctrl-W _		taille MAX
+
+
+● suffixes ou déplacements :
+0		début de ligne
+$		fin		"	"
+
+w		→ début de mot
+e		→ fin	"	"
+b		← début	"	"
+
+W		→ début de MOT (séquence de non-blancs)
+E		→ fin   "   "
+B		← début "   "
+
+
+● suffixes :
+iw		« inner word »
+is		« inner sentence »
+ip		« inner § »
+i[ i( i<	– utilise des caractères de début de bloc, pas de >)] etc.
+		« inner block » du type correspondant : [] () <> {} ""
+
+
+┌──
+│● MODE INSERTION :
+│Ctrl-J	RetLn
+│
+│• suppression :
+│Ctrl-H		supprime caractère à gauche
+│
+│Ctrl-W		supprime le mot à gauche
+│
+│Ctrl-U      supprime tout à gauche
+│Ctrl-O D    "       "     à droite
+└───
+
+● édition :
+  i
+  a
+  I		insertion en DÉBUT de TEXTE
+  A		ajout en FIN de ligne
+
+  O		ouvrir ligne AVANT ligne curseur + INSERT
+  o		"	"	"	 APRÈS	"	"	"	"
+
+●commenter bloc de code sans greffon :
+	Ctrl+V		→ mode « bloc visuel »
+	sélectionner les lignes
+	I			→ mode « INSERTION »
+	entrer le caractère à insérer
+	Échap		→ toutes les lignes sont précédées du caractère
+• et décommenter :
+	Ctrl+V
+	sélectionner les caractères à supprimer
+	x			→ simple suppression
+
+• avec le greffon NERD-commenter :
+ 	\cc		commenter
+	\cu		décommenter
+
+
+
+● AUTOCOMPLÉTION :
+Ctrl+N		propose insertion prochaine complétion
+Ctrl+P		"	"	suivante	"	"
+
+
+● undo/redo :
+  u		undo
+  Ctrl-R	redo
+  U		restaure TOUTE LA LIGNE
+
+● sélection VISUELLE :
+	v
+•indentation bloc ou ligne en mode visuel :
+  𝑛<
+  𝑛>
+
+
+● INDENTATION BLOC OU LIGNE :
+  𝑛>>	Indent line by shiftwidth spaces
+  𝑛<<	"		"		"		"
+  𝑛==	réindente 𝑛 lignes
+
+  >%	Increase indent of a braced or bracketed block (place cursor on brace first)
+  =%	Reindent a braced or bracketed block (cursor on brace)
+  <%	Decrease indent of a braced or bracketed block (cursor on brace)
+  ]p	Paste text, aligning indentation with surroundings
+
+  =i{  Re-indent the 'inner block', i.e. the contents of the block
+=a{  Re-indent 'a block', i.e. block and containing braces
+=2a{ Re-indent '2 blocks', i.e. this block and containing block
+
+  >i{	Increase inner block indent
+  <i{	>	Decrease inner block indent
+
+
+● FORMATAGE DU TEXTE :
+ [nbLn]ce [largr]	centrer (ligne / étendue / texte sélectionné)
+ 	ligne courante s/ 80 col par défaut
+
+
+● SUPRESSION/COUPER/COLLER :
+  d...
+  dd	suppression (couper) ligne complète
+  D		supprimer tt à droite
+  y		copier
+
+  p		coller APRÈS curseur (ligne suivant si une ligne entière a été coupée)
+  P		"   "   AVANT   "   "
+
+  c...	suppression (jusque là où le déplacement ... amène) + mode insertion
+		"c2l" → « supprimer 2 caractères à droite »
+
+  x
+  r.	remplacer par le caractère «.»
+  R		entre en mode Remplacement. Puis échap.
+
+  !xxx	exécuter la commande shell xxx
+
+:rxxx		insère le fichier xxx
+:r !xxx		"		" résultat de la commande xxx
+
+
+● changement de CASSE :
+  ~		bascule casse (sélection ou caractère)
+  g~~	"       "       toute la ligne
+  g~...	"       "
+ 
+gUU		majuscule tt la ligne
+gU...		majuscule
+  gUiw	maj le mot courant
+  gU3e	maj jusqu'en 3e fin-de-mot
+  gis		maj la phrase courante
+ 
+guu		minuscule tt la ligne
+  gu...	minuscule
+
+
+● commandes de déplacement :
+  Ctrl-G		infos
+  G			aller en fin de fichier
+  gg			"	" en début	"	"
+𝑛𝑛G			"	" ligne 𝑛𝑛
+ 
+  zt			amène la ligne courante en haut de la fenêtre
+  zb			"		"		"		en bas
+  z.			"		"		"		au milieu, curseur←←
+ 
+Ctrl-Y		↑ la vue de 𝑛 lignes
+Ctrl-E		↓ la vue de 𝑛 lignes
+ 
+Ctrl-U		↑ le curseur ½ fenêtre (par défaut, réglable via l'option «scroll»)
+Ctrl-D		↓ "		"		"		"		"
+
+● recherche :
+  %		()[]{} correspondant
+
+  /		recherche en avant
+  ?		"		"	 arrière
+  n		suivant
+  N		précédent
+
+● remplacement à la SED :
+MAIS vim utilise sa propre version, pas-tout-à-fait compatible avec les PCRE ...
+:s/x/y		au sein de la LIGNE			suffixes :	g → TOUTES LES OCCURENCES
+:𝑛,𝑛s/x/y	sur une plage de lignes					c → confirmation
+:%s/x/y		dans tout le fichier
+• recherche perl :
+:perldo s/.../.../
+
+
+● options utiles :
+• options des recherches :
+ 	'ic'   'ignorecase'
+	'is'  'incsearch'		incremental search
+	'hls' 'hlsearch'		highlight search
+
+● Aide :
+  F1, Help, :help
+_ Ctrl + ]		→ aide sur mot courant
+_ Ctrl + T		→ retour sujet précédent
+• greffon zeavim :
+	<leader>z	→ mot /s curseur – manuel d'après le fichier
+	gz<mvt>		→ texte sélectionné par mouvement
+
+● INSTALLER UN GREFFON :
+_ Tout mettre sous ~/.vim/ (dossiers autoload, doc, plugin, ...)
+_ Pour reconstruire l'index de la doc :
+	:helptag ~/.vim/doc
+
+
+● complétion de commande :
+valable en mode «non compatible» (:set nocp)
+  Ctrl-D		liste complétions
+  Tab			complétion suivante

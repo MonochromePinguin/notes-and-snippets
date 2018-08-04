@@ -1,0 +1,13 @@
+
+services:
+
+    # this fixture class is declared as a service,
+    # so we can inject the service container as param and get access to doctrine
+    # for "advanced" SQL commands (see the class file)
+    #
+    # the tag is important for loading the fixture
+    #
+    AppBundle.DataFixtures.LoadInquerySubmitStatus:
+        class: AppBundle\DataFixtures\LoadInquerySubmitStatus
+        tags: ['doctrine.fixture.orm']
+

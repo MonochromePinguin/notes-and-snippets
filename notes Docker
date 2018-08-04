@@ -1,0 +1,39 @@
+• privilégier l'image de la distro « Alpine », la plus minimaliste disponible
+
+• les conteneurs docker sont sans-état / stateless
+→ dans le cas d'une BdD, if faut donc sauvegarder régulièrement l'image,
+et reconstruire la BdD au lançement de l'image à partir de scripts SQL
+ si le conteneur tombe ...
+
+
+• exécuter une image avec des ports mappés :
+	docker run -d -p <portHôte>:<portConteneur> <image> <commande>
+
+● on peut en une commande télécharger (depuis le « hub » d'images)
+ et exécuter une image ...
+• ¿ quid de la configuration des MdP ?
+	Elle est effectuée via des variables d'environnement !
+
+• ET les dockerfile :
+	FROM node:alpine
+	WORKDIR .
+	COPY package*.json ./
+	RUN npm install
+	COPY . .
+	EXPOSE 3000					← ouvre au web le port 3000 du conteneur
+	cmd ["node", "app.js"]		← exécute ces 2 commandes
+
+
+● configurer un ensemble de services :
+ via un fichier « docker-compose.yml » accédé par docker-compose ...
+
+qui liste en particulier les services à démarrer en conteneur, leurs noms d'ĥôte,
+les ports réseau à ouvrir et mapper, ...
+
+● systèmes spécialisés pour docker :
+• images :
+_ CoreOS (linux minimaliste)
+_ snappy (spécialisés dans les paquets snaps d'ubuntu)
+• OS dédiés à la gestion de fermes de conteneurs :
+_ kubernetes
+_ swarm (de docker)

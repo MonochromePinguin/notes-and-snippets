@@ -1,0 +1,62 @@
+
+• PROGRAMMATION AGILE :
+_ mise en avant des individus plutôt que des outils, autonomie,
+_ moins axée sur les paperasses (contrats) et la doc que sur le développement d'un logiciel opérationnel,
+_ collaboration régulière / suivie avec le client.
+_ adaptation aux changements plutôt que le suivi d'un planning
+
+
+• MOSCOW : MSCW :
+_ Must have		non négotiable
+_ Should have		important, mais peut fonctionner sans
+_ Could have		un plus, si possible
+_ Would have		dans le futur, éventuellement
+
+• SCRUM : terme anglais pour « mélée ».
+
+
+• cycles itératifs («sprints»)
+ & incrémentaux (ajout de f°alités l'une après l'autre)
+
+• « product backlog » :
+	contrairement au cahier des charges, il est rédigé au fur & à mesure,
+ et priorise les f°lités :
+	on note d'abord les points principaux, et on affine le tout au fur et à mesure.
+
+• « sprint backlog » :
+	même chose, pour chaque cycle
+
+• « sprint planning » :
+_ découper le boulot en tâches («user stories» )
+_ faire le point sur l'avancement, choix des priorités,
+
+• « daily scrum » :
+_ au sein de l'équipe (ce que j'ai fait hier, ce que j'avais prévu, ce que je compte faire auj', ce qui me bloque ou pas, ...).
+
+• « revue de sprint » :
+_ avec client – démonstration du produit actuel et recueil
+ des remarques client
+
+• « grooming » / « mise à jour backlog» :
+	régulièrement, par le « scrum master » ...
+
+• « user story » :
+	« en tant que xxx je veux pouvoir xxx afin que xxx ... »
+→ traduit en tâches, dont la durée est estimée, code, ...
+→ assignée régulièrement, ...
+→ numérotée ou étiquetée pour suivi.
+
+
+
+
+• « product owner » :
+_ c'est souvent un représentant du client ou le client lui-même.
+_ censé être plus impliqué, moins hiérarchique que le « chef de projet » – l'équipe est censée avoir son mot à dire dans le choix des technologies.
+_ Sert d'interface entre client et équive de dév.
+
+• « scrum master » :
+_ Garant de la mise en place de la méthode SCRUM (mais l'adaptant tout de même)
+_ Rédacteur principal des backlogs
+
+• « les dév » :
+_ Auto-organisés, travaillant avec le product owner et les clients

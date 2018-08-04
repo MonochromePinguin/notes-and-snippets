@@ -1,0 +1,27 @@
+
+.styleAnimated {
+/* duration timing-function delay iteration-count direction fill-mode play-state name */
+	animation: 1.5s ease noirBleu, 0.4s ease-out 2 alternate both glow;
+}
+
+@keyframes glow {
+	from {
+		text-shadow: 1px 1px 1px black, -1px 1px 1px black,
+			 1px -1px 1px black, -1px -1px 1px black;
+	}
+	to
+	{
+		text-shadow: 1px 1px 20px red, -1px 1px 20px red,
+			 1px -1px 20px red, -1px -1px 20px red;
+	}
+}
+
+@keyframes noirBleu {
+	from {
+		color: black;
+	}
+	to {
+		color: blue;
+	}
+}
+
