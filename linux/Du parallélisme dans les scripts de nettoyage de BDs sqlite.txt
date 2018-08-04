@@ -1,0 +1,35 @@
+	Je cherchais à déterminer le parallélisme le plus rapide pour nettoyer les bases de données sqlite de chaque profil firefox ; j'ai donc comparé les temps d'exécutions moyens de scripts ayant divers niveaux de parallélisme. Il faut noter que le travail était effectué sur des copies IDENTIQUES des bases de données ... Le résultat serait probablement plus en faveur de l'exécution massivement parallèle en cas de durée de nettoyage variant fortement d'un profil à l'autre.
+	
+•création des 10 répertoires pour chaque test :
+«for x in $(seq 1 10); do mkdir n$x; cp ~/.mozilla/firefox/mwad0hks.default/*.sqlite n$x/; done»
+
+• 10 exécutions séquentielles :
+	time sh -c 'for x in n*; do cd $x; for y in *.sqlite; do sqlite3 -batch $y "VACUUM;"; done; cd ..; done'
+
+real	0m59.274s	→ 5,92s par répertoire
+user	0m26.878s
+sys	0m2.628s
+
+• 10 exécutions par lot de 2 :
+(avec une fonction appelée 2x en concurrence à chaque boucle)
+	time sh -c 'unrep() { cd $1; for y in *.sqlite; do sqlite3 -batch $y "VACUUM;"; done; cd ..; } ; for x in $(seq 1 5); do unrep n$(( $x * 2 -1 )) & unrep n$(( $x * 2)); done'
+
+real	0m41.508s	→ 4,15s par ...
+user	0m27.070s
+sys	0m2.800s
+
+• 12 exécutions par lot de 4 :
+	time sh -c 'unrep() { cd $1; for y in *.sqlite; do sqlite3 -batch $y "VACUUM;"; done; cd ..; } ; for x in 1 2 3; do unrep n$(( $x * 4 -3 )) & unrep n$(( $x * 4 -2 )) & unrep n$(( $x * 4 -1 )) & unrep n$(( $x * 4)); done'
+
+real	0m39.249s	→ 3.27s ...
+user	0m35.266s
+sys	0m3.588s
+
+• 10 exécutions toutes concurrentielles :
+	time sh -c 'unrep() { cd $1; for y in *.sqlite; do sqlite3 -batch $y "VACUUM;"; done; cd ..; } ; for x in $(seq 1 10); do unrep n$x & done; wait'
+
+real	0m30.313s	→3,03s ...
+user	0m35.634s
+sys	0m3.400s
+
+Tout exécuter en masse semble le plus rapide !

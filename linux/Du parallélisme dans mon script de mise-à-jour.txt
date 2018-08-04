@@ -1,0 +1,149 @@
+┌───────────────────────────────────────────────────────────────────┐
+│● Appel du «màj.sauvegardes.sh -r» classique (pas de parallélisme),│
+│ à vide (pas de copie effectuée), sans activités concurrentes :    │
+└───────────────────────────────────────────────────────────────────┘
+
+♦ vers «Stock» :
+
+•1e exécution (caches vides) :
+real	0m55.423s
+user	0m2.624s
+sys	0m5.304s
+
+• 2e & 3e exécutions (caches & tampons mis à jour) :
+real	0m48.623s
+user	0m2.504s
+sys	0m5.300s
+
+real	0m48.722s
+user	0m2.332s
+sys	0m5.452s
+
+♦ dans les mêmes conditions, vers le DD «SAUVEGARDES» :
+_ Les différences sont, en cas, que le disque est formaté en FAT32 (probablement plus lent que le NTFS), et qu'il y a en plus le traitement des fichiers de config')
+
+• 1e & 2e exécutions (caches déjà remplis par une exécution précédente  ayant effectué une copie de fichiers ...)
+real	1m30.651s
+user	0m6.160s
+sys	0m8.829s
+
+real	1m30.264s
+user	0m5.532s
+sys	0m9.337s
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│● Appel de la nouvelle version de «màj.sauvegardes.sh -r», qui tire│
+│parti des cœurs supplémentaires du processeur (4 tâches en //èle), │
+│ dans les mêmes conditions :					    │
+└───────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────┐
+│version « [ -n $M ] && traiteMinecraft & » :│
+└────────────────────────────────────────────┘
+♦ vers «Stock» :
+
+•1e exécution (caches vides) :
+real	0m54.058s
+user	0m2.668s
+sys	0m5.424s
+
+• 2e & 3e exécutions (caches & tampons mis à jour) :
+real	0m47.358s
+user	0m2.528s
+sys	0m5.360s
+
+real	0m47.321s
+user	0m2.580s
+sys	0m5.304s
+
+
+♦vers «SAUVEGARDES» :
+
+•1e exécution (caches vides) :
+real	0m49.376s
+user	0m5.520s
+sys	0m9.417s
+
+• 2e & 3e exécutions (caches & tampons mis à jour) :
+real	0m46.996s
+user	0m5.700s
+sys	0m8.641s
+
+real	0m47.093s
+user	0m5.860s
+sys	0m8.609s
+
+┏━━━━━
+┃┌──────────────────────────────────────────────┐
+┃│version « [ -n $M ] && (traiteMinecraft) & » :│
+┃│ (donc avec un sous-shell supplémentaire)     │
+┃└──────────────────────────────────────────────┘
+┃
+┃♦ vers «Stock» :  -caches déjà à jour-
+┃real	0m47.445s
+┃user	0m2.644s
+┃sys	0m5.248s
+┃
+┃real	0m47.724s
+┃user	0m2.620s
+┃sys	0m5.376s
+┃
+┃cette 2e version est légèrement plus lente que la 1e ...
+┗━━━━━
+
+→ La mise en parallèle n'a gagné que moins de 2s lorsqu'il y a 2 tâches,
+mais plus de 40 secondes quand il y en a 4 !
+
+→ Si on fait indiquer textuellement par les tâches leur fin d'exécution, on obtient :
+	traiteMiro < traiteMinecraft (Stock)
+	traiteConfig < traiteMiro < traiteMinecraft < traiteDocs (SAUVEGARDES)
+  Ce sont effectivement les appels de parcourtSansSuppression() les plus gourmands ...
+
+┌─────────────────────────────────────────────────────────────┐
+│● Appel de la 2e nouvelle version de «màj.sauvegardes.sh -r»,│
+│ à 5 tâches //èles : «traiteDocs()» divisé en 2 tâches,      │
+│ dans les mêmes conditions :				      │
+└─────────────────────────────────────────────────────────────┘
+
+♦vers «SAUVEGARDES» :
+•exécutions avec caches & tampons mis à jour :
+
+real	0m41.730s
+user	0m5.340s
+sys	0m8.737s
+
+real	0m41.735s
+user	0m5.320s
+sys	0m8.713s
+
+→ Dans ce cas, on a comme ordre d'achèvement :
+	traiteConfig < traiteMiro < traiteDocs(p2) < traiteDocs(p1) < traiteMinecraft
+
+♦si le moniteur système est actif, on voit que les 4 cœurs sont actifs à ~ 80% jusqu'à la fin de traiteDocs(partie 2),
+ puis ils chutent à ~ 60%, jusqu'à la fin de traiteDocs(p1),
+ puis ils chutent à ~ 40%, pd l'exécution de traiteMinecraft ;
+leur activité moyenne sans màj.xxx.sh est ≤ 10% ...
+
+┌─────────────────────────────────────────────────────────────┐
+│● Appel de la 3e nouvelle version de «màj.sauvegardes.sh -r»,│
+│ à 6 tâches //èles : «traiteDocs()» divisé en 3 tâches,      │
+│ dans les mêmes conditions :				      │
+└─────────────────────────────────────────────────────────────┘
+
+♦vers «SAUVEGARDES» :
+•exécutions avec caches & tampons mis à jour :
+
+real	0m37.900s
+user	0m4.364s
+sys	0m6.824s
+
+real	0m38.076s
+user	0m4.420s
+sys	0m6.884s
+
+→ bon, çà ira comme çà : la durée d'exécution a été divisée par 2 depuis la version monotâche ...
+→ les cœurs sont actifs à pas loin de 100% jusqu'à la fin de traiteDocs(p3),
+ puis chutent à ~ 85% jusqu'à la fin de traiteDocs(p2),
+ puis à ~60% jusqu'à la fin de traiteDocs(p1),
+ puis entre 20% & 40% jusqu'à la fin de traiteMinecraft (il n'y a plus qu'une seule de nos tâches en f°ment ...)

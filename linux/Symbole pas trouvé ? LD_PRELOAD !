@@ -1,0 +1,4 @@
+Si, par faute d'un bug, le linkeur produit une bibliothèque partagée qui, au chargement, provoque un message d'erreur du genre «symbole pas trouvé», alors que la compilation s'est très bien passée, on peut remédier à celà au lançement du programme utilisant cette bibliothèque partagée :
+	LD_PRELOAD <liste de bibliothèques à précharger (séparateur «:»)> <programme>.
+
+Cf «man 8 ld.so»/«ENVIRONNEMENT» !

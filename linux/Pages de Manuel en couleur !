@@ -1,0 +1,53 @@
+		Des variables d'environnement LESS_TERMCAP_xxx ...
+
+Que veulent dire ces «fameuses» variables influençant l'affichage des pages de manuel ?
+
+♦ Apparemment,
+  _ le postfixe est un code de la base de données de terminfo,
+  _ et les valeurs de ces variables d'environnement seraient utilisées à la place des valeurs par défaut (¿ obtenues via terminfo par man/less ?) :
+
+● codes à passer en paramètre à tput : «man 5 terminfo» !
+
+● D'après terminfo, il semble effectivement que la console linux/Xterm/xxx ne gère pas l'italique !
+_ Seul un sous-ensemble de ttes les capacités énumérées sont gérées ... :-(
+
+_ Et, PIRE, setaf/setab//setf/setb n'acceptent en paramètre que 8 codes de couleur (0 - 7) : 
+→ pour utiliser les 256 couleurs, il faut émettre «à la main» le code de contrôle:
+		\e[38;5;<couleur>m pour l'avant-plan,
+		\e[48;5;<couleur>m pour l'arrière-plan !
+
+
+♦ Les codes terminfo de sortie de mode (rmul, rmso) ne réinitialisent pas les attribut «couleur» ou «gras» :
+ → les variables LESS_xxx de sortie de mode (_me, _se, _ue, ) doivent donc inclure le code sgr0 («réinitialisation des attributs d'apparence») pour éviter de baver sur le texte qui suit !
+
+
+LESS_TERMCAP_me : «end mode»	«turn off all appearance modes (mb, md, so, us)»
+
+LESS_TERMCAP_so : «begin standout-mode»		→ çà colore la barre d'info en bas de l'écran & les occurences d'une recherche
+LESS_TERMCAP_se : «end standout-mode»
+
+LESS_TERMCAP_us : «begin underline mode»
+LESS_TERMCAP_ue : «end underline mode»
+
+LESS_TERMCAP_mb : «enter blinking mode»
+LESS_TERMCAP_md : «enter double-bright mode» - "bold" == "extra-bright"
+
+• je n'ai trouvé les variables suivantes que sur une seule page ; elles SEMBLENT cohérentes, mais ... sont-elles utilisées par man/less ? :
+LESS_TERMCAP_mr : ¿ «reverse mode» ?
+LESS_TERMCAP_mh : ¿ «half-bright» ?
+LESS_TERMCAP_ZN : ¿ «subscript mode» ? «ssubm» pour terminfo, mais ZN pour l'ancien termcap
+LESS_TERMCAP_ZV : ¿ rsubm == «End subscript mode» ?
+LESS_TERMCAP_ZO : ssupm == «superscript mode» ?
+LESS_TERMCAP_ZW : rsupm == «End superscript mode» ?
+
+
+
+• d'où mon essai :
+export LESS_TERMCAP_me=$(tput sgr0)				#«turn off all appearance modes (mb, md, so, us)»
+export LESS_TERMCAP_so=$(tput smso; tput bold; echo -e "\e[38;5;190m")	# «begin standout-mode - info box»
+export LESS_TERMCAP_se=$(tput rmso; tput sgr0) 			# avec «tput rmso», çà ne réinitialise pas la couleur ... «end standout-mode»
+
+export LESS_TERMCAP_us=$(tput smul; tput bold; echo -e "\e[38;5;207m")	# «begin underline mode»
+export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)			# «end underline mode»
+
+export LESS_TERMCAP_md=$(tput bold;  echo -e "\e[38;5;30m") 		# "double-bright mode" == "bold" == "extra-bright"

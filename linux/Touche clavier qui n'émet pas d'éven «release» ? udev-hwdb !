@@ -1,0 +1,39 @@
+● SI UNE TOUCHE DU CLAVIER D'UN PORTABLE N'ÉMET PAS D'ÉVÉNEMENT «release» :
+Il faut indiquer au noyau que cette touche n'en émet pas, et que le pilote devra simuler l'éven' en interne ;
+La méthode actuelle utilise udev/hwdb :
+
+_ il faut créer/modifier un fichier /s /lib/udev/hwdb.d (j'ai modifié 60-keyboard.hwdb) :
+Dans le cas du samsung, ajouter la ligne
+	KEYBOARD_KEY_ce=!prog1 
+ dans la section générique de samsung a suffit ...
+
+• puis :
+	udevadm hwdb --update
+
+• et pour vérifier :
+ d'un côté, pour surveiller :
+	udevadm monitor --property
+ et de l'autre, pour actualiser le périphérique :
+	udevadm trigger --verbose --sysname-match=event0
+
+
+• pour voir si le changement est incorporé :
+	udevadm control –reload
+	 udevadm hwdb --test='keyboard:name:[MODALIAS]
+→ liste les touches réaffectées
+
+● Trouver la chaîne de description du clavier :
+•	find /sys -name modalias | xargs egrep -il 'samsung|keyboard'
+ puis chercher dans leur contenu une chaîne du type
+ keyboard:dmi:bvn*:bvr*:bd*:svn*:pn*.
+Je n'ai rien trouvé ...
+
+•Mais :
+	udevadm trigger --dry-run --verbose
+ m'a donné parmis d'autres :
+	/sys/devices/platform/i8042/serio0/input/input0
+→ input0 référence le clavier, MAIS après tout une série de test & commandes ça n'a rien donné, alors que 
+	udevadm trigger --verbose --sysname-match=event0
+m'a fourni
+	/sys/devices/platform/i8042/serio0/input/input0/event0
+qui par un heureux hasard s'est trouvé réagir ...

@@ -1,0 +1,25 @@
+● Il est possible d'utiliser un script JS dans la barre d'adresse de firefox !
+via la syntaxe
+	javascript:	[code-à-exécuter]
+Pour avoir de l'IIFE :
+	javascript:( function f(){...} )()
+ou
+	javascript:( function f() {...}() )
+
+
+par exemple, pour modifier l'URL d'un lien XiTi (utiliser la partie cible) :
+• créer un marque-page dont l'URL contient le code
+	javascript:(
+	function(){
+		const page = window.location;
+		if ( page.hostname != "logp6.xiti.com" )
+			return;
+
+		const req = page.search;
+		if ( req == null )
+			return;
+
+		window.location.replace(	req.slice( req.indexOf("&url=") +5 )	);
+	} )()
+• lui attribuer un mot-clé (dans la fen' «propriété») afin de pouvoir y accéder
+depuis la barre d'adresse.

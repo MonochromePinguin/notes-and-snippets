@@ -1,0 +1,88 @@
+	Une commande SED longue et compliquée à lire, après tests, s'est révélée > 15% plus rapide que son ancien équivalent BASH dans ap-hotspot :
+
+● la commande sed servant de filtre au sein de sa construction :
+
+ck-list-sessions | sed -rn "/^Session[0123456789]+/ { s/.*//; x; /[0-9]+ :[0-9]+(\.[0-9]+){0,1}/ p; n }; /unix-user/ { s/.*= '([0-9]+)'/\1/; G; s/[\n 	]+/ /g; h; b }; /x11-display / { s/.*= '(:[0-9]+(.[0-9]+){0,1})'/\1/; t X11ok; s/.*//; h; b; :X11ok; H; g; s/[\n 	]+/ /g; h; b }; /is-local = FALSE/ { s/.*//; h; b }; $ { x; /[0-9]+ :[0-9]+(.[0-9]+){0,1}/ p }" | while read u d
+do
+	listeUser[i]="$u"
+	listeDisplay[i]="$d"
+	((i++))
+done
+
+
+● la construction BASH qu'elle remplace :
+
+	ck-list-sessions | sed -rn "s/[[:blank:]]//g; s/.*:($)|realname='([^']*)'|x11-display='([^']+)'/\1\2\3/p;" | while read l
+	do
+		[ -z "$l" ] && { v=; continue; }
+
+		#si on viens de lire une ligne non-vide & que la dernière est un n° de display ...
+		[[ "$l" =~ [.:0123456789]+ ]] && [ -n "$v" ] && {
+			#... on peut stocker les id. dans les tableaux
+			listeUser[i]="$v"
+			listeDisplay[i]="$l"
+			((i++))
+			v=
+			continue
+		}
+
+		v="$l"
+	done
+
+
+● et le script SED déplié avec commentaires :
+
+/^Session[0123456789]+/ {	#si on tombe s/ la 1e ligne d'une descript° de session :
+ s/.*//		# vider l'espace de motif
+ x		# échanger tampon de retenue & espace de motif (→ le RAZ)
+		# ↓ imprimer les données précédemment conservées
+		# SI elles sont au bon format
+/[0-9]+ :[0-9]+(\.[0-9]+){0,1}/ p
+ n		# redémarrer sur la prochaine ligne
+};
+# → afficher l'éventuel tampon stocké précédemment et fait la place au prochain 
+
+/unix-user/ {
+ s/.*= '([0-9]+)'/\1/	# ne conserver que la valeur de l'attribut
+ G			# ajouter l'Sretenue à l'Smotif → ce dernier devient
+			# soit UID, soit UID\nDisplay (cas n°2)
+ s/[\n 	]+/ /g		# remplacer sauts-de-ligne & blancs par UN espace (si cas n°2)
+ h			# mettre l'Smotif dans l'Sretenue
+ b			# « Branch (to end) » → reprendre le script au début,
+			# prochaine ligne
+};
+# → conserver l'UID, en début d'Sretenue si le Display était déjà là
+
+/x11-display / {
+ s/.*= '(:[0-9]+(.[0-9]+){0,1})'/\1/
+ t X11ok	# si la substitut° s'est déroulée, sauter à «X11ok»
+		#sinon :
+ s/.*//		# vider l'espace de motif
+ h		# s'en servir pour RAZ l'espace de retenue
+ b		#...
+
+ :X11ok		# label («si un display X11 a été trouvé»)
+ H		# ajouter l'espace de motif à l'Sretenue
+ g		# mettre l'Sretenue ds l'Smotif
+ s/[\n 	]+/ /g	# remplacer sauts-de-ligne & blancs par UN espace
+ 		# →si l'UID était présent, on obtient une ligne «UID Display»
+ h		# mettre l'Smotif ds l'Sretenue
+ b		#...
+};
+# → conserver le display X11 s'il est présent & le placer s/ la même ligne
+# que l'UID (si présent), sinon vider l'espace de retenue et reprendre la recherche
+
+/is-local = FALSE/ {
+ s/.*//		# supprimer tout l'espace de motif
+ h		# en remplir le tampon de retenue (→ le RAZ)
+ b		# ...
+};
+# → si la session n'est pas locale, vider l'espace de retenue et reprendre la recherche
+
+$ {	#en fin d'entrée :
+ x	# échanger tampon de retenue & espace de motif,
+	# ↓ puis vérifier que les 2 informations sont présentes
+	# et imprimer si elles sont là
+ /[0-9]+ :[0-9]+(.[0-9]+){0,1}/ p
+}
+# → afficher le dernier tampon de retenue s'il contient une paire UID/Display
