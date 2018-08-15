@@ -508,9 +508,13 @@ _ variables d'environnement :
 
 
 ● GESTION DES SESSIONS :
- On n'utilise plus $_GET, $_SESSION, etc. mais l'objet HttpFoundation :
+ On n'utilise plus $_GET, $_SESSION, etc. mais l'objet Session :
+	« use Symfony\Component\HttpFoundation\Session\Session »
+ou bien on le récupère, au sein des controlleurs, via
+	$request->getSession();
+$request étant injecté en paramètre.
 
-par exemple, pour récupérer l'entête User-Agent :
+• par exemple, pour récupérer l'entête User-Agent :
 	use Symfony\Component\HttpFoundation\Request;
 	(...)
 	$request = Request::createFromGlobals();
@@ -525,13 +529,14 @@ par exemple, pour récupérer l'entête User-Agent :
 	$this->addFlash(...)
 
 
-• afficher les messages flash :
+• afficher les messages flash en PHP :
 	foreach ($session->getFlashBag()->all() as $type => $messages) {
 		foreach( $messages as $msg) {
 			echo '<div class="flash' . $type . '">' . $msg . '</div>';
 		}
 	}
-_ dans twig :
+• afficher les messages flash dans twig :
+paramètre « app.flashes »
 	{% for label, messages in app.flashes %}
 		{% for message in messages %}
 			...

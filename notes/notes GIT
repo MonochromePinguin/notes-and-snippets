@@ -103,7 +103,9 @@ est basée la branche locale, puis lui applique tout nos changements locaux :
 	--global : pour l'utilisateur
 	--local : pour le dépôt
 
-• configurer au moins user.name et user.email ...
+• configurer au moins user.name et user.email ... 
+	git config --global user.name <nom>
+
 • autres options utiles :
 	core.editor 		vim
 	color.ui			true

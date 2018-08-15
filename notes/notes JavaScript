@@ -85,24 +85,35 @@ form.action,
 ev.button	→ 0 = bouton principal, 1 = molette/milieu, 2 = b. droit,
 				3 et 4 = précédent / suivant
 
-
+• :
 document.getElementById(),
 		.getElementsByName(),
 		.getElementsByTagName(),
 		.querySelector(),		→ 1er élém rencontré
 		.querySelectorAll(),	→ TOUT les éléments
 
+document.getElementsByTagName('main')[0].children
+
 
 ● listes notables du DOM :
 document.forms[]
 formElem.elements[]
 elem.classList[]
-
+elem.chilNodes[]
 
 ● element :
-elem.childNodes[],
+elem.children[],
 	.firstChild,
 	.lastChild
+
+• elem.children[] ≠ elem.childNodes[] !
+.childNodes :
+	propriété d'un nœud du DOM – «Node». Contient tout les nœuds fils
+ ( TextNode, éléments, commentaires, ...).
+.children :
+	propriété d'un élément – «Element». Contient uniquement les éléments fils.
+
+• elem.setAttribute() ≠ elem.style.setProperty() !
 
 elem.getAttributes()
 	.appendChild()
@@ -124,6 +135,16 @@ _ Si armée via elem.style.setProperty(),
  récupérables via elem.style.getProperty()
 • via getComputedStyle :
 	getComputedStyle(elem,null).getPropertyValue('--var');
+
+
+● AJOUTER/SUPPRIMER UN SÉLECTEUR CSS :
+	var css = document.createElement("style");
+	css.type = "text/css";
+	css.innerHTML = "strong { color: red }";
+	document.body.appendChild(css);
+• ou, si on est sûr d'avoir une feuille de style :
+	var sheet = window.document.styleSheets[0];
+	sheet.insertRule('strong { color: red; }', sheet.cssRules.length);
 
 
 ● en HTML < 5, Il fallait :

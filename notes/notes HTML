@@ -162,8 +162,9 @@ _ alt=""		→ chaîne vide, l'image n'a pas d'importance structurelle,
 • penser à l'attribut title= qui sert de popup explicative
 
 • un élément positionné en «absolute» le sera par rapport au plus proche
- ancêtre positionnné (pas «static»),
- et doit avoir au moins un ancêtre positionné.
+ ancêtre positionné (pas «static»),
+ et doit donc avoir au moins un ancêtre positionné (un «position: relative»
+ sans «top», «bottom» ou autre fait parfaitement l'affaire).
 
 • z-index ne marche que sur les éléments positionnés !
 	À voir au sujet de l'ordonnancement z-index :
@@ -173,6 +174,27 @@ opacity, etc. – bref, tout ce qui demande un rendu offscreen –, créée
 	cf «/usr/share/doc/divers/HTTP, HTML, CSS : articles/What No One Told You About Z-Index.html»
 
 • si on arme les prop' «width» et «right», cette dernière est ignorée.
+
+● « Block Formating Context » :
+De même que des « contextes d'empilement » sont créés sous certaines conditions,
+On peut créer des "contextes de formatage de bloc", ou des « Flex Formating
+ Context » tout comme des « Grid Formating Context » (même comportement mais
+ visée différente).
+• Un bloc ayant un « Block Formating context » contient TOUT ses descendants :
+_ les éléments «float» ne débordent pas,
+_ de même, le contenu texte ne vas pas enrober un "float" voisin hors du BFC,
+_ les marges des éléments contenus ne sont pas fusionnées avec celles du
+ conteneur ayant créé le BFC quand aucun autre élément ne sépare les 2
+• un BFC est créé par :
+_ «display: flow-root»
+_ la propriété «float»
+_ «position: absolute» et «position: fixed»
+_ «overflow» différent de "visible" (→zone tronquée ou scrollable)
+_ «column-span: all» dans éléments ayant une propriété créant des colonnes
+  («columns»,«column-count» ou «column-width», ...)
+_ «display: inline-block»
+_ «display: table-cell»
+_ «display: table-caption»
 
 
 
@@ -225,7 +247,7 @@ Quand la feuille de style a changé, il suffit donc de changer, au sein des page
 
 ● DIFFÉRENCE BALISES BLOCK/INLINE :
 • PAR DÉFAUT :
-				bloc								inline
+				BLOC								INLINE
 	- apparait en dessous					- dans le sens d'écriture après
 		de son prédécesseur						son prédécesseur
 	- largeur 100%							- largeur minimale
@@ -354,7 +376,7 @@ nécessaire pour avoir une pleine hauteur !
 		flex-direction: [row|column|row-reverse|column-reverse];
 		flex-wrap: [nowrap|wrap|wrap-reverse];
 		/* le long de l'axe principal*/
-		justify-content: [flex-start|flex-end|center|space-between|space-around|...];
+		justify-content: [flex-start|flex-end|center|space-between|space-around|space-evenly|...];
 		/* et de l'axe secondaire */
 		align-items: [normal|stretch|flex-start|flex-end|self-start|...];
 	}
@@ -398,13 +420,39 @@ et un «display: inline-block» sur les descendants blocs ...
 		transform: translate(-50%, -50%);
 	}
 
+• pas de flex-grow ≠ 0 sur les enfants d'un conteneur flex avec justify-content :
+The alignment is done after the lengths and auto margins are applied, meaning that, if in a Flexbox layout there is at least one flexible element, with flex-grow different from 0, it will have no effect as there won't be any available space
 
-●changer l'ordre des éléments :
+•changer l'ordre des éléments :
 	.élément: nth-child(𝑛) {
 		order: γ;
 	}
 Passera le 𝑛ième élément en position γ
 
+
+
+● grilles CSS :
+•line ≠ track,
+ cell ≠ area
+
+• pour une grille contenant un maximum d'éléments par ligne,
+ à raison de 5cm chacun :
+	ul {
+		display: grid;
+		grid-template-columns: repeat( auto-fill, minmax(5cm, 1fr) );
+		grid-gap: 1mm;
+
+		list-style: none;
+	}
+• placement des éléments :
+on indique les LIGNES (≠ PISTES «tracks») encadrant les élements :
+→ le 3e enfant de la liste occupera les 2x2 cases haut-gauche de la grille :
+	ul:nth-child(3) {
+		grid-row:	1 / 3; /* raccourci pour grid-row-start + grid-row-end */
+		grid-column: 1 / 3 /* raccourci pour grid-column-[start|end] */
+	}
+• Les éléments n'ayant pas explicitement reçu d'emplacement occupent l'espace
+laissé par les autres !
 
 
 ●type de puces dans une liste :
@@ -584,10 +632,10 @@ ou mieux:
 	all
 	aural / speech	lecture vocale
 	braille
-	embossed		braille « imprimé »
+	embossed		braille « imprimé » / en 3D
 	handheld
 	print
-	projector
+	projector		projecteur ou présentation
 	screen			écran classique
 	tty				périphériques avec grille de caractères de taille fixe
 	tv
@@ -609,7 +657,8 @@ var(--nom-var) OU var(--nom, valeur-si-"nom"-invalide)
 _ (bien sûr, var(--v, var(--w, 𝑛𝑛𝑛) ) est possible !)
 • N'étant pas supportées par 100% des navigateurs, il convient de précéder leur
 déclaration d'un valeur par défaut.
-
+• (2018/08/10) À cette date, les variables ne sont pas utilisables partout :
+pas dans les sélecteurs de media-query, pas dans les pseudo-sélecteur nth(), ...
 
 ● calc() :
 f° CSS permettant les 4 opérations de base, et réentrante.

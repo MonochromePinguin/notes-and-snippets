@@ -1,0 +1,36 @@
+:root {
+  --width-cell: 5rem;
+  --cell-color1: lightgreen;
+  --cell-color2: lightpink;
+}
+
+
+article > h1,
+article > h2 {
+	text-align: center;
+	text-size: 1rem;
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat( auto-fill, minmax( var(--width-cell), 1fr) );
+  grid-gap: 0.5rem;
+
+  padding: 1rem;
+  box-shadow: 5px 5px 3px black;
+}
+
+
+.cell {
+  font-size: 1rem;
+
+  border: 1px solid blue;
+  border-radius: 0.2rem;
+  padding: 0;
+  background-color: var(--cell-color1);
+}
+
+#column-count {
+  font-weight: bold;
+}
+
