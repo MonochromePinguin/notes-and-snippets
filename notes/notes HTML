@@ -11,7 +11,7 @@ sur	https://developers.google.com/fonts/docs/getting_started
 génèrer des liens pour des images placehoder de taille arbitraire :
 	https://placeholder.com/
 
-♦♦♦ Cf «notes programmation» pr notes javascript ! ♦♦♦
+♦♦♦ Cf «notes Javascript» pr notes javascript ! ♦♦♦
 
 • sous firefox :
 	Ctrl maj M	→	voir la page telle que sous un autre appareil / autre déf°
@@ -24,8 +24,9 @@ génèrer des liens pour des images placehoder de taille arbitraire :
 	attr[[:space:]]*=[[:space:]]*("val[^'']"|'val[^']'|val[^ ''<`'>])
 bref, la valeur peut être encadrée d'apostrophes, de guillemets,
 ou non encadrée – mais alors sans contenir aucun espace, guillemet, apostrophe,
- chevron ouvrant ou fermant, guillemet anglais, et en étant suivie d'un espace.
-
+ chevron ouvrant ou fermant, guillemet an ne donne-t-il pasglais, et en étant suivie d'un espace.
+• bien sûr, de nombreux caractères sont autorisés dans le nom des propriétés :
+    crochets, parenthèses, caractères UTF-8, ...
 
 ● HTML5 :
 _ insensible à la casse des balises (mais à celle des valeurs d'attributs)
@@ -142,7 +143,9 @@ _ meta title :
 
 
 ● NE PAS OUBLIER :
-- balises <meta charset=""> et <title> dans <head>
+- balises <meta charset="">,
+          <meta dir="ltr|rtl">, 
+- <title> dans <head>
 - déclarer la langue, au moins via <html lang="fr">, et partout où ça change
 	aucune langue : "Zxx"
 	indéterminé : "und"
@@ -346,8 +349,11 @@ _ les autres sont des feuilles de style alternatives, présentées par le
 ● balises structurantes, conférant une valeur sématique, introduites par HTML5 :
 <header>, <footer>, <nav> (principaux liens de navig°), <main>,
 <section>, <article>, <aside>,
-tous pouvant contenir leurs titres <h𝑛>, ...
-<section> pourra contenir <header>, <article>s, <aside>s, ...
+tous pouvant contenir leurs <header>, titres <h𝑛>, ...
+<article> pourra contenir <header>, <section>s, <aside>s, ...
+• ATTENTION au niveau des titres :
+quand situé sous un h1, un article, section ou aside doit avoir
+ comme titre au plus un h2 pour respecter l'arborescence des titres
 • et autres balises :
 	<detail> (dont le contenu est caché jsqu'à déploiment),
 	  <summary> qui doit ê le 1er enfant de <detail>,

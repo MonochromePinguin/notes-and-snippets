@@ -9,3 +9,5 @@ ul>(li>(p)*2)*5
 ul>(li>(p>({....}span{contenu}{....}))*2)*4
 	ul avec 4 li de 2 p chacun, chaque p contenant des .... entrecoupés d'un span avec la chaîne «contenu»
 
+lorem
+lorem{n} -> lorem de {n} mots
