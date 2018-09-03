@@ -28,6 +28,22 @@ ou non encadrée – mais alors sans contenir aucun espace, guillemet, apostroph
 • bien sûr, de nombreux caractères sont autorisés dans le nom des propriétés :
     crochets, parenthèses, caractères UTF-8, ...
 
+● BEM en CSS - Block Element Modifier :
+BEM est une technique de nommage des classes CSS.
+On construit les classes comme des composants réutilisable / empilables
+ (composants de comportement, de stylisation, ...)
+<div class="box">
+    <h1 class="box-title">...</h1>
+    <p class="box-content">
+        ... <span class="box-content-highlight">...</span>
+    </p>
+</div>
+_ donner une classe au bloc  -> "box",
+_ inclure ce nom dans la classe de l'enfant  -> "box-title", "box-content"
+  récursivement  -> "box-content-highlight"
+_ ajouter le modifieur 
+
+
 ● HTML5 :
 _ insensible à la casse des balises (mais à celle des valeurs d'attributs)
 _ la fermeture des balises «void» par un slash est facultative, au choix du dév'
@@ -39,6 +55,9 @@ _ HTML 4.01 définissait 16 couleurs, reprises par CSS1.
 _ le module «color» de CSS niveau 3, lui, en reconnait 140 (dites «extended
 color keywords», «X11 colors» ou «SVG colors») – mais uniquement utilisables en
 CSS et SVG.
+
+• la valeur de propriété de couleur « currentColor » (pour marges etc.) permet
+ de récupérer la couleur de texte actuelle ...
 
 
 ● GRADIENTS DE COULEUR :
@@ -81,7 +100,7 @@ et de forme calquée sur ce dernier :
  bandes semi-transparentes par dessus une image,
 
 
-●** TEXTE COLORÉ (GRADIENT OU DÉCOUPÉ SUR IMAGE DE FOND) :
+● TEXTE « COLORÉ » (GRADIENT OU DÉCOUPÉ SUR IMAGE DE FOND) :
 le CSS :
 	background: linear-gradient(to bottom right, yellow, blue);
 	-webkit-background-clip: text;
@@ -177,6 +196,14 @@ opacity, etc. – bref, tout ce qui demande un rendu offscreen –, créée
 	cf «/usr/share/doc/divers/HTTP, HTML, CSS : articles/What No One Told You About Z-Index.html»
 
 • si on arme les prop' «width» et «right», cette dernière est ignorée.
+
+
+● POSITIONNEMENT :
+_ static par défaut 
+_ relative : par rapport à sa position calculée
+_ absolute : par rapport au plus proche ancêtre positionné (viewport par défaut)
+_ fixed : par rapport à la page 
+
 
 ● « Block Formating Context » :
 De même que des « contextes d'empilement » sont créés sous certaines conditions,
@@ -281,6 +308,12 @@ Ils occupent par défaut toute la largeur disponible au sein du parent ...
 	margin-right: auto;
 → centré horizontalement !
 
+
+● SUPPRIMER L'ESPACE SÉPARANT DEUX ÉLÉMENTS INLINE-BLOCK :
+Cet espace est dû à un espace ou un retLn dans le source ...
+Plusieurs méthodes :
+_ flex,
+_ margin-right: calc(-0.5em),
 
 
 ● Liste de balises «meta name» HTTP :
@@ -590,7 +623,11 @@ l'affichage d'une infobulle.
 • bloc <noscript> :
 _ HTML ≤ 4.1, <noscript>	n'est permis que dans <html>
 _ HTML5 :	<noscript> peut être utilisé dans <head> !
-	→	possibiliter d'utiliser un <link rel="stylesheet" ..> différent !
+	→	possibiliter d'utiliser un <link rel="stylesheet" ..> différent pour
+	 les navigateurs sans JS !
+
+• bloc <style> :
+   peut être inséré partout dans le code, pas seulement dans le <head> ...
 
 
 •propriété CSS «background» : images cumulables !
