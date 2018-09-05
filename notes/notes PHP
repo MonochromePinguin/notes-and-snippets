@@ -367,6 +367,13 @@ _ propriétés statiques :
 • héritage (extends) ;
 • interfaces (implements) : « programmat° par contrat »
 
+• ON PEUT AJOUTER DES PROPRIÉTÉS ET MÉTHODES PUBLIQUES DE MANIÈRE DYNAMIQUES
+À UNE INSTANCE ! 
+Ne pas oublier le point-virgule en fin d'assignation.
+    $instance->newFunc = function() { ... };
+Mais on ne peut pas l'appeler directement, il faut utiliser, par exemple,
+    call_user_func($instance->newFunc);
+
 
 ● AFFICHAGE DU TEMPS LOCALISÉ :
 L'information de localisation est armée *par processus*, non *par thread*.

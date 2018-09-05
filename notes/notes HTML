@@ -316,6 +316,13 @@ _ flex,
 _ margin-right: calc(-0.5em),
 
 
+● box-sizing :
+content-box     par défaut.
+border-box       les bordures sont incluses dans la place allouée à l'élément
+   -> beaucoup plus simple de calculer la mise-en-page.
+
+
+
 ● Liste de balises «meta name» HTTP :
 	<meta name="XXX" content="XXX" />
 ⊕Author
