@@ -1,0 +1,71 @@
+	┏━━━━━━━━━━━━━┓
+	┃ NOTES JAVA :┃
+	┗━━━━━━━━━━━━━┛
+
+● COMPILER EN CLI :
+avec telle structure de dossier & classes :
+	.
+	├ Manifest (fichier manifest)
+	└ src
+	  └ com
+	    └ monochrome
+	      └Main.java
+
+	javac -classpath src src/com/monochrome/Main.java
+	jar cfm package.jar Manifest -C src com
+
+• javac :
+compile chaque fichier « .java » en bytecode « .class »
+	-classpath : le chemin où trouver l'arborescence des classes
+•jar :
+	jar cfm [nomPaquetageÀproduire] [nomManifest] -C [dossierSources] [racineEspaceDeNommage]
+créé le «.jar».
+	c	: ℂréer paquetage
+	f	: on indique le nom du paquetage créé – 1er argument
+	m	: tirer les attributs du fichier à créer du fichier donné en 2e argument
+
+
+┏━━
+┃•comparaison de chaines :
+┃	« == tests for reference equality. (useful for interned strings)
+┃	 .equals() tests for value equality. »
+┃
+┃• les nombres peuvent être formatés avec des soulignés en java ≥7 :
+┃	double v = 1_000_000d;
+┃• préfixes 0x (hexa), 0b (binaire) - comme en C ;
+┃
+┃• ne pas oublier la syntaxe «for( compteur : tableau )» :
+┃	int[][] tbl = { { 1, 2, 3}, {10, 20, 30} };
+┃	for ( int[] sousTableau : tbl )
+┃		for ( int entier : sousTableau )  ← la boucle englobante renvoit un
+┃			blablabla		    int[] dans «sousTableau»
+┃
+┃● MODIFICATEURS DE VISIBILITÉ DES CLASSES ... :
+┃	«par défaut» → tout le paquetage
+┃	public
+┃● ... ET DES ATTRIBUTS & MÉTHODES :
+┃	private		→	privé à la classe
+┃	«par défaut»	→	tout le paquetage
+┃	protected	→	paquetage et descendance de la classe
+┃	public
+┃
+┃• static :
+┃	s/ membre ou méthode :	commun à la classe ;
+┃				pas d'accès aux champs d'instances.
+┃	s/ bloc d'initialisation - exécuté au chargement de la classe.
+┃	s/ classes internes : ↓↓↓
+┃
+┃• classes internes :
+┃	«par défaut»	→	chq instance est liée à une instance
+┃						 de la classe conteneur
+┃	static			→	comme membres statiques ...
+┃	classes locales & anonymes :
+┃			utilisables seulmnt ds le bloc de code de déclarat°
+┃
+┃• final :
+┃	s/ attribut	→	constante (pour objets : référence constante)
+┃	s/ méthodes →	ne peuvent être redéfinies par descendants
+┃	s/ classe 	→	elle ne peut être dérivée
+┃• static final → constante !
+┗━━
+

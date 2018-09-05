@@ -87,7 +87,8 @@ ev.button	→ 0 = bouton principal, 1 = molette/milieu, 2 = b. droit,
 
 • :
 document.getElementById(),
-		.getElementsByName(),
+		.getElementsByClassName(),
+		.getElementsByName(),	→ tt éléments d'attribut "name" donné
 		.getElementsByTagName(),
 		.querySelector(),		→ 1er élém rencontré
 		.querySelectorAll(),	→ TOUT les éléments
@@ -114,6 +115,8 @@ elem.children[],
 	propriété d'un élément – «Element». Contient uniquement les éléments fils.
 
 • elem.setAttribute() ≠ elem.style.setProperty() !
+
+elem.closest('sélecteur') – renvoit l'élément, un parent, ou null
 
 elem.getAttributes()
 	.appendChild()
@@ -156,9 +159,15 @@ ou dans
 	<script language="javascript">
 
 
-● elem.addEventListener(ev, fonc° ) :
-	pour bloquer l'action par défaut / la propagation de l'éven par bullage :
-	 fonc° doit appeler ev.preventDefault()
+● elem.addEventListener(ev, callback ) / ev.preventDefault() / ev.stopPropagation() :
+• ev.preventDefault() :
+	Bloque l'action par défaut du navigateur, mais pas le bullage de l'éven.
+• ev.stopPropagation():
+	Bloque le bullage – seul l'élément courant effectue des actions en retour,
+ pas les éléments parents.
+• renvoyer TRUE/FALSE :
+	SANS EFFET EN JAVASCRIPT PUR.
+	Équivalent ev.preventDefault() + ev.stopPropagation() sous JQuery.
 
 
 

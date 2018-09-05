@@ -41,7 +41,7 @@ On construit les classes comme des composants réutilisable / empilables
 _ donner une classe au bloc  -> "box",
 _ inclure ce nom dans la classe de l'enfant  -> "box-title", "box-content"
   récursivement  -> "box-content-highlight"
-_ ajouter le modifieur 
+_ ajouter le modifieur
 
 
 ● HTML5 :
@@ -163,13 +163,15 @@ _ meta title :
 
 ● NE PAS OUBLIER :
 - balises <meta charset="">,
-          <meta dir="ltr|rtl">, 
+          <meta dir="ltr|rtl">,
 - <title> dans <head>
 - déclarer la langue, au moins via <html lang="fr">, et partout où ça change
 	aucune langue : "Zxx"
 	indéterminé : "und"
 - d'après «https://www.w3.org/TR/html5-diff/#syntax», §3.1, on peut utiliser de
 	<h1> à <h6> avec <section> ...
+  MAIS, d'après le validateur, si on a un <h1> global, il faut utiliser au plus
+  des <h2> dans les <section> ...
 - en HTML5 : <input>, PAS <input>texteAffiché</input> !
 - <label>...<input type="..."></label> ! <input> DANS son <label>
 - script placé dans l'élément <head> : avec l'attribut «defer» ou «async» !
@@ -199,10 +201,10 @@ opacity, etc. – bref, tout ce qui demande un rendu offscreen –, créée
 
 
 ● POSITIONNEMENT :
-_ static par défaut 
+_ static par défaut
 _ relative : par rapport à sa position calculée
 _ absolute : par rapport au plus proche ancêtre positionné (viewport par défaut)
-_ fixed : par rapport à la page 
+_ fixed : par rapport à la page
 
 
 ● « Block Formating Context » :
@@ -391,9 +393,11 @@ _ les autres sont des feuilles de style alternatives, présentées par le
 <section>, <article>, <aside>,
 tous pouvant contenir leurs <header>, titres <h𝑛>, ...
 <article> pourra contenir <header>, <section>s, <aside>s, ...
+• il ne peut y avoir qu'un seul <main> par document,
+ et PAS dans un <article>, <section>, ...
 • ATTENTION au niveau des titres :
 quand situé sous un h1, un article, section ou aside doit avoir
- comme titre au plus un h2 pour respecter l'arborescence des titres
+ comme titre au plus un h2 pour respecter l'arborescence des titres.
 • et autres balises :
 	<detail> (dont le contenu est caché jsqu'à déploiment),
 	  <summary> qui doit ê le 1er enfant de <detail>,
