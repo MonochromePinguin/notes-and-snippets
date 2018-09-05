@@ -148,6 +148,8 @@ _ meta title :
 	indéterminé : "und"
 - d'après «https://www.w3.org/TR/html5-diff/#syntax», §3.1, on peut utiliser de
 	<h1> à <h6> avec <section> ...
+  MAIS, d'après le validateur, si on a un <h1> global, il faut utiliser au plus
+  des <h2> dans les <section> ...
 - en HTML5 : <input>, PAS <input>texteAffiché</input> !
 - <label>...<input type="..."></label> ! <input> DANS son <label>
 - script placé dans l'élément <head> : avec l'attribut «defer» ou «async» !
@@ -348,6 +350,8 @@ _ les autres sont des feuilles de style alternatives, présentées par le
 <section>, <article>, <aside>,
 tous pouvant contenir leurs titres <h𝑛>, ...
 <section> pourra contenir <header>, <article>s, <aside>s, ...
+• il ne peut y avoir qu'un seul <main> par document,
+ et PAS dans un <article>, <section>, ...
 • et autres balises :
 	<detail> (dont le contenu est caché jsqu'à déploiment),
 	  <summary> qui doit ê le 1er enfant de <detail>,
