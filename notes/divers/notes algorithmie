@@ -1,0 +1,77 @@
+Résolution d'algorithmes : 
+_ LDA :
+    Langages de description d'algorithme : pas de standard, que des conventions.
+_   Algogramme »
+
+_ créer l'algo : 
+	définir le problème,
+		les étapes,
+	analyser les données de base,
+	définir les données de sorte,
+	écrire l'algo.
+
+
+_ écrire l'algo :
+	nom et description,
+	types des données.
+
+_ fonction renvoit résultat, entrées typées.
+  méthode : pas de sortie, entrées (généralement) non typées.
+
+_ types primitifs dispo : 
+	entier,
+	réel,
+	booléen (PAS truthy/falsy),
+	caractère (en algo' pure, pas du tout convertible en sa valeur numérique),
+	chaînes
+_ types complexes :
+	tableaux. 
+
+_ symbole d'affectation, variables et constantes :
+	var <- valr
+	var := valr
+
+_ tableaux :
+	en algo, entrées d'un tableau toutes du même type.
+
+
+_ l'opérateur + est POLYMORPHE :
+**comportement différent en fonction du type d'entrée**
+	nb + nb -> addition
+	chaîne + chaîne -> concaténation
+
+
+_ " structure appauvrie " :
+	if ... then ... else fi <- structure
+	if ... then fi		<- sans else : structure appauvrie !
+
+
+_ un exemple :
+
+PROCÉDURES
+	PROCEDURE proc(ch: CHAÎNE)
+		DÉBUTFONC
+			...
+		FINFONC
+
+DÉCLARATIONS
+	VAR 
+	    v : ENTIER
+ENTRÉE
+	LIRE v
+
+DÉBUT
+	v := 1O 
+	DÉBUTSI expr
+	ALORS
+		code
+	SINON
+		code
+	FINSI
+
+
+
+
+
+
+

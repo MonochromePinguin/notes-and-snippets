@@ -11,7 +11,7 @@ sur	https://developers.google.com/fonts/docs/getting_started
 génèrer des liens pour des images placehoder de taille arbitraire :
 	https://placeholder.com/
 
-♦♦♦ Cf «notes programmation» pr notes javascript ! ♦♦♦
+♦♦♦ Cf «notes Javascript» pr notes javascript ! ♦♦♦
 
 • sous firefox :
 	Ctrl maj M	→	voir la page telle que sous un autre appareil / autre déf°
@@ -24,7 +24,24 @@ génèrer des liens pour des images placehoder de taille arbitraire :
 	attr[[:space:]]*=[[:space:]]*("val[^'']"|'val[^']'|val[^ ''<`'>])
 bref, la valeur peut être encadrée d'apostrophes, de guillemets,
 ou non encadrée – mais alors sans contenir aucun espace, guillemet, apostrophe,
- chevron ouvrant ou fermant, guillemet anglais, et en étant suivie d'un espace.
+ chevron ouvrant ou fermant, guillemet an ne donne-t-il pasglais, et en étant suivie d'un espace.
+• bien sûr, de nombreux caractères sont autorisés dans le nom des propriétés :
+    crochets, parenthèses, caractères UTF-8, ...
+
+● BEM en CSS - Block Element Modifier :
+BEM est une technique de nommage des classes CSS.
+On construit les classes comme des composants réutilisable / empilables
+ (composants de comportement, de stylisation, ...)
+<div class="box">
+    <h1 class="box-title">...</h1>
+    <p class="box-content">
+        ... <span class="box-content-highlight">...</span>
+    </p>
+</div>
+_ donner une classe au bloc  -> "box",
+_ inclure ce nom dans la classe de l'enfant  -> "box-title", "box-content"
+  récursivement  -> "box-content-highlight"
+_ ajouter le modifieur
 
 
 ● HTML5 :
@@ -38,6 +55,9 @@ _ HTML 4.01 définissait 16 couleurs, reprises par CSS1.
 _ le module «color» de CSS niveau 3, lui, en reconnait 140 (dites «extended
 color keywords», «X11 colors» ou «SVG colors») – mais uniquement utilisables en
 CSS et SVG.
+
+• la valeur de propriété de couleur « currentColor » (pour marges etc.) permet
+ de récupérer la couleur de texte actuelle ...
 
 
 ● GRADIENTS DE COULEUR :
@@ -80,7 +100,7 @@ et de forme calquée sur ce dernier :
  bandes semi-transparentes par dessus une image,
 
 
-●** TEXTE COLORÉ (GRADIENT OU DÉCOUPÉ SUR IMAGE DE FOND) :
+● TEXTE « COLORÉ » (GRADIENT OU DÉCOUPÉ SUR IMAGE DE FOND) :
 le CSS :
 	background: linear-gradient(to bottom right, yellow, blue);
 	-webkit-background-clip: text;
@@ -142,7 +162,9 @@ _ meta title :
 
 
 ● NE PAS OUBLIER :
-- balises <meta charset=""> et <title> dans <head>
+- balises <meta charset="">,
+          <meta dir="ltr|rtl">,
+- <title> dans <head>
 - déclarer la langue, au moins via <html lang="fr">, et partout où ça change
 	aucune langue : "Zxx"
 	indéterminé : "und"
@@ -176,6 +198,14 @@ opacity, etc. – bref, tout ce qui demande un rendu offscreen –, créée
 	cf «/usr/share/doc/divers/HTTP, HTML, CSS : articles/What No One Told You About Z-Index.html»
 
 • si on arme les prop' «width» et «right», cette dernière est ignorée.
+
+
+● POSITIONNEMENT :
+_ static par défaut
+_ relative : par rapport à sa position calculée
+_ absolute : par rapport au plus proche ancêtre positionné (viewport par défaut)
+_ fixed : par rapport à la page
+
 
 ● « Block Formating Context » :
 De même que des « contextes d'empilement » sont créés sous certaines conditions,
@@ -281,6 +311,12 @@ Ils occupent par défaut toute la largeur disponible au sein du parent ...
 → centré horizontalement !
 
 
+● SUPPRIMER L'ESPACE SÉPARANT DEUX ÉLÉMENTS INLINE-BLOCK :
+Cet espace est dû à un espace ou un retLn dans le source ...
+Plusieurs méthodes :
+_ flex,
+_ margin-right: calc(-0.5em),
+
 
 ● Liste de balises «meta name» HTTP :
 	<meta name="XXX" content="XXX" />
@@ -348,10 +384,13 @@ _ les autres sont des feuilles de style alternatives, présentées par le
 ● balises structurantes, conférant une valeur sématique, introduites par HTML5 :
 <header>, <footer>, <nav> (principaux liens de navig°), <main>,
 <section>, <article>, <aside>,
-tous pouvant contenir leurs titres <h𝑛>, ...
-<section> pourra contenir <header>, <article>s, <aside>s, ...
+tous pouvant contenir leurs <header>, titres <h𝑛>, ...
+<article> pourra contenir <header>, <section>s, <aside>s, ...
 • il ne peut y avoir qu'un seul <main> par document,
  et PAS dans un <article>, <section>, ...
+• ATTENTION au niveau des titres :
+quand situé sous un h1, un article, section ou aside doit avoir
+ comme titre au plus un h2 pour respecter l'arborescence des titres.
 • et autres balises :
 	<detail> (dont le contenu est caché jsqu'à déploiment),
 	  <summary> qui doit ê le 1er enfant de <detail>,
@@ -588,7 +627,11 @@ l'affichage d'une infobulle.
 • bloc <noscript> :
 _ HTML ≤ 4.1, <noscript>	n'est permis que dans <html>
 _ HTML5 :	<noscript> peut être utilisé dans <head> !
-	→	possibiliter d'utiliser un <link rel="stylesheet" ..> différent !
+	→	possibiliter d'utiliser un <link rel="stylesheet" ..> différent pour
+	 les navigateurs sans JS !
+
+• bloc <style> :
+   peut être inséré partout dans le code, pas seulement dans le <head> ...
 
 
 •propriété CSS «background» : images cumulables !
