@@ -431,3 +431,11 @@ provoqué par l'emploi d'un tableau de valeurs à passer en paramètres au POST
 	$.javax(url, options)
 		→ la méthode la plus avancée mais la moins simple à utiliser
 
+
+● plugins jquery d'intérêt:
+    dataTable   - affichage de tableau triable, recherchable, éditable 
+
+
+• calendrier avancé :
+    fullCalendar    - affichage d'événement, etc.
+
