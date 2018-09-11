@@ -67,7 +67,10 @@ Chaque package est une « boîte noire »  représentant un ensemble d'élément
     Comme le précédent, mais en mettant en avant non pas les dépendances mais
 les fonctionnalités et interfaces fournies ou requises par les packages.
     Un « composant » n'est ni plus ni moins qu'un module, package, etc ...
-suivant le langage (ou même quelque chose de plus abstrait)
+suivant le langage (ou même quelque chose de plus abstrait).
+_ Sert lors de la rétroingénierie, ou lors de l'écriture de la doc' absente
+ d'un logiciel.
+_ chaque composant du diagramme est marqué comme tel via <<component>> 
 
 * diagramme de déploiement :
     diagramme avec des symboles et non des boîtes, décrivant les grands
@@ -193,8 +196,10 @@ _ On ne place pas de méthodes dans les cadres des classes - ces méthodes sont
 les « messages ».
 
 _ flèche en tirets  vers le cadre d'une classe:  création de qqch
-_ flèche épaisse accompagnée d'un nom de fonction : démarrage d'un
-    traitement (appel de fonction)
+_ flèche épaisse, flèche barrée : démarrage d'un traitement et attente de la
+ réponse (appel de fonction) - « message synchrone »,
+_ flèche fine, demi-flèche : « message asynchrone » (on envoit le message et
+on passe à autre chose en attendant l'éventuelle réponse)
 _ flèche en tiret, dans l'autre sens : renvoit d'une réponse
 _ cadres verticaux le long des « lignes de vie » :
     symbolisent la réalisation d'un traitement ...
@@ -202,7 +207,13 @@ _ cadres verticaux le long des « lignes de vie » :
 _ les cadres représentent des actions non linéaires :
     LOOP    notre chère boucle ...
     ALT     if/then/else  ou encore switch suivant le nombre de cas indiqués.
+    OPT     exécution optionnel
+    REGION  région critique (cf concept en programmation : zone de code
+    NEG, BREAK, REF, SD.
     
+    
+exécutable par un seul thread à la fois. Me soumettre à la question en cas de
+terminologie pas claire.
 
 _ les « auto-messages » et les « messages récursifs » :
     termes compliqués qui correspondent en fait aux concepts tout simples
@@ -227,7 +238,8 @@ _ inclusion - « include » :
     flèche en tirets + mention « include »
 Le cas d'utilisation A inclus obligatoirement le cas B, mais l'inverse n'est pas
 vrai :
-    Un caissier 
+    Un caissier peut vendre un article, ce qui inclu d'encaisser le paiement,
+mais il peut aussi encaisser les € sans avoir déclenché la vente ...
 
 _ extension - « extends » :
     flèche en tiret + mention « extends »
@@ -235,3 +247,47 @@ Les 2 cas d'utilisation sont liées, mais de manière optionnelle :
  Un caissier peut gérer une commande et encaisser le paiement, mais aussi faire
  l'un sans l'autre (commande à distance, pré-paiement, ...)
  
+ 
+*** diagramme d'activité :
+_Cadres arrondis pour les actions,
+_ losanges pour les décisions (exactement comme lors des 1ers dojo d'algo !)
+_ cadres à bords droits pour les données d'entrées et de sorties d'une action ;
+_ cadre à bord droit convexe pour l'envoi de signaux - eux-mêmes placés comme
+de simples action.   
+
+_ symboles de début / fin : disque noir / disque noir dans un cercle
+_ symbole de fin locale : disque bleu avec une croix. Fin d'un thread.
+fork / join / régions interruptibles :
+    mêmes concepts qu'en programmation. 
+_ région interruptible :
+Traitement annulable à tout moment.
+    cadre avec bord gauche concave et ligne brisée sortant du cadre de la région
+interruptible : symbolise la sortie de la région
+
+_ données d'entrées ou de sorties : cadres à bords droits. 
+
+
+*** diagramme de composants :
+flèche en tirets, tête en triangle : « ce composant fourni tel service »
+flèche en tiret, tête en chevron : « ce composant dépends de tel service »
+
+
+            interface <----- dépendant
+                /\
+               /__\                 oh bordel, des flèches en ASCII
+                |                       c'est pas commode
+                |
+            fournisseur
+            
+_ les « ports » (pas grand chose à voir avec les ports de TCP)
+améliorent la lisibilité des interfaces : au lieu d'avoir plein de flèches
+pointant vers une interface,
+on note le nom de celle-ci à côté du composant dans un demi-cercle.
+
+
+*** diagramme de déploiement :
+Simples composants décrivant les noeuds physiques et leurs relations logiques,
+avec multiplicité.
+« artefacts » : logiciels au sein des composants.
+ 
+            
