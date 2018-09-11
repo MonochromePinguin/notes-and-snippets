@@ -290,4 +290,25 @@ Simples composants décrivant les noeuds physiques et leurs relations logiques,
 avec multiplicité.
 « artefacts » : logiciels au sein des composants.
  
-            
+
+*** diagramme de packages :
+package contenu par un autre package : trait doté d'un « plus » cerclé du côté
+du package parent.            
+
+
+*** diagramme d'état :
+    états logiques d'un système et leur transitions.
+
+_ état composite : 
+    un bloc contenant d'autres états, indiquant qu'une même transition
+s'applique à tout ses composants. Plus simple à lire !
+
+
+_ état pseudo-historique :
+    comme le précédent, mais au lieu de changer d'état définitivement,
+on peut revenir à l'état précédent d'où on était parti ...
+    Flèche de retour : pointant vers un H cerclé signifiant qu'on reviens à
+l'état enregistré dans l'historique. 
+
+_ transition propre : on reste dans le même état, avec mise à jour d'un attribut
+(p.ex. incrémentation d'une variable).
