@@ -1,27 +1,19 @@
 *** Notes sur UML ***
 
-_ Nous avons reçu la consigne d'utiliser un certain logiciel de schémas UML :
-    Astah.
-Payant par défaut, mais disponible gratuitement en version
-« étudiant américain », grace à une astuce gracieusement fournie par Amandine, permettant d'obtenir une licence gratuite pendant un an.
-Va sur 
-    http://astah.net/student-license-request ,
-rentre une paire prénom/nom, et une fausse adresse universitaire américaine (en
-l'occurence, le nom de domaine de son ancienne école ...)
- composée ainsi :
-     initiales,
-     00,
-     deux chiffres,
-     @mix.wvu.edu
--> tu recevra une license pour utiliser le logiciel (au delà des 30 jours d'essai)
-téléchargable sur une autre page. 
-    un exemple :
-        ad0066@mix.wvu.edu
-            
+● les 4+1 vues d'un système logiciel :
+_ besoins des utilisateurs  →   diagramme useCases, diagramme de packages
+_ vue logique               →   diagramme de classes ; diagramme d'objet      
+_ vue des processus         →   diag. de séquence ; diag. d'activité ;
+                                de communication, d'état-transition
+_ diagramme de composants   
+_ "     "    " déploiement
 
-_ UML est : _ un langage de modélisation (Ce n'est pas un langage qui se
+
+
+● UML est :
+_ un langage de modélisation (Ce n'est pas un langage qui se
 prononce ou s'écrit, mais le terme de « langage » s'applique à lui tout de même)
-            _ une notation graphique
+_ une notation graphique
   
 _ Historiquement parlant, MERISE est plus ancienne que UML, et a permis
 l'émergeance du premier ; leurs symboles sont relativement proches. Tu as
@@ -51,19 +43,20 @@ Chaqu'un de ces éléments est un boîte dotée d'un dessin spécifique :
     _ rectangle écorné à droite pour un commentaire ou une contrainte,
     _ icône pour un acteur (dans le diagramme de « cas d'utilisation »)
 
-* diagramme de classe :
+
+●● diagramme de classe (IMPORTANT) :
      un diagramme statique, listant les méthodes et propriétés d'une classe.
      
-* diagramme d'objet :
+● diagramme d'objet :
     Peu utilisé. Sert surtout d'exemple au précédent (avec instances des
 classes du précédent).
     
-* diagramme de package :
+●● diagramme de package (IMPORTANT) :
     Pour représenter les grands ensembles du mécanisme décrit et leurs relations
 en simplifiant le schéma.
 Chaque package est une « boîte noire »  représentant un ensemble d'éléments UML.
  
-* diagramme de composants :
+● diagramme de composants :
     Comme le précédent, mais en mettant en avant non pas les dépendances mais
 les fonctionnalités et interfaces fournies ou requises par les packages.
     Un « composant » n'est ni plus ni moins qu'un module, package, etc ...
@@ -72,22 +65,22 @@ _ Sert lors de la rétroingénierie, ou lors de l'écriture de la doc' absente
  d'un logiciel.
 _ chaque composant du diagramme est marqué comme tel via <<component>> 
 
-* diagramme de déploiement :
+● diagramme de déploiement :
     diagramme avec des symboles et non des boîtes, décrivant les grands
 composants d'un ensemble plutôt que leurs relations.
     
-* diagramme de profils :
+● diagramme de profils :
     Par exemple, pour un serveur, représente les différents modes de
 fonctionnement : développement, testing, production,
 et qui doit utiliser quel mode.
  
-*** diagramme de cas d'utilisation  (LE PLUS UTILISÉ, À RETENIR):
+●● diagramme de cas d'utilisation (LE PLUS UTILISÉ, IMPORTANT):
  diagramme statique. Comme le nom l'indique ...
  
-* diagramme d'état :
+● diagramme d'état :
     représente l'évolution d'un objet entre ses différents états.
     
-*** diagramme  de séquences (À RETENIR ?) :
+●● diagramme  de séquences (À RETENIR) :
     Interactions entre entités au cours du temps.(J'en ai déjà vu des comme ça,
 notemment en réseau, sans savoir qu'ils avaient un nom ...)
     Diagramme vertical représentant les appels de services, envois de messages
@@ -95,12 +88,13 @@ ou de données, ... entre composants. Tout échange (appel de procédure ou non 
 est nommé « message ». 
     
 
+~~~ plus en détail ~~~
 
 
-*** diagramme de classe :    
+●● DIAGRAMME DE CLASSE :    
 _ Les associations et multiplicités sont assez semblables aux notations merise :
 « 1,n » devient « 1..* » ...
-** MAIS ATTENTION AU SENS : les mutiplicités (le terme UML pour « cardinalité »
+* MAIS ATTENTION AU SENS * : les mutiplicités (le terme UML pour « cardinalité »
 en merise) sont placées ;dans l'autre sens.
  
  Si client peut avoir 0 à n compte, mais compte un unique client, on notera :
@@ -118,7 +112,7 @@ centre.
 une multiplicité  de 1.
 
  
-_ « généralisation » / « spécialisation » :
+• « généralisation » / « spécialisation » :
 C'est le concept d'« héritage » en programmation.
 ** Se note avec une flèche pointant sur la classe abstraite / parente.
 La classe parente « généralise » ses classes dérivées,
@@ -127,7 +121,7 @@ Les classes dérivées (qui « extends » / « héritent de » la classe parente
 Une classe abstraite sera écrite avec un nom en italique.
  
 
- *** notation des attributs et méthodes d'une classe UML *** :
+• *** notation des attributs et méthodes d'une classe UML *** :
 ATTENTION, SYNTAXE AVANCÉE ! Mieux vaut la connaitre, mais à éviter quand on
 dessine un schéma pour des néophytes.
 _ les attributs des classes peuvent être facultativement constants ou dérivés :
@@ -142,11 +136,11 @@ arbitraires), mas des attributs dont la valeur *dépend* d'autres attributs.
 ** ATTENTION à NE PAS CONFONDRE AVEC PHP OÙ C'EST L'INVERSE :
     dollar pour variable, pas de dollar pour constante ... **
         
-_ attributs et méthodes statiques :
+• attributs et méthodes statiques :
     soulignés, suivis d'un deux point, puis du nom de la classe. notation
  totalement arbitraire !;
 
-_ « restriction de navigabilité » :
+• « restriction de navigabilité » :
 Une relation entre deux classes peut n'avoir qu'un seul sens :
 Elle sera marquée d'une croix (départ de la relation) à un bout, et d'une flèche
 à l'autre (arrivée) :
@@ -164,12 +158,12 @@ de manière indirecte (càd. que le terminal a besoin de la classe TicketDeCaiss
 pour engendrer les ventes) : on peut rajouter une flèche en tirets entre les 2.
  
 
-_ « classe d'associations » :
+• « classe d'associations » :
     (Voir la diapo correspondante dans la préz' )
 Sur cette diapo, la classe «LigneDeVente» permet d'ajouter une notion de
 quantité à la relation entre les classes « Vente » et « Article ».
 
-_ « composition et association » :
+• « composition et association » :
     permet d'indiquer les suppressions en cascade (voir le concept en SQL) :
 dans le schéma de la diapo associée, le losange noir sous Terminal indique
 que la suppression de ce dernier implique la suppression des Ventes liées à ce
@@ -185,13 +179,13 @@ référence aux opérations du point-de-vue d'une classe précise. On ne met pas
 toutes les relations possibles sur un même schéma 
   
   
-*** diagramme de séquence :
+●● DIAGRAMME DE SÉQUENCE :
 Représente les actions survenant au cours du temps au sein d'une interaction.
 _ Avec Lignes verticales / « lignes de vie » (l'axe vertical représente le
  passage du temps),
 _ accompagnées de flèches horizontales (actions et échanges de « messages ».
 Sur le plan du code, les messages sont implémentés tout simplement sous la
-forme de méthodes et fonctions).
+forme de méthodes et fonctions, de RPC, ...).
 _ On ne place pas de méthodes dans les cadres des classes - ces méthodes sont
 les « messages ».
 
@@ -201,8 +195,18 @@ _ flèche épaisse, flèche barrée : démarrage d'un traitement et attente de l
 _ flèche fine, demi-flèche : « message asynchrone » (on envoit le message et
 on passe à autre chose en attendant l'éventuelle réponse)
 _ flèche en tiret, dans l'autre sens : renvoit d'une réponse
-_ cadres verticaux le long des « lignes de vie » :
+_ rectangles verticaux le long des « lignes de vie » :
     symbolisent la réalisation d'un traitement ...
+    
+_ message provenant d'un élément en dehors du diagramme :
+    la flèche part du bord du diagramme ou d'un disque noir.
+
+_ automessage :
+    appel d'une méthode ou fonction ;
+    
+_ terminaison d'un élément :
+    croix en fin de ligne de vie.
+    Doit résulter d'un message ou auto-message.
 
 _ les cadres représentent des actions non linéaires :
     LOOP    notre chère boucle ...
@@ -220,7 +224,7 @@ _ les « auto-messages » et les « messages récursifs » :
 d' « appel de fonction » et d' « appel de fonction en tâche de fond »
 
 
-*** diagramme de cas d'utilisation :
+●● DIAGRAMME DE CAS D'UTILISATION :
 Représente les différentes action que le ou les acteurs du schéma peuvent
  accomplir ... C'est une représentation de haut niveau, sans la complexité d'un
  diagramme de classes.
@@ -248,7 +252,7 @@ Les 2 cas d'utilisation sont liées, mais de manière optionnelle :
  l'un sans l'autre (commande à distance, pré-paiement, ...)
  
  
-*** diagramme d'activité :
+● diagramme d'activité :
 _Cadres arrondis pour les actions,
 _ losanges pour les décisions (exactement comme lors des 1ers dojo d'algo !)
 _ cadres à bords droits pour les données d'entrées et de sorties d'une action ;
@@ -267,7 +271,7 @@ interruptible : symbolise la sortie de la région
 _ données d'entrées ou de sorties : cadres à bords droits. 
 
 
-*** diagramme de composants :
+● diagramme de composants :
 flèche en tirets, tête en triangle : « ce composant fourni tel service »
 flèche en tiret, tête en chevron : « ce composant dépends de tel service »
 
@@ -285,19 +289,19 @@ pointant vers une interface,
 on note le nom de celle-ci à côté du composant dans un demi-cercle.
 
 
-*** diagramme de déploiement :
+● diagramme de déploiement :
 Simples composants décrivant les noeuds physiques et leurs relations logiques,
 avec multiplicité.
 « artefacts » : logiciels au sein des composants.
  
 
-*** diagramme de packages :
+●● diagramme de packages :
 package contenu par un autre package : trait doté d'un « plus » cerclé du côté
 du package parent.            
 
 
-*** diagramme d'état :
-    états logiques d'un système et leur transitions.
+● diagramme d'états-transitions :
+    états logiques d'un système et ses transitions.
 
 _ état composite : 
     un bloc contenant d'autres états, indiquant qu'une même transition
@@ -312,3 +316,39 @@ l'état enregistré dans l'historique.
 
 _ transition propre : on reste dans le même état, avec mise à jour d'un attribut
 (p.ex. incrémentation d'une variable).
+
+
+● diagramme de communication :
+    semblable à un diagramme de classe accompagné des messages et de flèches
+numérotées montrant leur circulation.
+• syntaxe avancée :
+chaque objet est représenté par un cercle au lieu d'un rectangle ;
+_ classe entité (ou données) du système :
+    cercle souligné
+_ classe contrôle :
+encapsule un useCase du système.    
+    cercle avec flèche sur la périphérie
+_ frontière :, et plus de connexion par la suite. 
+lieu d'échange entre des acteurs et le système (E/S)
+    cercle avec un T couché : « |-- » précédant l'élément.
+  « business boundary » : frontière / interaction entre entités,
+  autres « boundaries » : frontières entre éléments du code.
+_ classe liée au « business » :
+    classe avec un
+
+
+_ entre crochets : conditions.
+
+
+● diagramme de temps :
+_ horizontal, états disposés en colonne.
+_ contraintes de temps :
+    indiquées entre accolades avec les actions,
+    ou données au dessus du diagramme sous forme de cotes.
+        
+ 
+ 
+● autres diagrammes UML inconnus des développeurs mais présents au  sein
+ de l'entreprise:
+• BOM : Business Object Modelisation
+• BPM : Business Project Modelisation   

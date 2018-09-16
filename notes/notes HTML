@@ -318,9 +318,9 @@ _ flex,
 _ margin-right: calc(-0.5em),
 
 
-● box-sizing :
-content-box     par défaut.
-border-box       les bordures sont incluses dans la place allouée à l'élément
+● BOX-SIZING :
+_ content-box     par défaut.
+⊕ border-box       les bordures sont incluses dans la place allouée à l'élément
    -> beaucoup plus simple de calculer la mise-en-page.
 
 
@@ -418,8 +418,8 @@ Par défaut, ils sont positionnés sur une même «ligne de base» située en ba
 
 
 ● FLEX :
-• Sous chrome, ajouter «margin: 0» aux enfants peut ê
-nécessaire pour avoir une pleine hauteur !
+• Sous chrome, ajouter «margin: 0» aux enfants peut ê nécessaire pour qu'ils
+occupent 100% de la hauteur !
 	.conteneur
 	{
 		display: flex;
@@ -429,6 +429,9 @@ nécessaire pour avoir une pleine hauteur !
 		justify-content: [flex-start|flex-end|center|space-between|space-around|space-evenly|...];
 		/* et de l'axe secondaire */
 		align-items: [normal|stretch|flex-start|flex-end|self-start|...];
+		
+		/* alignement des lignes/colonnes d'éléments le long de l'axe secondaire */
+		align-content: [ start | center | space-between | space-aroud ];
 	}
 • centrage horiz–vertic auto :
 	.conteneur {
@@ -482,8 +485,14 @@ Passera le 𝑛ième élément en position γ
 
 
 ● grilles CSS :
+les lignes du bord ont l'indice 1.
 •line ≠ track,
  cell ≠ area
+ 
+• grid-row,
+  grid-column: 1 / 5
+              -3 / -1    ← nombres négatifs : à partir de la DERNIÈRE lignes
+               1 / span 5;
 
 • pour une grille contenant un maximum d'éléments par ligne,
  à raison de 5cm chacun :
