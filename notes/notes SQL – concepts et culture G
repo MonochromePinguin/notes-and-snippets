@@ -1,3 +1,28 @@
+● modèle relationnel décrit dans un article d'Edgar Codd de 1970.
+• langage DÉCLARATIF et normalisé.
+• les procédures stockées et trigger ne font PAS partie de SQL,
+ce sont des surcouches :
+    PL/SQL de oracle,
+    transact SQL de cybase (rachetée par µsoft, puis recréée par ses fondateurs)
+
+
+_ clause : WHERE, FROM, SELECT ...
+_ prédicat : CONDITION LOGIQUE 
+
+• DDL, DML, DCL – et DIL :
+3 "sous-ensembles" du langage SQL.
+_ DDL – « Data Description Langage » → tt ce qui est relatif à la structure BdD
+_ DML –  manipulation   → changer les données
+_ DCL – contrôle (GRANT, REVOKE, LOCK, COMMIT ROLLBACK)
+_ DIL (nouveau) : Data Interrogation Language. Le SELECT et ses subtilités.
+
+•OLTP :
+    OnlIne Transactionel Processing
+•OLAP :
+    « OnLine Analytical Processing »
+serveur décisionnel ou Data Warehouse, bref entrepôt de données,
+regroupant différentes sources de données (Oracle, MariaDB, H2, ...)
+
 
 
 ● ACID :
@@ -12,7 +37,7 @@
 	En cas de duplication de données (plusieurs serveurs contenant les mêmes
  données), cette contrainte là devient gourmande → NoSQL !
 • Durabilité :
-	persistance des données face aux incidents. Mias là on se limite à l'aspect
+	persistance des données face aux incidents. Mais là on se limite à l'aspect
  logiciel du terme ...
 
 
@@ -64,6 +89,7 @@ _ MPD – Modèles Physiques de Données :
  de la table ...
 
 
+• BdD relationnelles, et ...
 ● noSQL :
 _ Not Only SQL.
 _ PAS *ACID*
