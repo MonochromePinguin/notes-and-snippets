@@ -77,6 +77,15 @@ Une clé référençant un autre enregistrement de la même table
 Une clé référençant un enregistrement d'une autre table
 
 
+● INDEX :
+Ressources, comme les tables.
+• « index couvrant » :
+    index couvrant 2 colonnes ou plus.
+
+CREATE INDEX ix_... ON table(colonne)
+    
+
+
 ●(MySQL) par défaut, les chaînes ne sont PAS stockées en UTF8 :
 il faut indiquer l'encodage à la création d'une table :
 (et facultativement l'ordre de tri à utiliser)
@@ -108,6 +117,11 @@ _on peut lui appliquer des droits via GRANT et REVOKE
 • VUES ≠ TABLE TEMPORAIRE :
 	VUE : en lecture seule, stockée ds la BdD
 	TABLE TEMPORAIRE : en L/E, stockée en mémoire le temps de la  session ...
+
+● TABLE TEMPORAIRE :
+    (MySQL) CREATE TEMPORARY TABLE tbl ....
+    (SQLserver) CREATE #tbl ...
+        avec SQLserver, les tables temporaires sont préfixées d'un dièse # 
 
 
 ● CONSTRAINT :
@@ -279,33 +293,38 @@ récupère les noms d'élèves apprenant le PHP,
 		JOIN école ON élève.id_école = école.id
 			JOIN language ON école.id_lang = language.id
 				WHERE language.nom = 'PHP';
+
 • différents types :
-[INNER|] JOIN	→ retourne les enregistrements pour lesquels la condition
- du ON est remplie dans les 2 tables droite et gauche
-LEFT JOIN →	affiche aussi les enreg de la table de gauche ne remplissant
- pas la cond°
-RIGHT JOIN → affiche aussi les enreg de la tbl de droite ne remplissant pas ...
-
-• le CROSS JOIN se comporte comme un INNER quand on lui ajoute une condition.
-
-
-
+_ [INNER|] JOIN	→ retourne les enregistrements pour lesquels la condition
+    du ON est remplie dans les 2 tables droite et gauche
+_ JOIN →	affiche aussi les enreg de la table de gauche ne remplissant
+    pas la cond°
+_ RIGHT JOIN → affiche aussi les enreg de la tbl de droite ne remplissant pas ...
+_ CROSS JOIN se comporte comme un INNER quand on lui ajoute une condition.
+_ SELF JOIN :
+    se fait en donnant deux alias différents à la même table au sein du FROM :
+        « FROM tbl t1, tbl t2 »
+_ THETA JOIN
 
 ● OPÉRATEURS D'ENSEMBLE :
 • UNION :
 	union de 2 requêtes, sans doublons.
 • UNION ALL :
 	on laisse les doublons.
+• UNION peut aussi créer une ensemble, qui sera traité comme une table
+    – pratique quand on a les droits de créer une table (même temporaire) 
+
 • INTERSECT,
   MINUS
+
 
 
 ● FONCTIONS :
 _ ROUND(𝑛), ROUND(𝑛, nb)
 _ ISNULL(ₙ) renvoit 𝑛, ou 0 si le nombre 𝑛 est null
     → ( salaire + isnull(prime) ) renvoit tjr un nombre même si «prime» est null
-_ COALESCE
-    
+_ COALESCE(v1, v2, ...)
+    renvoit le premier v𝑛 non null
 _ length()
 _ replace()
 _ substring()
@@ -320,12 +339,17 @@ _ PARSE(ch, typeDest)
 • fonctions de géolocalisation,
 • de date :
 	NOW()	→  horodatage actuel,
-	DATE(NOW()) → date actuelle
-	YEAR(), MONTH(),
+	    DATE( NOW() ) → date actuelle
+	    YEAR( NOW() ) → une année sous forme de nombre 
+	YEAR(),
+	MONTH(),
 	DATEDIFF() → différence entre 2 dates,
-
-• fonctions travaillant sur des aggrégats :
+	
+• FONCTIONS D'AGGRÉGATION :
 	COUNT(), SUM(), MAX(), MIN(), AVG(), ...
+• HAVING :
+    s'utilise avec les fonctions d'aggrégations comme le WHERE.
+     
 
 ● FONCTIONS DE TRAITEMENT DE TEXTE :
 	replace(ch,de,vers)
@@ -335,6 +359,11 @@ _ PARSE(ch, typeDest)
 	substring(ch,pos,nb), substring(ch,pos), ...
 	upper(ch), lower(ch),
 	...
+
+
+● GROUP_CONCAT( tbl.champs [| SEPARATOR ch ] ) :
+concaténe les lignes correspondant au champs donné,
+    optionnellement séparées par une chaîne.
 
 
 ●(sqlite) « pragma table_info(tbl) » :
@@ -400,12 +429,16 @@ BIGINT        8oct
 (N)VARCHAR
 
 
-●
+● MÉTADONNÉES :
+• le « dictionnaire » des données.
+    SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE COLUMN_DEFAULT
+        FROM IN
+        SCHEMA.COLUMNS
+        WHERE
 
 
 ● CRÉATION / SUPPRESSION D'UNE TABLE EN MySQL :
-  CREATE TABLE <table>
-  (
+  CREATE TABLE <MA_ION
 	id INT PRIMARY KEY AUTO_INCREMENT,
 			→ clé primaire numérique : plus rapide pour les recherches
 	nom VARCHAR(tMax),
@@ -418,7 +451,7 @@ La taille des champs doit être bien pensée – les champs consomment de la pla
   DROP TABLE <table>;
   DROP DATABASE <Bdd>;
 
-●(MySQL) COMMANDES ADMINISTRATIVES :
+● COMMANDES ADMINISTRATIVES :
   CREATE USER [IF NOT EXIST] <user> IDENTIFIED BY 'MdP'...
 	→ il y a de nbx options pour spécifier les droits, la fréquence de renouvellement du MdP, ...
 	 Penser à NE JAMAIS UTILISER «root» en tant qu'utilisateur !
@@ -452,6 +485,10 @@ _ % : joker pour « toutes adresses IP » ;
   DESCRIBE <table>;			→ itou
 
   ALTER TABLE <table> [ ADD ... | DROP ... | MODIFY ... ];
+
+    ALTER TABLE tbl  CHANGE COLUMN col col DECIMAL(8,2);
+est équivalent à
+    ALTER TABLE tbl  MODIFY col DECIMAL(8,2);
 
 
 •(MySQL) EXPORTER UNE BdD :

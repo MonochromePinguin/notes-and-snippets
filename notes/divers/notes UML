@@ -38,7 +38,7 @@ structure (« diagrammes statiques »).
 _ le terme de « diagramme » désigne l'ensemble du schéma et non un élément (une
 boîte)du tout ...
 
-Chaqu'un de ces éléments est un boîte dotée d'un dessin spécifique :
+chacun de ces éléments est un boîte dotée d'un dessin spécifique :
     _ rectangle dans le cas d'une classe, interface ou acteur,
     _ rectangle écorné à droite pour un commentaire ou une contrainte,
     _ icône pour un acteur (dans le diagramme de « cas d'utilisation »)
