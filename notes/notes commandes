@@ -23,7 +23,7 @@ Seul bc affiche les résultats en virgule flottante ...
  si on lui ordonne « scale=𝑛 » !!! OU si on exécute « bc -l » (précision : 20)
 
 •ex :
-faire la moyenne ligne par lignes de colonnes de nombres, stockées chaqu'une dans un fichier :
+faire la moyenne ligne par lignes de colonnes de nombres, stockées chacune dans un fichier :
 	 { echo scale=2; paste -d+ rés.* | sed 's/,/./g' | while read ln; do  echo "($ln)/10"; done } | bc
 _ paste insère des + entre les nombres, pour que ce soit interprété comme addition par bc ;
 _ et sed remplace les virgules par des points pour que bc comprenne :-( ...

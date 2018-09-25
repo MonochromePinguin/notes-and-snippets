@@ -1,18 +1,11 @@
 ● (client MySQL ln2Comm) :
 mysql -u <user> -p<MdP, sans espace avant> -h <host> -P <n°Port>  <BdD>
 
-● le standard par défaut est de ne PAS stocker les chaînes en UTF8 :
-il faut donc à la création d'une
-
-● (sqlite) COMMANDES SPÉCIFIQUES À L'INTERFACE EN LN-DE-COMM :
-• EFFACER L'ÉCRAN :
-	ctrl+L ...
-• exécuter une commande du shell :
-	.shell <commande>
 
 ♦(MySQL) commandes notables :
 	mysql -u <userW> -p		→ le «-p» sans param fait demander le MdP
-	source	\.
+	source,	\.
+
 ♦(MySQL) changer le prompt :
 	prompt <chaîne>,
 	l'envVar $MYSQL_PS1,
@@ -23,6 +16,23 @@ il faut donc à la création d'une
 MySQL lit tout les *.cnf sous /etc/mysql/ ;
 /etc/mysql/my.cnf : pour la config personnalisée
 
+● métacommandes SQLite & Cie :
+«.tables» == «SELECT name FROM sqlite_master» → liste les tables présentes
+
+┌── la même chose à peu de choses près :
+│«.schema <nomTable>» → liste commandes ayant créé la table
+│«pragma table_info(<nomTable>)» → affiche la structure d'une table
+└──
+
+.databases → liste des BD ouvertes
+
+
+
+● (sqlite) COMMANDES SPÉCIFIQUES À L'INTERFACE EN LN-DE-COMM :
+• EFFACER L'ÉCRAN :
+	ctrl+L ...
+• exécuter une commande du shell :
+	.shell <commande>
 
 
 ♦(sqlite ?) formatage de la sortie de la commande SELECT :
@@ -52,11 +62,13 @@ _ NoSQL : pour données brutes – plus performant en lecture pour de gros volum
  "secondaires" → on y créée souvent plusieurs tables pour faciliter les
  diférentes recherches.
 
+
+
 ● CLÉ PRIMAIRE, CLÉ SECONDAIRE, CLÉ ÉTRANGÈRE :
 • clé primaire :
 	PRI
-Le champs (ou la combinaison de champs) permettant de référencer de manière
- non-ambigüe l'enregistrement
+Le champs (ou la combinaison de champs – clef composite) permettant de
+ référencer de manière non-ambigüe l'enregistrement
 • clé secondaire :
 	SEC
 Une clé référençant un autre enregistrement de la même table
@@ -65,15 +77,83 @@ Une clé référençant un autre enregistrement de la même table
 Une clé référençant un enregistrement d'une autre table
 
 
+● INDEX :
+Ressources, comme les tables.
+• « index couvrant » :
+    index couvrant 2 colonnes ou plus.
 
-● fonctions de traitement de texte :
-	replace(ch,de,vers)
-	ltrim(ch, àsuppr), rtrim(ch, àsuppr),
-		ou [lr]trim(ch) qui s'occupe des blancs
-	repeat(ch,nb)
-	substring(ch,pos,nb), substring(ch,pos), ...
-	upper(ch), lower(ch),
-	...
+CREATE INDEX ix_... ON table(colonne)
+    
+
+
+●(MySQL) par défaut, les chaînes ne sont PAS stockées en UTF8 :
+il faut indiquer l'encodage à la création d'une table :
+(et facultativement l'ordre de tri à utiliser)
+    CREATE TABLE tbl CHARACTER SET 'utf8' [| COLLATE ordreDeTi ] (...)
+
+● ENCODAGE DE CARACTÈRES («CHARACTER SET») ET ORDRE DE TRI («COLLATE») :
+  SHOW CHARACTER SET [LIKE 'utf%' ];
+  SHOW COLLATION [LIKE ...];
+
+• encodage et ordre de tri utilisés par une BdD :
+   SELECT @@character_set_database, @@collation_database;
+
+• modifier l'encodage d'une BdD ou d'une table :
+	ALTER [TABLE|DATABASE] <id> CHARACTER SET utf8mb4
+	  COLLATE utf8mb4_general_ci;
+
+
+
+● VUE :
+    CREATE VIEW nom AS SELECT ...
+    
+Table virtuelle (et dynamique) en L/E. 
+Affiche, par exemple, le résultat d'une requête. Les changements réalisés dans
+ la vue sont bien sûr appliqués aux tables sous-jacentes !
+_ on peut lui appliquer des droits via GRANT et REVOKE
+    → très utilisé pour gérer la sécurité à une granularité inférieure
+        à celle de la table.
+
+• VUES ≠ TABLE TEMPORAIRE :
+_VUE :
+    stockée ds la BdD, synchronisée avec les tables sous-jacentes.
+_TABLE TEMPORAIRE :
+    table indépendante, stockée en mémoire le temps de la session ...
+
+● TABLE TEMPORAIRE :
+•(MySQL) :
+    CREATE TEMPORARY TABLE tbl AS ( SELECT .... )
+ou
+    CREATE TEMPORARY TABLE tbl( ... )
+•(SQLserver):
+avec SQLserver, les tables temporaires sont préfixées d'un dièse #
+    CREATE #tbl ...
+ou
+    SELECT ... INTO #tbl FROM ...
+
+
+● CONSTRAINT :
+_ Convention de nommage : ck_xxxx.
+_ se placent après les champs.
+• PAR CONVENTION, une contrainte par colonne.
+
+UNIQUE(champs)
+CHECK(condition)    → PAS IMPLÉMENTÉ PAR MYSQL !
+
+    CREATE TABLE Test(
+        userName varchar,
+        count smallint,
+        CONSTRAINT  ck_ref FOREIGN KEY(userName) REFERENCES tableUser(name),
+        CONSTRAINT ck_null CHECK(champs IS NOT NULL),
+        CONSTRAINT ck_champ2_sup_champ0 CHECK(champ2 >= champ0 ),
+    )
+
+
+● ALIAS :
+    tbl AS t
+s'écrit aussi
+    tbl t
+
 
 ● Texte comportant un mot-clef, ou des opérateurs, des caractères blanc,
  ponctuation, accents, ... :
@@ -124,10 +204,22 @@ p.ex	SELECT region, ville, COUNT(*) AS nbEleves FROM écoles
 		HAVING nbEleves > 10
 		ORDER BY region ASC
 		ORDER BY ville ASC;
+• GROUP BY ... WITH ROLLUP :
+    WITH ROLLUP introduit des sous-totaux
 
 
-● sous-requêtes : requête entre parenthèses !
+● SOUS-REQUÊTES : requête entre parenthèses !
 Utilisables dans les clauses SELECT, FROM, WHERE.
+
+• sous-requêtes SIMPLES :
+    La sous-requête peut être exécutée seule. Elle sera exécutée avant la
+requête principale, puis ses résultats y seront utilisés.
+• ou CORRÉLÉES, SYNCHRONES :
+    La sous-requête fait référence à des colonnes/tables de la requête
+principale. Comme elle y est liée, le moteur SGBD va considérer les 2 requêtes
+comme un tout et OPTIMISER l'accès en BdD.
+ 
+
 p. ex :
 	SELECT nom FROM gens WHERE adresse IN ( SELECT nom FROM villes
 		WHERE population > 5000 );
@@ -141,12 +233,9 @@ ou
 •(sqlite) sqlite n'a pas de ALL() !
 
 
-● VUES ≠ TABLE TEMPORAIRE :
-	VUE : en lecture seule, stockée ds la BdD
-	TABLE TEMPORAIRE : en L/E, stockée en mémoire ...
-
 
 ♦ EXPRESSIONS RATIONNELLES dans le paramètre de «LIKE» :
+** INSENSIBLE À LA CASSE **
 les expressions rationnelles s'écrivent entre guillements simples «'».
 	   % remplace *,
 	et _ remplace ?
@@ -154,18 +243,26 @@ les expressions rationnelles s'écrivent entre guillements simples «'».
 ♦ SELECT sert aussi à afficher du texte brut.
 
 • SELECT expression AS nouveauNom ...
+    SELECT tbl.nom, t2.nom 
 
 ● clauses notables :
 	ORDER BY "xxx" [ASC|DESC]	← «ascendant»/«descendant»
-	LIMIT 𝑛						→ pas plus de 𝑛  entrées renvoyées.
+• pas plus de 𝑛 entrées renvoyées :
+	MySQL :     LIMIT 𝑛
+	Oracle :    WHERE ROWID < 𝑛
+	SQLserver : SELECT TOP 𝑛 ...
 
 
 ● WHERE :
-	BETWEEN
-	IN
+	BETWEEN ... AND ...
+	IN ( ..., ..., ..., ... )
 	LIKE
 	=, <>, =>, <=, >, <
-AND, OR, NOT
+    AND, OR, NOT,
+    ... IS NULL / IS NOT NULL,
+    ...
+• WHERE EXISTS (requête)
+    EXISTS(...) est vrai quand la sous-requête ne renvoit pas NULL 
 
 
 
@@ -183,6 +280,8 @@ AND, OR, NOT
 	SELECT * FROM élèves, écoles (...)
 est équivalent à
 	SELECT * FROM élèves JOIN écoles (...)
+• JOIN tout seul → « INNER JOIN »
+
 
 • clause ON :
  pour ne pas mettre la condition d'égalité de deux clés dans la clause WHERE.
@@ -205,37 +304,88 @@ récupère les noms d'élèves apprenant le PHP,
 		JOIN école ON élève.id_école = école.id
 			JOIN language ON école.id_lang = language.id
 				WHERE language.nom = 'PHP';
+
 • différents types :
-[INNER|] JOIN	→ retourne les enregistrements pour lesquels la condition
- du ON est remplie dans les 2 tables droite et gauche
-LEFT JOIN →	affiche aussi les enreg de la table de gauche ne remplissant
- pas la cond°
-RIGHT JOIN → affiche aussi les enreg de la tbl de droite ne remplissant pas ...
+_ [INNER|] JOIN	→ retourne les enregistrements pour lesquels la condition
+    du ON est remplie dans les 2 tables droite et gauche
+_ JOIN →	affiche aussi les enreg de la table de gauche ne remplissant
+    pas la cond°
+_ RIGHT JOIN → affiche aussi les enreg de la tbl de droite ne remplissant pas ...
+_ CROSS JOIN se comporte comme un INNER quand on lui ajoute une condition.
+_ SELF JOIN :
+    se fait en donnant deux alias différents à la même table au sein du FROM :
+        « FROM tbl t1, tbl t2 »
+_ THETA JOIN
 
-
-● UNION :
+● OPÉRATEURS D'ENSEMBLE :
+• UNION :
 	union de 2 requêtes, sans doublons.
-● UNION ALL :
+• UNION ALL :
 	on laisse les doublons.
+• UNION peut aussi créer une ensemble, qui sera traité comme une table
+    – pratique quand on a les droits de créer une table (même temporaire) 
+
+• INTERSECT,
+  MINUS
+
 
 
 ● FONCTIONS :
-	length()
-	replace()
-	substring()
-	concat()
-	...
+_ ROUND(𝑛), ROUND(𝑛, nb)
+_ ISNULL(ₙ) renvoit 𝑛, ou 0 si le nombre 𝑛 est null
+    → ( salaire + isnull(prime) ) renvoit tjr un nombre même si «prime» est null
+_ COALESCE(v1, v2, ...)
+    renvoit le premier v𝑛 non null
+_ length()
+_ replace()
+_ substring(ch, i, nb) ← index **à partir de 1**
+_ left(ch, 1)          ← substr() depuis la gauche
+_ 
+_ concat(ch1, ch2)
+
+_ PARSE(ch, typeDest)
+  TRY_PARSE(ch, typeDest) → ne génère pas d'erreur mais un NULL si le parse échoue   
+
+
 • fonctions mathématiques :
 	COS(), EXP(), LOG(), PI(), ...
 • fonctions de géolocalisation,
 • de date :
-	NOW()	→ rv la date actuelle,
-	YEAR(), MONTH(),
+	NOW()	→  horodatage actuel,
+	    DATE( NOW() ) → date actuelle
+	    YEAR( NOW() ) → une année sous forme de nombre 
+	YEAR(),
+	MONTH(),
 	DATEDIFF() → différence entre 2 dates,
-
-• fonctions travaillant sur des aggrégats :
+	
+• FONCTIONS D'AGGRÉGATION :
 	COUNT(), SUM(), MAX(), MIN(), AVG(), ...
+• HAVING :
+    s'utilise avec les fonctions d'aggrégations comme le WHERE.
+     
 
+● FONCTIONS DE TRAITEMENT DE TEXTE :
+	replace(ch,de,vers)
+	ltrim(ch, àsuppr), rtrim(ch, àsuppr),
+		ou [lr]trim(ch) qui s'occupe des blancs
+	repeat(ch,nb)
+	substring(ch,pos,nb), substring(ch,pos), ...
+	upper(ch), lower(ch),
+	...
+
+
+● TIMESTAMP VERS DATETIME OU DATE :
+    SELECT leTimestamp, 
+           FROM_UNIXTIME(leTimestamp) as val_datetime,
+           CAST(FROM_UNIXTIME(leTimestamp) as date) as val_date
+        FROM table
+
+
+
+
+● GROUP_CONCAT( tbl.champs [| SEPARATOR ch ] ) :
+concaténe les lignes correspondant au champs donné,
+    optionnellement séparées par une chaîne.
 
 
 ●(sqlite) « pragma table_info(tbl) » :
@@ -271,10 +421,46 @@ Supported unary prefix operators are these:
 	where title = 'Sur les épaules de Darwin'); »
 
 
+●(MySQL, SQLserver, Oracle) TRANSACTIONS AUTOMATIQUES :
+_ MySQL, SQLserver :
+Autocommit par défaut.
+    → « SET AUTOCOMMIT = 0 » avant toute transaction !
+_ Oracle :
+« uncommited » par défaut.
+    → après tout UPDATE,INSERT,DELETE, il faut un COMMIT !
+
+•(MySQL) :
+    SET SQL_SAFE_COMMIT = 0;
+permet d'utiliser des DELETE au sein d'une transaction sans clef dans le WHERE.
+
+
+●(MySQL) TRANSACTIONS :
+    SET AUTOCOMMIT = 0;
+    SET SQL_SAFE_UPDATES = 0;
+    START TRANSACTION;
+	    DELETE FROM COMMERCIAUX WHERE COMMISSION > 5000;
+        ROLLBACK;
+    END TRANSACTION;
+
+
+● TYPES DE DONNÉES :
+INTEGER/INT   4oct
+SMALLINT      16b
+BIGINT        8oct
+(N)CHAR
+(N)VARCHAR
+
+
+● MÉTADONNÉES :
+• le « dictionnaire » des données.
+    SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE COLUMN_DEFAULT
+        FROM IN
+        SCHEMA.COLUMNS
+        WHERE
+
 
 ● CRÉATION / SUPPRESSION D'UNE TABLE EN MySQL :
-  CREATE TABLE <table>
-  (
+  CREATE TABLE <MA_ION
 	id INT PRIMARY KEY AUTO_INCREMENT,
 			→ clé primaire numérique : plus rapide pour les recherches
 	nom VARCHAR(tMax),
@@ -287,7 +473,7 @@ La taille des champs doit être bien pensée – les champs consomment de la pla
   DROP TABLE <table>;
   DROP DATABASE <Bdd>;
 
-●(MySQL) COMMANDES ADMINISTRATIVES :
+● COMMANDES ADMINISTRATIVES :
   CREATE USER [IF NOT EXIST] <user> IDENTIFIED BY 'MdP'...
 	→ il y a de nbx options pour spécifier les droits, la fréquence de renouvellement du MdP, ...
 	 Penser à NE JAMAIS UTILISER «root» en tant qu'utilisateur !
@@ -322,6 +508,10 @@ _ % : joker pour « toutes adresses IP » ;
 
   ALTER TABLE <table> [ ADD ... | DROP ... | MODIFY ... ];
 
+    ALTER TABLE tbl  CHANGE COLUMN col col DECIMAL(8,2);
+est équivalent à
+    ALTER TABLE tbl  MODIFY col DECIMAL(8,2);
+
 
 •(MySQL) EXPORTER UNE BdD :
 	mysqldump -u <user> [-p|] --databases <BdD> > <fic.sql> #avec un «S»
@@ -339,24 +529,3 @@ _ use mysql;
 	↑ ceci ne tient pas compte du nom d'hôte ...
 _ flush privileges;
 _ redémarrer mysql en mode normal
-
-● ENCODAGE DE CARACTÈRES («CHARACTER SET») ET ORDRE DE TRI («COLLATE») :
-  SHOW CHARACTER SET [LIKE ...];
-  SHOW COLLATION [LIKE ...];
-• obtenir encodage et ordre de tri utilisés par une BdD :
-	SELECT @@character_set_database, @@collation_database;
-• modifier l'encodage d'une BdD ou d'une table :
-	ALTER [TABLE|DATABASE] <id> CHARACTER SET utf8mb4
-	  COLLATE utf8mb4_general_ci;
-
-
-
-● métacommandes SQLite & Cie :
-«.tables» == «SELECT name FROM sqlite_master» → liste les tables présentes
-
-┌── la même chose à peu de choses près :
-│«.schema <nomTable>» → liste commandes ayant créé la table
-│«pragma table_info(<nomTable>)» → affiche la structure d'une table
-└──
-
-.databases → liste des BD ouvertes

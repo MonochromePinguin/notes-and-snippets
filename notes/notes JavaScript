@@ -181,6 +181,34 @@ ou dans
  envoyer le formulaire (à l'addresse spécifiée, par la méthode indiquée ...)
 
 
+● PORTÉE DE « THIS » :
+• dans une simple fonction :
+    la portée globale (l'objet window au sein d'un navigateur)
+• dans une méthode :
+    l'objet conteneur.
+    -> Mais ce n'est PAS le cas pour une fonction dans une méthode !
+• dans une fonction fléchée :
+    le contexte dans lequel elle est déclarée
+• APPELER UNE FONCTION DANS UN CONTEXTE BIEN DÉFINI :
+    var agent = {
+        name: 'bla';
+        action: function(callback) {
+            callback.call(this);
+        }
+    }
+    
+    // cette fonction est dans le contexte de « Window »
+    function do() {
+        console.log( ... + this.name );
+    }
+    agent.action(do);
+    
+-> la callback sera appelée par « .call() » dans le contexte de l'objet.
+
+• fonc.call(this, arg1, arg2, arg3, ...)        -> liste d'arguments
+  fonc.apply(this, [arg1, arg2, arg3, ...] )    -> un tableau d'arguments
+
+
 
 ● ATTENTIONS AUX PORTÉES quand on arme un gestionnaire d'évènement ds une bcl !
 	for ( x = 0;  x < l;  x++ )
@@ -222,6 +250,46 @@ pour générer une chaîne incluant des variables :
 ● pour toutes les boucles «for» :
 préférer for (const ...) à for( let ... ) quand on ne modifie pas le compteur !
 
+● «var» est sujet au hoisting,
+pas «let» et «const».
+
+
+● TYPES DE BASE :
+    Undefined
+    Null
+    Boolean
+    Number
+    String
+    Object
+    Symbol (depuis ES6)
+
+• falsy :
+    undefined
+    null
+    false
+    0
+    chaîne vide ''
+    tableau vide [], objet vide {} SAUF SI CONVERSION EN BOOLÉEN
+    NaN
+    
+• truthy :
+    tout le reste ! chaînes, tableaux et objets ayant contenu ...
+
+• le cas particulier des tableaux vides :
+    let tbl = [];
+    ( tbl == false ) -> true
+    Boolean(tbl)     -> true
+Un tableau vide est falsy par défaut,
+ SAUF en cas de conversion explicite par « Boolean(tbl) » 
+ ou par la négation « !tbl »
+
+
+●  typeof() et instanceof ... :
+    if ( typeof(obj) == 'String' )
+        ...
+    if ( obj instanceof MonObjet )
+        ...
+ 
 
 • pr savoir si un objet X possède la propriété Y :
 « if ( Y in X ) »
@@ -240,6 +308,10 @@ préférer for (const ...) à for( let ... ) quand on ne modifie pas le compteur
 
 • les opérateurs ===, !== ne sont pas ==, !=   !
 
+• raccourci pour assigner une valeur par défaut :
+    var = val || defaultVal; 
+
+
 ● FONCTION AVEC UN NOMBRE VARIABLE D'ARGUMENTS :
 Comme on peut appeler une f° avec un nombre indéfini de paramètres, on peut
  utiliser l'objet «arguments» :
@@ -249,22 +321,36 @@ Comme on peut appeler une f° avec un nombre indéfini de paramètres, on peut
 	}
 _ «arguments» n'est pas disponible dans les fonctions fléchées.
 
-•en ES6, il y a les paramètres de reste («rest parameter») :
+• en ES6, il y a les paramètres de reste («rest parameter») :
 	fonc(a, b, ...args) {		→	args sera un tableau
 		//réutilise les mêmes paramètres – ici sans a et b
 		otherFunc(...args);
 		//chaque élément du tableau est accessible
 		fonc2(args[0], args[1]);
-
 	}
 _ le paramètre de reste est aussi décomposable en variables distinctes :
 	fonc(...[a, b, c] )
 → les 3 premiers paramètres sont nommés et accessibles – mais pas les suivants !
 
+• opérateur spread :
+    tbl = [a, b]
+    function f(p1, p2) {... }
+
+    f(...tbl)     // le tableau est décomposé en son contenu
+
+    biggerTbl = [ ...tbl, x, y ]    // biggerTbl débute par le contenu de tbl
+
+    var obj1 = {ch1: 1; ch2: 2}     //les propriétés de obj1 sont copiées dans obj2
+    obj2 = { ...obj1, ch3: 3, ch4: 4 }
+
+
 
 ● FONCTIONS FLÉCHÉES (ARROW FUNCTIONS) – ES6 :
+    const fonc = (a,b) => a + b;
+    const fonc = (name) => { console.log(name) }
+    
 - pas d'objet «arguments»
-- le «this» sera celui du contexte de déclaration
+- le «this» est celui du contexte de déclaration
 - ne peuvent servir de constructeur
 - ne peut utiliser «yield»
 • attention à la syntaxe :
@@ -344,4 +430,12 @@ provoqué par l'emploi d'un tableau de valeurs à passer en paramètres au POST
 
 	$.javax(url, options)
 		→ la méthode la plus avancée mais la moins simple à utiliser
+
+
+● plugins jquery d'intérêt:
+    dataTable   - affichage de tableau triable, recherchable, éditable 
+
+
+• calendrier avancé :
+    fullCalendar    - affichage d'événement, etc.
 

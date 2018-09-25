@@ -25,47 +25,142 @@ créé le «.jar».
 	m	: tirer les attributs du fichier à créer du fichier donné en 2e argument
 
 
+
+● FICHIER .java :
+en-tête (imports, déclaration de package)
+définition de la classe – contenant le corps de la classe
+
+public class ... {
+    //s'il y a un main
+    public static void main(String[] args) {
+        ...
+    }
+}
+• plusieurs classes dans un même fichier ?
+Par convention, une seule classe publique par fichier.
+
+
+
+● LITÉRAUX :
+    0b0010101       0b  binaire
+    0xA154FA4       0x  hexa
+    1.0f              f virgFlot
+    
+┃• les nombres peuvent être formatés avec des soulignés en java ≥7 :
+┃	double v = 1_000_000d;
+
+• caractères d'échappement :
+    \n
+    \r
+    \t
+    \b (backspace)
+    \f (saut de page)
+
+
+● OPÉRATEURS :
+    +=  *=  %=
+    &  |    ^ (XOR)    ~ (NOT « complémentation »)
+    >>   <<    SIGNÉS
+    >>>    <<<  NON-SIGNÉS
+    
+  
+● COMPOSITION / AGGRÉGATION :
+• composition :
+    un élément fait partie de l'autre (durée de vie, exclusivité)
+• aggrégation :
+    un élément a possède un autre élément b (mais b peut se passer de a)
+   
+    
+● POLYMORPHISME / SURCHARGE :
+•surcharge :
+    _ différentes signatures pour une même méthode
+    _choix de la méthode à la compilation;
+• polymorphisme :
+    _ même signature
+    _ redéfinition d'une méthode au sein d'une arborescence de classes
+    _ choix à l'exécution en fonction de la classe de l'objet.
+
+
+● ATTRIBUTS DANS UNE INTERFACE :
+    STATIC FINAL PAR DÉFAUT !
+
+
+● UPCASTING / DOWNCASTING :
+• upcasting :
+    classe fille vers classe parente ;
+    implicite lors d'une assignation.
+• downcasting : classe parent vers classe fille.
+    sans downcasting, la JVM vérifie à l'exécution la correspondance des types.
+    avec: pas de tests.
+
+
+
 ┏━━
 ┃•comparaison de chaines :
 ┃	« == tests for reference equality. (useful for interned strings)
 ┃	 .equals() tests for value equality. »
-┃
-┃• les nombres peuvent être formatés avec des soulignés en java ≥7 :
-┃	double v = 1_000_000d;
-┃• préfixes 0x (hexa), 0b (binaire) - comme en C ;
 ┃
 ┃• ne pas oublier la syntaxe «for( compteur : tableau )» :
 ┃	int[][] tbl = { { 1, 2, 3}, {10, 20, 30} };
 ┃	for ( int[] sousTableau : tbl )
 ┃		for ( int entier : sousTableau )  ← la boucle englobante renvoit un
 ┃			blablabla		    int[] dans «sousTableau»
-┃
-┃● MODIFICATEURS DE VISIBILITÉ DES CLASSES ... :
-┃	«par défaut» → tout le paquetage
-┃	public
-┃● ... ET DES ATTRIBUTS & MÉTHODES :
-┃	private		→	privé à la classe
-┃	«par défaut»	→	tout le paquetage
-┃	protected	→	paquetage et descendance de la classe
-┃	public
-┃
-┃• static :
-┃	s/ membre ou méthode :	commun à la classe ;
-┃				pas d'accès aux champs d'instances.
-┃	s/ bloc d'initialisation - exécuté au chargement de la classe.
-┃	s/ classes internes : ↓↓↓
-┃
-┃• classes internes :
-┃	«par défaut»	→	chq instance est liée à une instance
-┃						 de la classe conteneur
-┃	static			→	comme membres statiques ...
-┃	classes locales & anonymes :
-┃			utilisables seulmnt ds le bloc de code de déclarat°
-┃
-┃• final :
-┃	s/ attribut	→	constante (pour objets : référence constante)
-┃	s/ méthodes →	ne peuvent être redéfinies par descendants
-┃	s/ classe 	→	elle ne peut être dérivée
-┃• static final → constante !
-┗━━
 
+
+● MODIFICATEURS DE VISIBILITÉ DES CLASSES ... :
+	«par défaut» → tout le paquetage
+	public
+
+● ... ET DES ATTRIBUTS & MÉTHODES :
+	private		    →	privé à la classe
+	«par défaut»	→	tout le paquetage
+	protected	    →	paquetage et descendance de la classe
+	public
+
+• static :
+	s/ membre ou méthode :	commun à la classe ;
+				pas d'accès aux champs d'instances.
+	s/ bloc d'initialisation - exécuté au chargement de la classe.
+	s/ classes internes : ↓↓↓
+
+• CLASSES INTERNES :
+	«par défaut»	→	chq instance est liée à une instance
+						 de la classe conteneur
+	static			→	comme membres statiques ...
+	classes locales & anonymes :
+			utilisables seulmnt ds le bloc de code de déclarat°
+
+• final :
+	s/ attribut	→	constante (pour objets : référence constante)
+	s/ méthodes →	ne peuvent être redéfinies par descendants
+	s/ classe 	→	elle ne peut être dérivée
+
+• static final → constante !
+
+
+
+● CONCATÉNATION DE CHAÎNES :
+_ préférer ch.concat(ch2) à l'opérateur «+»,
+_et StringBuilder > StringBuffer > str.concat() > opérateur «+» 
+
+
+
+● TRY/CATCH/FINALY:
+Chaînage de blocs catch{},
+ ou classes d'exceptions multiples dans un même catch, séparées par des «|»;
+    try {
+        ...
+    } catch (ArithmeticException | blablaException e) {
+        ...
+    } catch (Exception e) {
+        ...
+    }
+
+
+
+● collections :
+Interfaces implémentées par des objets stockant des objets.
+⊕ Set :           € de valeurs non dupliquées.
+_ SortedSet :       Set trié.
+_ List :          € de valeurs consécutives
+_ Map :          tableau associatif
