@@ -107,21 +107,29 @@ il faut indiquer l'encodage à la création d'une table :
 ● VUE :
     CREATE VIEW nom AS SELECT ...
     
-Table virtuelle (et dynamique). Affiche, par exemple, le résultat d'une requête.
-Les changements réalisés dans la vue sont bien sûr appliqués aux tables
- sous-jacentes !
-_on peut lui appliquer des droits via GRANT et REVOKE
+Table virtuelle (et dynamique) en L/E. 
+Affiche, par exemple, le résultat d'une requête. Les changements réalisés dans
+ la vue sont bien sûr appliqués aux tables sous-jacentes !
+_ on peut lui appliquer des droits via GRANT et REVOKE
     → très utilisé pour gérer la sécurité à une granularité inférieure
         à celle de la table.
 
 • VUES ≠ TABLE TEMPORAIRE :
-	VUE : en lecture seule, stockée ds la BdD
-	TABLE TEMPORAIRE : en L/E, stockée en mémoire le temps de la  session ...
+_VUE :
+    stockée ds la BdD, synchronisée avec les tables sous-jacentes.
+_TABLE TEMPORAIRE :
+    table indépendante, stockée en mémoire le temps de la session ...
 
 ● TABLE TEMPORAIRE :
-    (MySQL) CREATE TEMPORARY TABLE tbl ....
-    (SQLserver) CREATE #tbl ...
-        avec SQLserver, les tables temporaires sont préfixées d'un dièse # 
+•(MySQL) :
+    CREATE TEMPORARY TABLE tbl AS ( SELECT .... )
+ou
+    CREATE TEMPORARY TABLE tbl( ... )
+•(SQLserver):
+avec SQLserver, les tables temporaires sont préfixées d'un dièse #
+    CREATE #tbl ...
+ou
+    SELECT ... INTO #tbl FROM ...
 
 
 ● CONSTRAINT :
@@ -196,6 +204,8 @@ p.ex	SELECT region, ville, COUNT(*) AS nbEleves FROM écoles
 		HAVING nbEleves > 10
 		ORDER BY region ASC
 		ORDER BY ville ASC;
+• GROUP BY ... WITH ROLLUP :
+    WITH ROLLUP introduit des sous-totaux
 
 
 ● SOUS-REQUÊTES : requête entre parenthèses !
@@ -225,6 +235,7 @@ ou
 
 
 ♦ EXPRESSIONS RATIONNELLES dans le paramètre de «LIKE» :
+** INSENSIBLE À LA CASSE **
 les expressions rationnelles s'écrivent entre guillements simples «'».
 	   % remplace *,
 	et _ remplace ?
@@ -327,7 +338,9 @@ _ COALESCE(v1, v2, ...)
     renvoit le premier v𝑛 non null
 _ length()
 _ replace()
-_ substring()
+_ substring(ch, i, nb) ← index **à partir de 1**
+_ left(ch, 1)          ← substr() depuis la gauche
+_ 
 _ concat(ch1, ch2)
 
 _ PARSE(ch, typeDest)
@@ -359,6 +372,15 @@ _ PARSE(ch, typeDest)
 	substring(ch,pos,nb), substring(ch,pos), ...
 	upper(ch), lower(ch),
 	...
+
+
+● TIMESTAMP VERS DATETIME OU DATE :
+    SELECT leTimestamp, 
+           FROM_UNIXTIME(leTimestamp) as val_datetime,
+           CAST(FROM_UNIXTIME(leTimestamp) as date) as val_date
+        FROM table
+
+
 
 
 ● GROUP_CONCAT( tbl.champs [| SEPARATOR ch ] ) :

@@ -1,4 +1,4 @@
-Emmet :
+● HTML :
 
 ul>(li)*5
 	ul avec 5 enfants li
@@ -11,3 +11,8 @@ ul>(li>(p>({....}span{contenu}{....}))*2)*4
 
 lorem
 lorem{n} -> lorem de {n} mots
+
+
+● JAVA :
+    psvm → public static void main(...)
+    sout → System.out.println(...)

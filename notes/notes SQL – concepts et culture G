@@ -17,18 +17,21 @@ _ DCL – contrôle (GRANT, REVOKE, LOCK, COMMIT ROLLBACK)
 _ DIL (nouveau) : Data Interrogation Language. Le SELECT et ses subtilités.
 
 •OLTP :
-    OnlIne Transactionel Processing
+« OnLine Transactional Processing »
+Stockage et manipulation de données – grand nombre de petites requêtes
+(p.ex :  transactions bancaires, références produits) 
 •OLAP :
-    « OnLine Analytical Processing »
-serveur décisionnel ou Data Warehouse, bref entrepôt de données,
-regroupant différentes sources de données (Oracle, MariaDB, H2, ...)
+   « OnLine Analytical Processing »
+serveur décisionnel ou Data Warehouse, bref entrepôt de données déjà consolidées,
+regroupant différentes sources de données (Oracle, MariaDB, H2, ...),
+utilisées pour le minage de données.
 
 
 
 ● ACID :
 • Atomicité :
 	transaction effectuée entièrement, ou pas du tout.
-• Cohérence :
+• Cohérence 
 	chaque transaction doit amener à un état valide – selon les règles définies.
 • Isolation :
 	Toute transaction doit d'effectuer comme si elle était la seule sur le
