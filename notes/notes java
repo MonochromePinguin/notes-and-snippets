@@ -71,7 +71,7 @@ Par convention, une seule classe publique par fichier.
     un élément a possède un autre élément b (mais b peut se passer de a)
    
     
-● POLYMORPHISME / SURCHARGE :
+● POLYMORPHISME / SURCHARGE / COVARIANCE :
 •surcharge :
     _ différentes signatures pour une même méthode
     _choix de la méthode à la compilation;
@@ -79,6 +79,9 @@ Par convention, une seule classe publique par fichier.
     _ même signature
     _ redéfinition d'une méthode au sein d'une arborescence de classes
     _ choix à l'exécution en fonction de la classe de l'objet.
+• covariance :
+    quand une méthode surchargée dans une classe-fille retourne une
+classe dérivée de celle renvoyée par la méthode de la classe-mère.
 
 
 ● ATTRIBUTS DANS UNE INTERFACE :
@@ -88,11 +91,14 @@ Par convention, une seule classe publique par fichier.
 ● UPCASTING / DOWNCASTING :
 • upcasting :
     classe fille vers classe parente ;
-    implicite lors d'une assignation.
+    implicite lors d'une assignation classeParent = classeEnfant.
 • downcasting : classe parent vers classe fille.
     sans downcasting, la JVM vérifie à l'exécution la correspondance des types.
     avec: pas de tests.
 
+
+● VARIABLE D'INSTANCE :
+    Tt paramètre passé au constructeur d'un objet est une « variable d'instance »
 
 
 ┏━━
@@ -100,11 +106,11 @@ Par convention, une seule classe publique par fichier.
 ┃	« == tests for reference equality. (useful for interned strings)
 ┃	 .equals() tests for value equality. »
 ┃
-┃• ne pas oublier la syntaxe «for( compteur : tableau )» :
+┃• ne pas oublier la syntaxe «for( compteur : iterable )» :
 ┃	int[][] tbl = { { 1, 2, 3}, {10, 20, 30} };
 ┃	for ( int[] sousTableau : tbl )
 ┃		for ( int entier : sousTableau )  ← la boucle englobante renvoit un
-┃			blablabla		    int[] dans «sousTableau»
+┃			blablabla		                int[] dans «sousTableau»
 
 
 ● MODIFICATEURS DE VISIBILITÉ DES CLASSES ... :
@@ -140,8 +146,7 @@ Par convention, une seule classe publique par fichier.
 
 
 ● CONCATÉNATION DE CHAÎNES :
-_ préférer ch.concat(ch2) à l'opérateur «+»,
-_et StringBuilder > StringBuffer > str.concat() > opérateur «+» 
+    StringBuilder > StringBuffer > str.concat() > opérateur «+» 
 
 
 
@@ -158,9 +163,79 @@ Chaînage de blocs catch{},
 
 
 
-● collections :
+● FLUX :
+_ .append(), .close(), .write(), ...
+
+InputStream, OutputStream, Reader, Writer et leurs enfants :
+    PrintWriter, CharArrayWriter, ... 
+_ System.in, System.out
+
+• « new PrintWriter( new FileOutputStream( new File(path) ) ) » :
+    try {
+        outFile = new File(OUT_FILE);
+        PrintWriter writer = new PrintWriter( new FileOutputStream(outFile));
+
+        System.out.println("writing to " + outFile.getAbsolutePath());
+
+        writer.print(...);
+        writer.println();
+
+        writer.close();
+
+    } catch (FileNotFoundException e) {
+        ...
+    }
+
+• JNDI :
+    Java Naming and Directory Interface
+
+
+● COLLECTIONS :
 Interfaces implémentées par des objets stockant des objets.
 ⊕ Set :           € de valeurs non dupliquées.
 _ SortedSet :       Set trié.
-_ List :          € de valeurs consécutives
-_ Map :          tableau associatif
+⊕ List :          € de valeurs consécutives
+    .add(val)
+    .remove(index)
+    .get(index)
+⊕ Map :
+_ hashmap          tableau associatif (PHP), dictionnaire (python), hash (ruby)
+    .put(clef, valeur)
+    .remove(clef)
+    .get(clef)
+• déclarations :
+    // avec upcastin implicite 
+    Map hash1 = new HashMap<Integer, String>();
+ou bien
+    HashMap<Integer, String> hash1 = new HashMap<>();
+
+
+● ITÉRATEURS :
+• listes :
+    Iterator iter = tblInt2.iterator();
+    while (iter.hasNext()) {
+        // print the value of the corresponding entry
+        System.out.println( iter.next() );
+
+        //remove the entry
+        iter.remove();
+    }
+• Maps :
+itérateur et transtypage de iter.next() vers Map.Entry.
+   hash1.forEach( (key, value) -> {
+            System.out.println(value);
+        }
+    );
+
+    //MÉTHODE DÉPRÉCIÉE
+    Iterator i = hash1.entrySet().iterator();
+    while (i.hasNext()) {
+        System.out.println( ( (Map.Entry) i.next() ).getValue() );
+    }
+
+    //Affiche la paire clef/valeur
+    Iterator i = hash1.values().iterator();
+    while (i.hasNext()) {
+        System.out.println( i.next() );
+    }
+
