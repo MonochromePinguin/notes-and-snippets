@@ -1,0 +1,37 @@
+Ctrl Maj A      action rapide
+
+Alt 1       panneau fichiers
+Alt 2       panneau « projets »
+
+Ctrl E      liste derniers fichiers ouverts
+
+• complétion de noms et mots-clés :
+Ctrl espace         complétion simple
+Ctrl Maj espace     « smart completion »
+
+• complétion de structures (fonctions, if, while,...) :
+Ctrl Maj Entrée     insère le squelette d'une structure débutant par tel mot-clé
+                    devant une expression : l'englobe dans un appel de f°
+
+• complétion suffixée :
+    <expr>.if <TAB>     →   <expr> englobée dans une structure «if»
+
+• accepter suggestion d'autocomplétion :
+entrée          → remplace ce qui est à gauche
+TAB             → remplace aussi les caractères à droite
+Ctrl Maj Entrée → corrige la construction courante
+
+
+Alt entrée          «intentions»
+
+Ctrl W          étendre/restreindre sélection aux mots/lignes/blocs
+Ctrl Maj W
+
+F2              prochaine erreur remarquée
+
+
+Alt ←→      naviguer entre onglets du même groupe
+
+Alt ↑↓      naviguer entre fonctions/etc.
+
+
