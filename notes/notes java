@@ -41,6 +41,23 @@ Par convention, une seule classe publique par fichier.
 
 
 
+● ANNOTATIONS :
+_ marqueurs / markers
+    @deprecated
+
+_ paramétrées / single value annotations
+    @SuppressWarning(value={"unchecked", "deprecation"})
+
+_ multi-paramétrées / full annotations 
+
+_ annotations d'annotations :
+    @Target,
+    @Retention,
+    @Inherited, 
+    ...
+
+
+
 ● LITÉRAUX :
     0b0010101       0b  binaire
     0xA154FA4       0x  hexa
@@ -57,11 +74,13 @@ Par convention, une seule classe publique par fichier.
     \f (saut de page)
 
 
+
 ● OPÉRATEURS :
     +=  *=  %=
     &  |    ^ (XOR)    ~ (NOT « complémentation »)
     >>   <<    SIGNÉS
     >>>    <<<  NON-SIGNÉS
+
     
   
 ● COMPOSITION / AGGRÉGATION :
@@ -69,6 +88,7 @@ Par convention, une seule classe publique par fichier.
     un élément fait partie de l'autre (durée de vie, exclusivité)
 • aggrégation :
     un élément a possède un autre élément b (mais b peut se passer de a)
+
    
     
 ● POLYMORPHISME / SURCHARGE / COVARIANCE :
@@ -83,9 +103,18 @@ Par convention, une seule classe publique par fichier.
     quand une méthode surchargée dans une classe-fille retourne une
 classe dérivée de celle renvoyée par la méthode de la classe-mère.
 
+• on peut surcharger le constructeur d'une classe, donc :
+Pour appeler un autre constructeur dans le constructeur, utiliser « this() »;
+    class c {
+        c(p1, p2) {
+            this(p1, p2, const);
+        }
+        
+        c(p1, p2, p3) {
+            ...
+        }
+    }
 
-● ATTRIBUTS DANS UNE INTERFACE :
-    STATIC FINAL PAR DÉFAUT !
 
 
 ● UPCASTING / DOWNCASTING :
@@ -97,8 +126,14 @@ classe dérivée de celle renvoyée par la méthode de la classe-mère.
     avec: pas de tests.
 
 
+
 ● VARIABLE D'INSTANCE :
     Tt paramètre passé au constructeur d'un objet est une « variable d'instance »
+
+
+● AUTOBOXING :
+    Conversion type primitif / type Objet associé – type « enveloppeur ». 
+
 
 
 ┏━━
@@ -143,14 +178,26 @@ classe dérivée de celle renvoyée par la méthode de la classe-mère.
 
 • static final → constante !
 
+● PORTÉES PAR DÉFAUT :
+• attributs dans une interface :
+    STATIC FINAL par défaut
+• enum dans une autre classe :
+    STATIC par défaut
+
 
 
 ● CONCATÉNATION DE CHAÎNES :
     StringBuilder > StringBuffer > str.concat() > opérateur «+» 
+• on peut appeler des méthodes sur une chaîne littérale :
+    "blablabla".concat("...")
 
 
+● Integer.parseInt(ch), Integer.decode(ch), Integer.value(ch),
+  Double.parseDouble(ch), Double.decode(ch), Double.value(ch),
+  etc. etc.
 
-● TRY/CATCH/FINALY:
+
+● TRY/CATCH/FINALLY:
 Chaînage de blocs catch{},
  ou classes d'exceptions multiples dans un même catch, séparées par des «|»;
     try {
@@ -190,6 +237,7 @@ _ System.in, System.out
     Java Naming and Directory Interface
 
 
+
 ● COLLECTIONS :
 Interfaces implémentées par des objets stockant des objets.
 ⊕ Set :           € de valeurs non dupliquées.
@@ -210,6 +258,7 @@ ou bien
     HashMap<Integer, String> hash1 = new HashMap<>();
 
 
+
 ● ITÉRATEURS :
 • listes :
     Iterator iter = tblInt2.iterator();
@@ -220,6 +269,7 @@ ou bien
         //remove the entry
         iter.remove();
     }
+    
 • Maps :
 itérateur et transtypage de iter.next() vers Map.Entry.
    hash1.forEach( (key, value) -> {
@@ -227,15 +277,42 @@ itérateur et transtypage de iter.next() vers Map.Entry.
         }
     );
 
+• ITÉRER À TRAVERS UN TABLEAU :
+les méthodes statiques .stream() et .asList() permettet de récupérer
+ un itérable :
+    Iterator<String> iter = Arrays.stream(tbl).iterator();
+        while (iter.hasNext()) {
+            System.out.println(iter.next());
+        }
+
+
+
     //MÉTHODE DÉPRÉCIÉE
     Iterator i = hash1.entrySet().iterator();
     while (i.hasNext()) {
         System.out.println( ( (Map.Entry) i.next() ).getValue() );
     }
 
-    //Affiche la paire clef/valeur
+    //Affiche la valeur seule / clef seule (avec hash1.keyset())
     Iterator i = hash1.values().iterator();
     while (i.hasNext()) {
         System.out.println( i.next() );
     }
 
+
+
+● ENUM :
+N'est PAS une classe !
+acceptent des constructeurs et des propriétés :
+    public static enum Val {
+        VAL1, VAL2, ... VAL𝑛;
+        ou
+        VAL1(...), VAL2(...), VAL3(...);
+        
+        public String name;
+        
+        Val(String name) {
+            this.name = name;
+        }
+    }
+• enum.values(), 

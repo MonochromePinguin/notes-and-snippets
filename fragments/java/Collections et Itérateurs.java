@@ -1,8 +1,5 @@
 package com.monochrome;
 
-import com.monochrome.scannerTest.ReadArrayWithScanner;
-import com.monochrome.streams.Streams;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,6 +11,14 @@ public class Collection {
 
     public static void main() {
         ArrayList<String> tbl = new ArrayList<>();
+
+        //ITERATOR ON A STRING[] :
+        Iterator<String> iter = Arrays.stream(listBuilding).iterator();
+        // OU BIEN
+        // Iterator<String> iter = Arrays.asList(listBuilding).iterator();
+        while (iter.hasNext()) {
+            System.out.println(" -> " + iter.next());
+        }
 
         for (String str : listBuiling) {
             tbl.add(str);
