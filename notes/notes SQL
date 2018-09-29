@@ -491,6 +491,8 @@ Les droits de création & suppression de table au sein d'une BdD sont alloués
  un-à-un :
  	GRANT CREATE ON <BdD>.* TO <user@hôte>;
 	GRANT DROP ON <BdD>.* TO <user@hôte>;
+	
+	GRANT ALL ON *.* TO <user@hôte>;
 
 • spécifier l'utilisateur :
 	testeur@localhost

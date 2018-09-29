@@ -39,6 +39,14 @@ public class ... {
 • plusieurs classes dans un même fichier ?
 Par convention, une seule classe publique par fichier.
 
+• import static :
+→ permet de ne pas préfixer un symbole importé par sa portée.
+    import static Math.*;
+ou
+    import static Math.PI;
+    ...
+    System.out.print(PI); // au lieu de « Math.PI » – grâce au import static
+
 
 
 ● ANNOTATIONS :
@@ -52,7 +60,10 @@ _ multi-paramétrées / full annotations
 
 _ annotations d'annotations :
     @Target,
-    @Retention,
+    @Retention
+        « RetentionPolicy.SOURCE » : écarté par le compilateur
+            .CLASS  : conservé dans le .class, mais pas chargé par la JVM
+            .RUNTIME : chargé par la JVM et accessible par réflexion 
     @Inherited, 
     ...
 
@@ -81,6 +92,31 @@ _ annotations d'annotations :
     >>   <<    SIGNÉS
     >>>    <<<  NON-SIGNÉS
 
+
+● INSTANCIER UNE CLASSE PAR SON NOM :
+Class.forName(str) : renvoit une référence à la classe nommée en param'
+try
+    {
+        Class classe = Class.forName(nomClasse);
+        // Récupère le constructeur prenant en paramètre telles classes
+        java.lang.reflect.Constructor constructeur = classe.getConstructor(
+            // ↓ liste des types des paramètres
+            new Class[] {Class.forName(nomClasseParam, nomClasseParam, ...}
+        );
+        // appel avec un tableau de paramètres
+        constructeur.newInstance(new Object[] { param, param, ...} );
+    }
+    catch (ClassNotFoundException | NoSuchMethodException
+        || InstantiationException
+        // ↓ classe abstraite ou interface
+        || IllegalAccessException
+        // classe inaccessible
+        || (java.lang.reflect.InvocationTargetException)
+    {
+      // Exception déclenchée si le constructeur invoqué
+      // a lui-même déclenché une exception
+    }
+    
     
   
 ● COMPOSITION / AGGRÉGATION :
@@ -184,6 +220,32 @@ Pour appeler un autre constructeur dans le constructeur, utiliser « this() »;
 • enum dans une autre classe :
     STATIC par défaut
 
+
+
+● MÉTHODES VARIADIQUES avec ellipse :
+l'argument variadique est un tableau :
+    fonc int f(bool i, int ...vars) {
+        for (int i : vars) { ... }
+        for (int i = 0; i < vars.length; i++) { ... }
+    }    
+→ possible de passer un tableau en argument !
+    int[] tbl = {1, 2, 3};
+    fonc(tbl);
+
+
+
+● TYPES GÉNÉRIQUES :
+_ non générique :
+peut stocker n'importe quoi, mais sans type assigné :
+    ArrayList lst = new ArrayList();
+_ générique :
+    ArrayList<Type> = new ArrayList<>();
+    
+• déclaration :
+    Class typeGénérique<T, ..., T𝑛> {
+        T ...;
+        T𝑛 ...;
+    }    
 
 
 ● CONCATÉNATION DE CHAÎNES :

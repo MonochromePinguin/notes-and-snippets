@@ -5,6 +5,12 @@ Travis, Jenkins, ...
 • Behat
 
 
+● objectifs :
+    scénarios (comportement inchangé),
+    non-régression (résultat inchangé),
+    tests de perfomance / de charge
+
+
 ● TEST UNITAIRES :
 Pour valider le comportement d'UN composant (une classe, ...),
  pas pour valider l'absence d'erreur.
@@ -47,7 +53,3 @@ Pour Vérifier les U.S. eet le comportement global de l'app ...
 Un truc du marketting.
 	mettre en concurrence 2 verions de qqch pour en améliorer l'efficacité
  en comparant 2 versions l ...
-
-
-●
-
