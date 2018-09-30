@@ -8,8 +8,8 @@ avec telle structure de dossier & classes :
 	├ Manifest (fichier manifest)
 	└ src
 	  └ com
-	    └ monochrome
-	      └Main.java
+		└ monochrome
+		  └Main.java
 
 	javac -classpath src src/com/monochrome/Main.java
 	jar cfm package.jar Manifest -C src com
@@ -31,144 +31,141 @@ en-tête (imports, déclaration de package)
 définition de la classe – contenant le corps de la classe
 
 public class ... {
-    //s'il y a un main
-    public static void main(String[] args) {
-        ...
-    }
+	//s'il y a un main
+	public static void main(String[] args) {
+		...
+	}
 }
 • plusieurs classes dans un même fichier ?
 Par convention, une seule classe publique par fichier.
 
 • import static :
 → permet de ne pas préfixer un symbole importé par sa portée.
-    import static Math.*;
+	import static Math.*;
 ou
-    import static Math.PI;
-    ...
-    System.out.print(PI); // au lieu de « Math.PI » – grâce au import static
+	import static Math.PI; //plus spécifique
+	...
+	System.out.print(PI); //au lieu de « Math.PI » – grâce au import static
 
 
 
 ● ANNOTATIONS :
-_ marqueurs / markers
-    @deprecated
+_ marqueurs / «markers» :
+	@deprecated
 
-_ paramétrées / single value annotations
-    @SuppressWarning(value={"unchecked", "deprecation"})
+_ paramétrées / «single value annotations» :
+	@SuppressWarning(value = {"unchecked", "deprecation"})
 
-_ multi-paramétrées / full annotations 
+_ multi-paramétrées / «full annotations»
 
 _ annotations d'annotations :
-    @Target,
-    @Retention
-        « RetentionPolicy.SOURCE » : écarté par le compilateur
-            .CLASS  : conservé dans le .class, mais pas chargé par la JVM
-            .RUNTIME : chargé par la JVM et accessible par réflexion 
-    @Inherited, 
-    ...
+	@Target,
+	@Retention
+		« RetentionPolicy.SOURCE » : écarté par le compilateur
+		    .CLASS  : conservé dans le .class, mais pas chargé par la JVM
+		    .RUNTIME : chargé par la JVM et accessible par réflexion
+	@Inherited,
+	...
 
 
 
 ● LITÉRAUX :
-    0b0010101       0b  binaire
-    0xA154FA4       0x  hexa
-    1.0f              f virgFlot
-    
+	0b0010101       0b  binaire
+	0xA154FA4       0x  hexa
+	1.0f              f virgFlot
+
 ┃• les nombres peuvent être formatés avec des soulignés en java ≥7 :
 ┃	double v = 1_000_000d;
 
 • caractères d'échappement :
-    \n
-    \r
-    \t
-    \b (backspace)
-    \f (saut de page)
+	\n
+	\r
+	\t
+	\b (backspace)
+	\f (saut de page)
 
 
 
 ● OPÉRATEURS :
-    +=  *=  %=
-    &  |    ^ (XOR)    ~ (NOT « complémentation »)
-    >>   <<    SIGNÉS
-    >>>    <<<  NON-SIGNÉS
+	+=  *=  %=
+	&  |    ^ (XOR)    ~ (NOT « complémentation »)
+	>>   <<    SIGNÉS
+	>>>    <<<  NON-SIGNÉS
 
 
 ● INSTANCIER UNE CLASSE PAR SON NOM :
 Class.forName(str) : renvoit une référence à la classe nommée en param'
-try
-    {
-        Class classe = Class.forName(nomClasse);
-        // Récupère le constructeur prenant en paramètre telles classes
-        java.lang.reflect.Constructor constructeur = classe.getConstructor(
-            // ↓ liste des types des paramètres
-            new Class[] {Class.forName(nomClasseParam, nomClasseParam, ...}
-        );
-        // appel avec un tableau de paramètres
-        constructeur.newInstance(new Object[] { param, param, ...} );
-    }
-    catch (ClassNotFoundException | NoSuchMethodException
-        || InstantiationException
-        // ↓ classe abstraite ou interface
-        || IllegalAccessException
-        // classe inaccessible
-        || (java.lang.reflect.InvocationTargetException)
-    {
-      // Exception déclenchée si le constructeur invoqué
-      // a lui-même déclenché une exception
-    }
-    
-    
-  
+	try	{
+		Class classe = Class.forName(nomClasse);
+		// Récupère le constructeur prenant en paramètre telles classes
+		java.lang.reflect.Constructor constructeur = classe.getConstructor(
+		    // ↓ liste des types des paramètres
+		    new Class[] {Class.forName(nomClasseParam, nomClasseParam, ...})
+		);
+		// appel avec un tableau de paramètres
+		constructeur.newInstance(new Object[] { param, param, ...} );
+	}
+	catch (ClassNotFoundException | NoSuchMethodException
+		| InstantiationException
+		// ↓ classe abstraite ou interface
+		| IllegalAccessException
+		// classe inaccessible
+		| java.lang.reflect.InvocationTargetException e ) {
+		...
+	}
+
+
+
 ● COMPOSITION / AGGRÉGATION :
 • composition :
-    un élément fait partie de l'autre (durée de vie, exclusivité)
+	un élément fait partie de l'autre (durée de vie, exclusivité)
 • aggrégation :
-    un élément a possède un autre élément b (mais b peut se passer de a)
+	un élément a possède un autre élément b (mais b peut se passer de a)
 
-   
-    
+
+
 ● POLYMORPHISME / SURCHARGE / COVARIANCE :
 •surcharge :
-    _ différentes signatures pour une même méthode
-    _choix de la méthode à la compilation;
+	_ différentes signatures pour une même méthode
+	_choix de la méthode à la compilation;
 • polymorphisme :
-    _ même signature
-    _ redéfinition d'une méthode au sein d'une arborescence de classes
-    _ choix à l'exécution en fonction de la classe de l'objet.
+	_ même signature
+	_ redéfinition d'une méthode au sein d'une arborescence de classes
+	_ choix à l'exécution en fonction de la classe de l'objet.
 • covariance :
-    quand une méthode surchargée dans une classe-fille retourne une
+	quand une méthode surchargée dans une classe-fille retourne une
 classe dérivée de celle renvoyée par la méthode de la classe-mère.
 
 • on peut surcharger le constructeur d'une classe, donc :
 Pour appeler un autre constructeur dans le constructeur, utiliser « this() »;
-    class c {
-        c(p1, p2) {
-            this(p1, p2, const);
-        }
-        
-        c(p1, p2, p3) {
-            ...
-        }
-    }
+	class c {
+		c(p1, p2) {
+		    this(p1, p2, const);
+		}
+
+		c(p1, p2, p3) {
+		    ...
+		}
+	}
 
 
 
 ● UPCASTING / DOWNCASTING :
 • upcasting :
-    classe fille vers classe parente ;
-    implicite lors d'une assignation classeParent = classeEnfant.
+	classe fille vers classe parente ;
+	implicite lors d'une assignation classeParent = classeEnfant.
 • downcasting : classe parent vers classe fille.
-    sans downcasting, la JVM vérifie à l'exécution la correspondance des types.
-    avec: pas de tests.
+	sans downcasting, la JVM vérifie à l'exécution la correspondance des types.
+	avec: pas de tests.
 
 
 
 ● VARIABLE D'INSTANCE :
-    Tt paramètre passé au constructeur d'un objet est une « variable d'instance »
+	Tt paramètre passé au constructeur d'un objet est une « variable d'instance »
 
 
 ● AUTOBOXING :
-    Conversion type primitif / type Objet associé – type « enveloppeur ». 
+	Conversion type primitif / type Objet associé – type « enveloppeur ».
 
 
 
@@ -216,42 +213,42 @@ Pour appeler un autre constructeur dans le constructeur, utiliser « this() »;
 
 ● PORTÉES PAR DÉFAUT :
 • attributs dans une interface :
-    STATIC FINAL par défaut
+	STATIC FINAL par défaut
 • enum dans une autre classe :
-    STATIC par défaut
+	STATIC par défaut
 
 
 
 ● MÉTHODES VARIADIQUES avec ellipse :
 l'argument variadique est un tableau :
-    fonc int f(bool i, int ...vars) {
-        for (int i : vars) { ... }
-        for (int i = 0; i < vars.length; i++) { ... }
-    }    
+	fonc int f(bool i, int ...vars) {
+		for (int i : vars) { ... }
+		for (int i = 0; i < vars.length; i++) { ... }
+	}
 → possible de passer un tableau en argument !
-    int[] tbl = {1, 2, 3};
-    fonc(tbl);
+	int[] tbl = {1, 2, 3};
+	fonc(tbl);
 
 
 
 ● TYPES GÉNÉRIQUES :
 _ non générique :
 peut stocker n'importe quoi, mais sans type assigné :
-    ArrayList lst = new ArrayList();
+	ArrayList lst = new ArrayList();
 _ générique :
-    ArrayList<Type> = new ArrayList<>();
-    
+	ArrayList<Type> = new ArrayList<>();
+
 • déclaration :
-    Class typeGénérique<T, ..., T𝑛> {
-        T ...;
-        T𝑛 ...;
-    }    
+	Class typeGénérique<T, ..., T𝑛> {
+		T ...;
+		T𝑛 ...;
+	}
 
 
 ● CONCATÉNATION DE CHAÎNES :
-    StringBuilder > StringBuffer > str.concat() > opérateur «+» 
+	StringBuilder > StringBuffer > str.concat() > opérateur «+»
 • on peut appeler des méthodes sur une chaîne littérale :
-    "blablabla".concat("...")
+	"blablabla".concat("...")
 
 
 ● Integer.parseInt(ch), Integer.decode(ch), Integer.value(ch),
@@ -262,13 +259,13 @@ _ générique :
 ● TRY/CATCH/FINALLY:
 Chaînage de blocs catch{},
  ou classes d'exceptions multiples dans un même catch, séparées par des «|»;
-    try {
-        ...
-    } catch (ArithmeticException | blablaException e) {
-        ...
-    } catch (Exception e) {
-        ...
-    }
+	try {
+		...
+	} catch (ArithmeticException | blablaException e) {
+		...
+	} catch (Exception e) {
+		...
+	}
 
 
 
@@ -276,27 +273,27 @@ Chaînage de blocs catch{},
 _ .append(), .close(), .write(), ...
 
 InputStream, OutputStream, Reader, Writer et leurs enfants :
-    PrintWriter, CharArrayWriter, ... 
+	PrintWriter, CharArrayWriter, ...
 _ System.in, System.out
 
 • « new PrintWriter( new FileOutputStream( new File(path) ) ) » :
-    try {
-        outFile = new File(OUT_FILE);
-        PrintWriter writer = new PrintWriter( new FileOutputStream(outFile));
+	try {
+		outFile = new File(OUT_FILE);
+		PrintWriter writer = new PrintWriter( new FileOutputStream(outFile));
 
-        System.out.println("writing to " + outFile.getAbsolutePath());
+		System.out.println("writing to " + outFile.getAbsolutePath());
 
-        writer.print(...);
-        writer.println();
+		writer.print(...);
+		writer.println();
 
-        writer.close();
+		writer.close();
 
-    } catch (FileNotFoundException e) {
-        ...
-    }
+	} catch (FileNotFoundException e) {
+		...
+	}
 
 • JNDI :
-    Java Naming and Directory Interface
+	Java Naming and Directory Interface
 
 
 
@@ -305,76 +302,76 @@ Interfaces implémentées par des objets stockant des objets.
 ⊕ Set :           € de valeurs non dupliquées.
 _ SortedSet :       Set trié.
 ⊕ List :          € de valeurs consécutives
-    .add(val)
-    .remove(index)
-    .get(index)
+	.add(val)
+	.remove(index)
+	.get(index)
 ⊕ Map :
 _ hashmap          tableau associatif (PHP), dictionnaire (python), hash (ruby)
-    .put(clef, valeur)
-    .remove(clef)
-    .get(clef)
+	.put(clef, valeur)
+	.remove(clef)
+	.get(clef)
 • déclarations :
-    // avec upcastin implicite 
-    Map hash1 = new HashMap<Integer, String>();
+	// avec upcastin implicite
+	Map hash1 = new HashMap<Integer, String>();
 ou bien
-    HashMap<Integer, String> hash1 = new HashMap<>();
+	HashMap<Integer, String> hash1 = new HashMap<>();
 
 
 
 ● ITÉRATEURS :
 • listes :
-    Iterator iter = tblInt2.iterator();
-    while (iter.hasNext()) {
-        // print the value of the corresponding entry
-        System.out.println( iter.next() );
+	Iterator iter = tblInt2.iterator();
+	while (iter.hasNext()) {
+		// print the value of the corresponding entry
+		System.out.println( iter.next() );
 
-        //remove the entry
-        iter.remove();
-    }
-    
+		//remove the entry
+		iter.remove();
+	}
+
 • Maps :
 itérateur et transtypage de iter.next() vers Map.Entry.
    hash1.forEach( (key, value) -> {
-            System.out.println(value);
-        }
-    );
+		    System.out.println(value);
+		}
+	);
 
 • ITÉRER À TRAVERS UN TABLEAU :
 les méthodes statiques .stream() et .asList() permettet de récupérer
  un itérable :
-    Iterator<String> iter = Arrays.stream(tbl).iterator();
-        while (iter.hasNext()) {
-            System.out.println(iter.next());
-        }
+	Iterator<String> iter = Arrays.stream(tbl).iterator();
+		while (iter.hasNext()) {
+		    System.out.println(iter.next());
+		}
 
 
 
-    //MÉTHODE DÉPRÉCIÉE
-    Iterator i = hash1.entrySet().iterator();
-    while (i.hasNext()) {
-        System.out.println( ( (Map.Entry) i.next() ).getValue() );
-    }
+	//MÉTHODE DÉPRÉCIÉE
+	Iterator i = hash1.entrySet().iterator();
+	while (i.hasNext()) {
+		System.out.println( ( (Map.Entry) i.next() ).getValue() );
+	}
 
-    //Affiche la valeur seule / clef seule (avec hash1.keyset())
-    Iterator i = hash1.values().iterator();
-    while (i.hasNext()) {
-        System.out.println( i.next() );
-    }
+	//Affiche la valeur seule / clef seule (avec hash1.keyset())
+	Iterator i = hash1.values().iterator();
+	while (i.hasNext()) {
+		System.out.println( i.next() );
+	}
 
 
 
 ● ENUM :
 N'est PAS une classe !
 acceptent des constructeurs et des propriétés :
-    public static enum Val {
-        VAL1, VAL2, ... VAL𝑛;
-        ou
-        VAL1(...), VAL2(...), VAL3(...);
-        
-        public String name;
-        
-        Val(String name) {
-            this.name = name;
-        }
-    }
-• enum.values(), 
+	public static enum Val {
+		VAL1, VAL2, ... VAL𝑛;
+		ou
+		VAL1(...), VAL2(...), VAL3(...);
+
+		public String name;
+
+		Val(String name) {
+		    this.name = name;
+		}
+	}
+• enum.values()
