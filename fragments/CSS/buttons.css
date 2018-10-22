@@ -1,0 +1,60 @@
+/* the variables for default button color values
+    --btn-color
+    --btn-bg-color
+
+    should be redefined in the main stylesheet, so this currentsheet must be included first.
+*/
+
+.btn {
+    --btn-color: green;
+    --btn-bg-color: lightgreen;
+
+    display: inline-block;
+    margin: 1em;
+    padding: 1em;
+
+    color: var(--btn-color);
+    font-weight: bold;
+    text-decoration: none;
+
+    background-color: var(--btn-bg-color);
+
+    border: 0.2em solid currentColor;
+    border-radius: 0.5em;
+
+    transition: color 0.4s, background-color 0.4s,
+    box-shadow 0.4s;
+
+    cursor: pointer;
+}
+
+
+.btn:hover {
+    box-shadow: 0.3em 0.3em 0.3em var(--btn-color),
+    -0.3em 0.3em 0.3em var(--btn-color),
+    0.3em -0.3em 0.3em var(--btn-color),
+    -0.3em -0.3em 0.3em var(--btn-color);
+
+    color: var(--btn-bg-color);
+    background-color: var(--btn-color);
+}
+
+.btn:active {
+    outline: currentColor dashed 0.5em;
+}
+
+
+.btn-primary {
+    --btn-color: blue;
+    --btn-bg-color: lightblue;
+}
+
+.btn-secondary {
+    --btn-color: lightblue;
+    --btn-bg-color: white;
+}
+
+
+.big {
+    font-size: 2em;
+}

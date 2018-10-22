@@ -53,8 +53,19 @@ Request, Response.
 
 annotations Vs XML (TODO)
 
-TODO: JSP
 TODO: JSTL
+
+
+● JSP :
+    <%@ include <fichier.jsp> %>
+    <%@ taglib ... %>
+        « Declares a tag library, containing custom actions, used in the page »
+    <%-- commentaire %>
+    <% code; %>
+    <%! déclaration de vars; %>
+    <%= expression %>
+
+
 
 ● JSF – « Java Server Faces » :
 
