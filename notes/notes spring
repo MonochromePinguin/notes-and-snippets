@@ -1,0 +1,132 @@
+● une 20aine de frameworks java regroupés.
+
+ce(s) framework(s) permettent de gérer parallélisme, load-balancing, ...
+
+• histoire :
+_ 2002 : Rd Johnson publie « Expert One-on-One J2EE Desing & Development », contenant
+du code et un diagramme de classe ...
+_ 2004 : ... devenu String 1.0
+
+
+• contraintes métier,
+• contraintes techniques :
+    parallélisme,
+    temps de réponse (systèmes temps-réel),
+    haute disponibilité 
+        → on peut p.ex utiliser la réplication : 𝑛 instances en load-balancing.
+• contraintes pratiques :
+    _ évolutivité,
+    _ maintenabilité,
+    _ O de SOLID (possibilité d'insérer des greffons)
+    _ portabilité (parfois),
+    _ interopérabilité :
+        
+● RMI : « Remote Method Invocation » :
+    API java pour le RPC au sein d'une architecture répartie en JAVA.
+    registre central/ annuaire,
+
+●    fichier .wsdl (Web Service Description Language, dérivé du XML),
+    échanges via SOAP
+
+● Spring :
+_ framework basé sur l'IOD.
+_ un .xml ou des annotations indiquent les classes à instancier pour injection.
+_ architecture AOP – « Aspect Oriented Programming »
+
+
+
+● PLUSIEURS APPROCHES POUR L'INJECTION DE DÉPENDANCES :
+_ injection via un setter, convention java beans
+_ via le constructeur, comme sous symfony
+• injection directe dans la propriété *privée* par spring, via définition
+dans la config .xml ( <property name="champ" value="val"/> ) 
+_ Cette méthode est utilisable pour toute propriété, de type simple ou non :
+    int, String, List, Set, Map, mais aussi fichier ...
+    <bean id="testBean" class="com.monochrome.test">
+        <property name="list">
+            <list>
+                <value>....</value>
+                <value>....</value>
+            </list>
+        </property>
+        <property name="intProp" value="43"/>
+        <property name="injectedVariable" value=${name.space.of.value} />
+    </bean>
+_ les « inner beans » : beans injectés dans un bean :
+    ...
+        <property name="innerBean">
+            <bean id="..." class="...">
+                ...
+            </bean>
+        </property>
+    ...
+
+• org.spring.applicationContext : conteneur de l'application, responsable de l'injection.
+
+
+
+● BEANS :
+_ trouvés par XML, injection, ou code java
+_ annotés @Component
+    ou @Component("autreNom")
+
+ 
+● PORTÉES DES BEAN ( @scope(<portées>) ) :
+• singleton (par défaut) :
+    1 seule instance par ApplicationContext
+• prototype :
+    nouvelle instance à chaque requête de Bean
+
+(↓ portées spécifiques aux app' web : )
+• request(proxyMode = ScopedProxyMode.TARGET_CLASS) :
+    une instance pour chaque requête HTTP.
+    Le paramètre «proxyMode» serait nécessaire ??????? 
+• session(proxyMode = ScopedProxyMode.TARGET_CLASS) :
+    ... chaque session de client HTTP
+• application :
+    la durée de vie de la servlet
+• webSocket :
+    ...
+• flow :
+    la durée de vie d'un «flow» – un programme s'exécutant pour le compte d'un
+    client HTTP : ???? session ? requête ?
+
+
+
+● PROXYS DE BEAN :
+C'est de l'AOP – « Aspect Oriented Programming »
+    Pour injecter un bean dans un autre de portée différente (p.ex un bean 
+de portée «request» injecté dans un bean de portée «singleton»),
+ et garder l'intégrité de référence, on injecte un proxy :
+→ configuration spéciale du bean :
+• en XML :
+    <bean id="unId" class="com.monochrome.Class" scope="session">
+        <aop:scoped-proxy>
+    </bean>
+• annotation :
+    ???????????
+    
+    
+● CYCLE DE VIE D'UN BEAN :
+Ne pas utiliser le constructeur, qui est appelé avant l'hydratation du bean ..
+• propriétés XML :
+    <bean id="leBean" init-method = "initFonc" destroy-method="destroyFonc">
+    </bean>
+• annotations (officiellement recommandé !) :
+    ????
+    @Pre-destroy
+• implémentation d'interface :
+    ????
+
+
+● ANNOTATIONS NOTABLES :
+@Repository,
+@Service,
+@Controller
+
+
+● SECTIONS CRITIQUES :
+_ @Transactional :
+    cette annotation sur une méthode permet l'exclusion mutuelle entre threads
+
+

@@ -1,0 +1,42 @@
+●objets notables :
+• SessionFactory :
+    abstraction de la BdD
+• Session :
+    abstraction de la connexion à la BdD
+• Transation :
+    session.beginTransaction()
+    
+• TransactionFactory :
+    optionnel.
+• 
+
+• JPA « Java Persistance API », sur laquelle  Hibernate est basée.
+• JTA « Java Transaction API » :
+protocole de commit à 2 phases, très efficace pour transactions courtes,
+mais lourd pour grosses transactions.
+→ 2 commits à réaliser :
+_ le 1er verrouille la table,
+_ le 2e commit le tout.
+
+
+● CLASSES PERSISTANTES :
+_ classes sauvées en BdD.
+• bonnes pratiques :
+_ classes POJO (« Plain Old Java Object ») :
+simples classes, 
+    _ avec constructeur par défaut (« sans paramètres »),
+    _ propriétés persistées privées avec getters/setters
+    
+    
+●  ANNOTATIONS :
+• classes :
+    @Entity
+    @Table(name = "table", schema = "BdD" [, catalog = ""] )
+• colonnes :
+    @Id
+    @Column(name = "col")
+    @Column(name="colonne", unique = true, nullable = false)
+    
+    
+● hibernate.cfg.xml :
+    Doit faire le lien avec les classes utilisées via des entrées «mapping»

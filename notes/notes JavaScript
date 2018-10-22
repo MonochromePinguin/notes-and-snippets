@@ -31,6 +31,7 @@ _ exécutés dans l'ordre d'apparition, APRÈS le chargement du document,
 
 
 ● objet Window :
+l'objet global au sein d'un onglet de navigateur (MAIS « global » sous node).
 • Window : la fenêtre (ou l'onglet)
 • Window.document : le DOM y étant contenu.
 • document.defaultView : la Window contenant le DOM.
@@ -125,7 +126,7 @@ elem.getAttributes()
 etc.
 
 
-● attributs de données :
+● ATTRIBUTS DE DONNÉES :
 définits comme les autres attributs HTML
 – Leurs noms démarrent par «data-»
 – accessibles par :
@@ -229,29 +230,56 @@ remplacer le corps de la boucle par un appel de fonction, tel que :
   qui renvoit une réponse (en HTML, XML, JSON, ...)
 → requête asynchrone
 
+JSON.stringify(obj) → chaîne JSON. les propriétés indéfinies sont écartées.
+JSON.parse(ch)      → objet
+
+
+
+● afficher le contenu d'un objet via console.log() :
+utiliser des virgules pour SÉPARER LES PARAMÈTRES
+ → le navigateur affichera l'objet de manière détaillée.
+    console.log("texte", obj)
+
 
 ---------------------------------- PUR JAVASCRIPT -----------------------------
 
-● (ES6) patron de chaîne :
-• avec le guillement inverse.
+● (ES6) PATRON DE CHAÎNE avec le guillemet inverse.
 pour générer une chaîne incluant des variables :
 	v1 = 'chat';
 	v2 = 'mammifère';
 	res = `le ${v1} est un ${v2}`;
 
 
-● boucles «for of» et «for in» :
-• « for ( v of tbl )» :
+● conversion implicite en nombre via le préfixe « + » :
+val = +'1234'
+val = +'blabla' →    NaN !
+
+
+
+● BOUCLES «FOR OF» (VALEURS) ET «FOR IN» (INDEXES) :
+• VALEUR – « for ( v of tbl )» :
 	parcourt les valeurs ; i reçoit une copie de la valeur
-• « for ( p in obj )» :
-	parcourt les propriétés
-	→ on accède à la valeur via « obj[i] » ...
+• INDICES – « for ( p in obj )» :
+	parcourt les propriétés, (donc les indices pour un tableau)
+	→ on accède à la valeur via « obj[p] » ...
+	
+• tbl.forEach( (val [, index [, array]] ) => ... )
+
 
 ● pour toutes les boucles «for» :
 préférer for (const ...) à for( let ... ) quand on ne modifie pas le compteur !
 
-● «var» est sujet au hoisting,
-pas «let» et «const».
+
+
+● HOISTING :
+_ «var» est sujet au hoisting,
+_ PAS «let» et «const».
+
+
+• préfixes numériques :
+  0x...     hexa
+  0b...     binaire
+  0o...     octal
 
 
 ● TYPES DE BASE :
@@ -312,7 +340,36 @@ Un tableau vide est falsy par défaut,
     var = val || defaultVal; 
 
 
-● FONCTION AVEC UN NOMBRE VARIABLE D'ARGUMENTS :
+
+MÉTHODES ET FONCTIONS NOTABLES DES OBJETS :
+•supprimer une propriété :
+    delete( obj.prop )
+• avant stringification, on peut aussi utiliser
+    obj.prop = undefined
+car les propriétés indéfinies ne sont pas converties ...    
+
+« obj.prop = f° fléchée » est possible ...
+
+
+
+● MÉTHODES NOTABLES DES TABLEAUX :
+• la seule différence visible entre un tableau et un autre type d'objet, c'est
+        .length
+        
+tbl.map( v => f(v) )
+    → tableau de même taille
+tbl.filter( v => testBooléen )
+    → tableau ne contenant que les valeurs répondant au critère
+tbl.reduce( (accum, v) => accum + v, v0DeAccum )
+    → opération cyclique sur toutes les entrées du tableau 
+
+_ fin du tableau :
+    tbl.push()
+    tbl.pop()
+
+
+
+● FONCTION VARIADIQUE (avec un nombre variable d'arguments) :
 Comme on peut appeler une f° avec un nombre indéfini de paramètres, on peut
  utiliser l'objet «arguments» :
 	fonc() {
@@ -322,17 +379,21 @@ Comme on peut appeler une f° avec un nombre indéfini de paramètres, on peut
 _ «arguments» n'est pas disponible dans les fonctions fléchées.
 
 • en ES6, il y a les paramètres de reste («rest parameter») :
-	fonc(a, b, ...args) {		→	args sera un tableau
+le paramètre de reste est un TABLEAU
+	fonc(a, b, ...args) {		#→	args sera un tableau
 		//réutilise les mêmes paramètres – ici sans a et b
 		otherFunc(...args);
-		//chaque élément du tableau est accessible
-		fonc2(args[0], args[1]);
+		if (args.length > 0) {
+		    //chaque élément du tableau est accessible
+		    fonc2(args[0], args[1]);
+	    }
 	}
 _ le paramètre de reste est aussi décomposable en variables distinctes :
 	fonc(...[a, b, c] )
 → les 3 premiers paramètres sont nommés et accessibles – mais pas les suivants !
 
-• opérateur spread :
+
+• OPÉRATEUR DE DESTRUCTURATION / « SPREAD » :
     tbl = [a, b]
     function f(p1, p2) {... }
 
@@ -343,25 +404,45 @@ _ le paramètre de reste est aussi décomposable en variables distinctes :
     var obj1 = {ch1: 1; ch2: 2}     //les propriétés de obj1 sont copiées dans obj2
     obj2 = { ...obj1, ch3: 3, ch4: 4 }
 
+• ASSIGNATION DÉSTRUCTURANTE :
+    let a, b,
+        allTheRest;
+    [ a, b ] = [v1, v2];
+        # → a = v1,
+        #   a = v2
+    [ a, b, ...allTheRest] = [1, 2, 4, 8, 16];
+        # → a = 1,
+        #   b = 2,
+        #   allTheRest = [4, 8, 16];
+
 
 
 ● FONCTIONS FLÉCHÉES (ARROW FUNCTIONS) – ES6 :
     const fonc = (a,b) => a + b;
     const fonc = (name) => { console.log(name) }
+    [12, 14, 25, 13].filter( age => age < 18 )
     
 - pas d'objet «arguments»
 - le «this» est celui du contexte de déclaration
 - ne peuvent servir de constructeur
 - ne peut utiliser «yield»
+
 • attention à la syntaxe :
-– renvoyer un objet :
-	a => ( {val: a} )
+– RENVOYER UN OBJET :
 Les parenthèses évitent l'interprétation des accolades comme bloc de code.
-– armer une variable à une fonction si cette variable est nulle :
+	a => ( {val: a} )
+_ reprendre une variable d'entrée dans la construction d'un objet créé
+ UN CHAMPS DE MÊME NOM ET VALEUR :
+	value => ({ value, double: a*2 }) 
+
+• armer une variable à une fonction SSI cette variable est nulle :
 	var = var || fonc() {};
 	var = var || ( () => {} );	//nécessite des parentèses englobantes !
+
 • décomposition des variables et valeurs par défaut :
+    fonc = (  a, b,         ,     c              )  => ...
 	fonc = ( [a, b] = [1, 2], {x: c} = {x: a + b}) => a + b + c;
+
 
 
 ● UN EXEMPLE DE SYNTAXE TORDUE MAIS LÉGALE :
@@ -375,6 +456,14 @@ findMissingLetter= (a) => (
 													  )
 						 )
 )
+
+
+
+● MODULES ES6 :
+    import * from './nomFichierSansPointJs';
+    import symbol from './nomSansPointJs';
+
+un peu comme les IIFE ...
 
 ----------------------------------------JQuery----------------------------------
 

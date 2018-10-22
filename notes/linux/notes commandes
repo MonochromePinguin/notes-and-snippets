@@ -506,6 +506,8 @@ _ le dossier «Documentation» des sources du noyau (... en partie seulement)
 ● afficher température(s) interne(s) :
 	sensors (paquet lm-sensors)
 
+● afficher liste mutex, sémaphores, segments mémoire partagée, ... :
+    ipcs
 
 ● commandes administratives :
 •«logger», «notify-send» & leurs options,
@@ -699,6 +701,10 @@ _ getent ahosts <nomHôte> :
 
   lsof -Pnl +M -i4 : liste les ports ip4 ouverts
   lsof -Pnl +M -i6 : '' ''	'' ip6
+
+• obtenir le PID du programme écoutant sur tel port :
+    sudo ss -lptn 'sport = :8080'
+
 
 • nmap est un outils de scan de ports :
 nmap -p<port(s)> <hôte> ...

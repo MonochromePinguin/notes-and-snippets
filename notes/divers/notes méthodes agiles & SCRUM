@@ -6,25 +6,24 @@ _ collaboration régulière / suivie avec le client.
 _ adaptation aux changements plutôt que le suivi d'un planning
 
 
-• MOSCOW : MSCW :
-_ Must have		non négotiable
-_ Should have		important, mais peut fonctionner sans
-_ Could have		un plus, si possible
-_ Would have		dans le futur, éventuellement
-
 • SCRUM : terme anglais pour « mélée ».
 
 
 • cycles itératifs («sprints»)
  & incrémentaux (ajout de f°alités l'une après l'autre)
 
-• « product backlog » :
+● « PRODUCT BACKLOG » :
+journal des fonctionnalités à implémenter
+(fonctionnalités, caractéristiques, besoins, ...)
 	contrairement au cahier des charges, il est rédigé au fur & à mesure,
- et priorise les f°lités :
+ évolue, et priorise les f°lités :
 	on note d'abord les points principaux, et on affine le tout au fur et à mesure.
+• source de modification du projet.
+
 
 • « sprint backlog » :
-	même chose, pour chaque cycle
+	même chose, pour chaque cycle.
+« au moins 4 U.S par sprint »
 
 • « sprint planning » :
 _ découper le boulot en tâches («user stories» )
@@ -40,13 +39,97 @@ _ avec client – démonstration du produit actuel et recueil
 • « grooming » / « mise à jour backlog» :
 	régulièrement, par le « scrum master » ...
 
-• « user story » :
+● les EPIC sont découpées en User Stories
+EPIC : besoin exprimé; si compliqué, sera découpé en U.S. 
+
+
+● « USER STORY » :
+liste d'«items».
 	« en tant que xxx je veux pouvoir xxx afin que xxx ... »
 → traduit en tâches, dont la durée est estimée, code, ...
 → assignée régulièrement, ...
 → numérotée ou étiquetée pour suivi.
 
+• MoSCoW : MSCW :
+Priorisation des U.S.
+_ Must have		non négotiable
+_ Should have		important, mais peut fonctionner sans
+_ Could have		un plus, si possible
+_ Would have		dans le futur, éventuellement
 
+
+• vélocité d'une équipe :
+    capacité d'une équipe à rendre le sprint fini (travaillés ensemble ou pas ? expérience ? etc, etc)
+• plan de release :
+
+
+
+● LES BESOINS ET LA PRIORISATION DES U.S. :
+_ besoin de base :
+    le minimum requis pour a.
+_ besoin monodimentionnel :
+    la satisfaction client augmente linéairement avec la réalisation de ces U.S.
+    autres fonctions apportant de la satisfaction client,
+    et donc de la valeur ajoutée.
+_ « besoin enchanteur » :
+    le luxe. Si ça se fait, tant mieux, mais c'est du luxe, non prioritaire.
+cf MOSCOW ↑
+
+
+
+● GESTION DU RISQUE AGILE :
+• identifier le risque et sa famille :
+analyse AMDEC « Analyse des Modes de Défaillance, de leurs Effets et Criticité » :
+_ risque interne (au projet) :
+    U.S. mal découpé, dépassement de budget, ...
+→ pas le management de l'entreprise
+_ risque externe :
+    un fournisseur tardant à livrer un logiciel nécessaire ...
+_ risque technique :
+    panne matérielle, brusque changement de technologie  
+_ risque « imprévisible » (qui ne relève pas du projet et de portée bcp plus globale) :
+    incendie, catastrophe climatique, ...
+→ noté dans un « registre des risques »
+
+• évaluation qualitative :
+IPR : « Indice de Priorité du Risque »
+    gravité G,
+    Probabilité P
+    Non Détectabilité du Risque ND (risque de ne pas le voir arriver)
+→    IPR = G * P * ND ...
+
+
+• évaluation quantitative :
+    coût pondéré = estimation du coût * probabilité de survenue
+VMA  « Valeur Monétaire Attendue » = dans chaque cas, Σ investissement et risque pondéré
+
+• stratégies de réponse au risque :
+_ le prévenir / diminuer sa probabilité de survenue,
+_ atténuer son impact,
+_ le transférer (sous-traitance, assurance),
+_ l'accepter activement (en utilisant la (€) réserve de contingeance),
+_ l'accepter passivement (sans réserves !) 
+
+• ... et le risque positif :
+    SWOT : « Strenght Weakness Oportunity Threat »
+_  
+
+
+
+● EXIGENCES :
+_ utilisateur (interface, cas d'utilisation),
+_ métier        (règles de fonctionnement),
+_ fonctionnelles,
+_ non-fonctionnelles (temps de réponse, ergonomie),
+_ d'implémentation
+
+
+
+● URBANISATION D'UN SYSTÈME D'INFORMATION :
+_ couche métier,
+_ couche fonctionnelle,
+_ couche applicative,
+_ infrastructure
 
 
 • « product owner » :

@@ -1,8 +1,100 @@
 Travis, Jenkins, ...
 
+• deux qualifications :
+ISTQB : « International Software Test Qualification Board »
+CFTL : « Commité Français du Test Logiciel »
+
 • TDD « Test Driven Development »
 
 • Behat
+
+
+• « tests dynamiques » (tests manuels ou automatiques)
+ ≠ « tests statiques « (revue de code)
+
+
+● 7 PRINCIPES DES TESTS :
+_ montrer la présence des défauts
+_ les tests exhaustifs sont imposibles
+_ tester tôt (pour réagir tôt)
+_ les défauts sont souvent regroupés ensembles
+_ « le paradoxe du pesticide » : plus on teste, plus y'a d'erreurs
+_ les tests dépendent du contexte
+_ illusion de l'absence d'erreur
+
+
+
+● conception des tests :
+_ planification
+_ conception des tests, choix de la stratégie de tests :
+_ détermination des critères d'acceptation
+     critères d'entrée,
+     et de sortie (p.ex, « il n'y a plus d'anomalies critiques ou bloquantes »)
+_ exécution des tests
+_ gestion des anomalies
+_ clôture des tests
+
+
+● STRATÉGIES DE TEST :
+_ périmètre à tester
+_ phase d tests
+_ types de test
+_ environnement d testts 
+_ critères d'acceptation (critères d'E/S)
+_ analyse des risques
+_ outils de tests
+_ gestion des anomalies :
+    sévérité → mineure, moyenne, gave, bloquante
+    criticité : du point de vue métier ???????
+    reproductibilité
+    état du bug ticket (open, assigned, pending, rejected, need exam, closed)
+
+
+● TECHNIQUES DE CONCEPTION DES TESTS :
+• en boite noire :
+    _ partition d'équivalence :
+        « classes d'équivalences » :
+            plages de valeurs ayant même utilisation/signification :
+               p. ex : si nombres acceptés en paramètre € [a...b],
+                → 3 plages d'équivalence : <a, € [a...b], >b
+    _ valeurs limites 
+    _ états-transitions
+    _ table d décision
+• boîte blance
+• ... d'après l'expérience ...
+
+
+● PHASES DE TESTS PENDANT LE CYCLE DE VIE DU LOGICIEL :
+• tests unitaires : composant par composant – par les dév,
+• tests d'intégration : composants tout ensemble – par équipe de tests,
+• tests système / tests de qualification / d'homologation :
+    réalisés avec une volumétrie de données similaire aux conditions réelle
+    → performance, tenue de charge
+    – par équpde de tests indépendante
+• tests d'Acceptation Utilisateurs / U.A.T :
+    VABF Vérification d'Aptitude au Bon Fonctionnement :
+        par quelques groupes d'utilisateurs
+    VSR Vérification du Service Régulier :
+        « test de bout en bout »
+        déploiement en production sur un site pilote
+_ tests de non-régression,
+_ tests d'acceptation (tests recette)
+
+• les tests de non-régression bien sûr accompagnent le tout.
+
+
+● TYPES DE TESTS :
+• tests fonctionnels :
+    vérification des fonctionnalités métiers / ce qu'attendent les utilisateurs.
+• tests non-fonctionnels :
+    tests de rendement, de performance, de charge,
+    d'ergonomie, de portabilité, ...
+• tests de structure / « boîte blanche » (les tests suivant sont en boîte noire)
+• tests liés au changement :
+    tests de confirmation (« le bug est bien résolu »)
+    tests de non-régression
+• tests de maintenance :
+    ?????
 
 
 ● objectifs :
@@ -11,13 +103,17 @@ Travis, Jenkins, ...
     tests de perfomance / de charge
 
 
+
+
 ● TEST UNITAIRES :
 Pour valider le comportement d'UN composant (une classe, ...),
  pas pour valider l'absence d'erreur.
 _ aucune dépendance entre eux ni avec les BdD, API, système de fichier, ...
 _ rapides à exécuter
 
-• par convention, tests placés dans une arborescence sous /.*Tests/
+•(PHP) par convention, tests placés dans une arborescence sous /.*Tests/
+
+
 
 ● VOCABULAIRE PLUS-OU-MOINS BIEN DFINI :
 • mocks : «simulacres»
@@ -50,6 +146,6 @@ Pour Vérifier les U.S. eet le comportement global de l'app ...
 
 
 ● TESTS A/B :
-Un truc du marketting.
+Un truc du marketing.
 	mettre en concurrence 2 verions de qqch pour en améliorer l'efficacité
  en comparant 2 versions l ...

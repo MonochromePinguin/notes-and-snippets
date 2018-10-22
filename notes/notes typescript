@@ -1,0 +1,49 @@
+● INFÉRENCE DE TYPE :
+let a = true
+→ let a : boolean = true;
+
+
+● FONCTIONS :
+• paramètre optionnel :
+postfixé d'un «?». (pas comme en PHP où celà signifie « paramètre nullable »)
+→ si non indiqué, vaut « undefined ».
+    function fonc( param1: number, param2: number, lastParam?: string { ... }
+
+• valeur par défaut d'un paramètre :
+    function fonc( lastParam = 'blabla' ) { ... }
+→ ici, le type est inféré.
+
+• opérateur spread : comme en JS
+    function fonc( par1: String, ...par2: String[] ) { ... }
+    
+
+
+● CLASSES :
+Surensemble de ES6.
+    « extends », « implements », ...
+    super.fonc(...) ...
+attributs & méthodes :
+_ public, protected, private ;
+    public par défaut.
+
+• création des attributs dans le constructeur :
+au lieu de
+    constructor(p1: string, p2: string) {
+        super(...);
+        this.p1 = p1; this.p2 = p2;
+    }
+on peut utiliser :
+    constructor(private p1: string, private p2: string) { ... }
+→ le modifieur de portée doit être indiqué dans les paramètres !
+    
+• accesseurs/mutateurs :
+Ne sont pas utilisés comme des méthodes, mais comme des intercepteurs,
+ appelés lors de lectures/assignations.
+_ les noms des getters/setters ne peuvent PAS reprendre le nom des propriétés !
+    class Obj {
+        private _prop: number;
+        
+        get prop() { ... }
+        set prop() { ... }
+    }
+

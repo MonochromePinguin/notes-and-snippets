@@ -118,6 +118,7 @@ Class.forName(str) : renvoit une référence à la classe nommée en param'
 
 ● COMPOSITION / AGGRÉGATION :
 • composition :
+    NOTION LIÉE AUX INTERFACES.
 	un élément fait partie de l'autre (durée de vie, exclusivité)
 • aggrégation :
 	un élément a possède un autre élément b (mais b peut se passer de a)

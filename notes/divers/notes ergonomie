@@ -1,0 +1,131 @@
+● VISER LA SIMPLICITÉ :
+Les visiteurs viennent pour accomplir une tâche précise : 
+le design, c'est secondaire.
+_ pas trop de couleurs (5-7 max),
+_ polices lisibles (pas plus de 3 fontes),
+
+_ éviter les animations 
+_ lisible (« plus c'est épuré, plus c'est crédible »)
+_ § de 300-400 caractères
+_ principe de l'entonnoir : le texte mène vers ... le/les boutons interessant 
+ le destinataire du site (bouton d'inscription, d'achat, ...)
+
+
+• FACILITÉ DE NAVIGATION :
+_ menu de navigation clair et lisible en sommet des pages,
+    repris dans le footer
+_ mettre en place un « fil d'ariane », afin que les utilisateurs sachent où ils
+ se trouvent au sein de l'arborescence.
+
+_ « règle des 3 clics » : tout est accessible en moins de 3 clics
+_ pas plus de 3 niveaux dans les hiérarchies !
+
+_ le header en toutes pages, y inclure un lien de retour à l'accueil
+_ inclure liens de navigation évitant le recours aux «précédent»/«suivant» du
+  navigateur.
+_ conserver la même charte graphique sur toutes les pages (liens au même endroit ...)
+_ facilité de navigation
+
+• visibilité de l'adresse :
+_ l'URL de la page doit être tt le temps visible
+
+• tangibilité de l'information :
+tts les liens des pages sont visibles dès le départ
+
+• rapidité de chargement :
+images optimisées (enlever les métadonnées, choisir des images de faible déf'),
+pas de scripts inutiles,
+
+• si une page est en travaux, tout le site est marqué en travaux !
+surtout si la partie « paiements » n'est pas 100% fonctionnelle ...
+
+• permaliens & slugs
+
+• titres accrocheurs « putes-à-clic » :
+titres enjoleurs, mais conditions restrictives écrites en tout petit dessous :
+_ ça marche !
+
+• mettre en place des mécanismes facilitant l'inscription des utilisateurs
+(« inscription via compte facebook, etc. »),
+• et la communication 
+
+
+• transparence des formats :
+    compatibilité avec la plupart des navigateurs utilisés ...
+    
+
+• Le netlinking, c'est bien pour le SEO (netlinking : reférencement du site depuis d'autres
+sites externes)
+
+
+● SAVOIR RESPECTER LES CONVENTIONS & STANDARDS :
+_ positionnement des logos & menus,
+_ logo renvoyant vers la page d'accueil,
+_ changer la couleur des liens déjà visités,
+
+• respecter les conventions d'icône :
+ un panier d'achat doit ressembler aux autres paniers d'achat POUR NE PAS FAIRE
+PEUR AUX ACHETEURS !!! Ils peuvent s'enfuir simplement pour cause
+ d'icône inhabituelle ...
+
+• METTRE LES UTILISATEURS EN CONFIANCE !
+Dans le cas d'une société :
+_ rendre les infos de contact facilement accessibles,
+_ avoir une page de présentation des informations & options vendues/fournies,
+_ se mettre dans leur peau, pas seulement à leur place ...
+    → outils  des outils d'analyse des mvt de souris, des clics (cf « crazy egg »!)
+    
+
+   
+
+● CONTENU :
+    toujours en COMPLÉMENT du texte. Elles peuvent ne pas être chargées !
+• informations toujours accessible, même sans CSS.
+• malvoyants :
+_ contraste suffisant entre arrière-plan et police.
+_ feuilles de style optionnelles.
+
+
+
+●  ARCHITECTURE DE L'INFORMATION :
+• organiser l'information :
+_ énumérer, catégoriser, structurer (via arborescence)
+_ penser à l'étiquetage,
+    au système de navigation (tt mouvements opérables au sein
+de l'app),
+    au système de recherche interne (comme l'intégration d'un moteur de
+ recherche au sein du site)
+→ maquetter le site pour tester navigation COMME UTILISATEUR CIBLÉ !
+
+• trouver juste équilibre entre largeur (catégories) et profondeur (quantité
+ d'information par page)
+
+
+
+● DIFFÉRENTS TYPES DE SITES :
+    sites vitrines,
+    e-commerce,
+    blogs,
+    GED (Gestion Électronique de Documents),
+    portails intranets,
+    extranets, ...
+    
+
+● MARQUEURS PERMETTANTS DE MESURER LE R.O.I :
+_ marqueurs possibles :
+    _ nb de visiteurs,
+    _ temps passé par le visiteur pour effectuer telle tâche,
+« chq utilisateur prends 10s de moins pour telle tâche, ce qui fait
+ ~1000 ut./jr * 10s * 20jrs de visite par mois * ... → 60000€ d'économisé »
+    _ taux de conclusion de transactions d'achat,
+    _ taux de rebond,
+    _ satisfaction des utilisateurs (mesure délicate ... enquête de
+ satisfaction, sondage, etc.)
+    _ taux d'inscription par nouveau visiteur, ...;
+_ mesurer situations de départ et d'arrivée.
+Avant de dire qu'il y a problème, MESURER la normalité, l'antériorité pour
+ références précises.
+ 
+• être proactif :
+ avoir connaissance des marqueurs utilisés et de leurs valeurs ...
+
