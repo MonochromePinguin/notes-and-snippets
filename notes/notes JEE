@@ -60,10 +60,30 @@ TODO: JSTL
     <%@ include <fichier.jsp> %>
     <%@ taglib ... %>
         « Declares a tag library, containing custom actions, used in the page »
-    <%-- commentaire %>
+    <%-- commentaire --%>
     <% code; %>
     <%! déclaration de vars; %>
     <%= expression %>
+
+
+• FAIRE TRÈS ATTENTION À LA CORRESPONDANCE VERSION–URI :
+  à partir de javax.servlets:jst 1.2, l'URI à indiquer dans la taglib
+contient un «/jsp» après le nom de domaine !
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+• affichage conditionnel :
+    <c:if test="${not empty model.field}">
+        ...
+    </c:if>
+
+• boucle :
+    <c:forEach items="${users}" var="u">
+        <tr>
+            <td>${u.name}</td>
+            <td>${u.password}</td>
+            <td>${u.activated}</td>
+        </tr>
+    </c:forEach>
 
 
 

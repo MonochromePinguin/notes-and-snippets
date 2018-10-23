@@ -505,6 +505,11 @@ Les droits de création & suppression de table au sein d'une BdD sont alloués
 	
 	GRANT ALL ON *.* TO <user@hôte>;
 
+_ utilisateur sans aucun droit d'accès :
+    GRANT USAGE ON *.* TO <user@hôte>
+« USAGE » est synonyme de « aucun droit ».
+
+
 • spécifier l'utilisateur :
 	testeur@localhost
 	'testeur'@'localhost';

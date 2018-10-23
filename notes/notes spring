@@ -120,9 +120,12 @@ Ne pas utiliser le constructeur, qui est appelé avant l'hydratation du bean ..
 
 
 ● ANNOTATIONS NOTABLES :
-@Repository,
+@Repository → ,
 @Service,
 @Controller
+
+• méthode à enrober dans un try{}catch(){} / BEGIN TRANSACTION/COMMIT :
+    @Transactional
 
 
 ● SECTIONS CRITIQUES :
@@ -130,3 +133,16 @@ _ @Transactional :
     cette annotation sur une méthode permet l'exclusion mutuelle entre threads
 
 
+
+● DÉMARRAGE DE SPRING :
+Par défaut, à moins qu'on ai spécifié une autre classe de démarrage dans
+le web.xml, spring cherche à démarrer la servlet « DispatcherServlet » :
+→ spring recherche dans WEB-INF/ le fichier de configuration 
+    « DispatcherServlet-servlet.xml »
+
+• changer la servlet par défaut de spring – dans web.xml :
+Dans la déclaration de servlet
+    <servlet>
+        ...
+        <load-on-startup>1</load-on-startup>
+    </servlet>

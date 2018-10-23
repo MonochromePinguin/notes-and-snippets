@@ -48,6 +48,8 @@ F2              prochaine erreur remarquée
 
 ● AUTOCOMPLÉTION :
 Alt entrée              «intentions»
+Ctrl J              menu contextuel «live template»
+Ctrl Alt J          entourer d'un «live template»
 
 • complétion de noms et mots-clés :
 Ctrl espace             complétion simple
@@ -88,4 +90,14 @@ Alt ↑↓      naviguer entre fonctions/etc.
 (pr suggestions d'autocomplétion) :
 Ctrl Maj Entrée → corrige la construction courante
 
+~~~~~~~~~~~~~~~~~~~
 
+● LIVE TEMPLATES PERSO :
+• intelliJ pro :
+_ JSP:
+    fore → <c:forEach ...>
+_ java:
+    psf →  private static final
+    pusf →  public static final
+    pvf → public void function
+    rsa → request.setAttribute(...)
