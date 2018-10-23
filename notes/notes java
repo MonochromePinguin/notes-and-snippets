@@ -62,17 +62,17 @@ _ annotations d'annotations :
 	@Target,
 	@Retention
 		« RetentionPolicy.SOURCE » : écarté par le compilateur
-		    .CLASS  : conservé dans le .class, mais pas chargé par la JVM
-		    .RUNTIME : chargé par la JVM et accessible par réflexion
+			.CLASS  : conservé dans le .class, mais pas chargé par la JVM
+			.RUNTIME : chargé par la JVM et accessible par réflexion
 	@Inherited,
 	...
 
 
 
 ● LITÉRAUX :
-	0b0010101       0b  binaire
-	0xA154FA4       0x  hexa
-	1.0f              f virgFlot
+	0b0010101		0b  binaire
+	0xA154FA4		0x  hexa
+	1.0f			  f virgFlot
 
 ┃• les nombres peuvent être formatés avec des soulignés en java ≥7 :
 ┃	double v = 1_000_000d;
@@ -99,8 +99,8 @@ Class.forName(str) : renvoit une référence à la classe nommée en param'
 		Class classe = Class.forName(nomClasse);
 		// Récupère le constructeur prenant en paramètre telles classes
 		java.lang.reflect.Constructor constructeur = classe.getConstructor(
-		    // ↓ liste des types des paramètres
-		    new Class[] {Class.forName(nomClasseParam, nomClasseParam, ...})
+			// ↓ liste des types des paramètres
+			new Class[] {Class.forName(nomClasseParam, nomClasseParam, ...})
 		);
 		// appel avec un tableau de paramètres
 		constructeur.newInstance(new Object[] { param, param, ...} );
@@ -118,7 +118,7 @@ Class.forName(str) : renvoit une référence à la classe nommée en param'
 
 ● COMPOSITION / AGGRÉGATION :
 • composition :
-    NOTION LIÉE AUX INTERFACES.
+NOTION LIÉE AUX INTERFACES.
 	un élément fait partie de l'autre (durée de vie, exclusivité)
 • aggrégation :
 	un élément a possède un autre élément b (mais b peut se passer de a)
@@ -141,11 +141,11 @@ classe dérivée de celle renvoyée par la méthode de la classe-mère.
 Pour appeler un autre constructeur dans le constructeur, utiliser « this() »;
 	class c {
 		c(p1, p2) {
-		    this(p1, p2, const);
+			this(p1, p2, const);
 		}
 
 		c(p1, p2, p3) {
-		    ...
+			...
 		}
 	}
 
@@ -179,7 +179,7 @@ Pour appeler un autre constructeur dans le constructeur, utiliser « this() »;
 ┃	int[][] tbl = { { 1, 2, 3}, {10, 20, 30} };
 ┃	for ( int[] sousTableau : tbl )
 ┃		for ( int entier : sousTableau )  ← la boucle englobante renvoit un
-┃			blablabla		                int[] dans «sousTableau»
+┃			blablabla							int[] dans «sousTableau»
 
 
 ● MODIFICATEURS DE VISIBILITÉ DES CLASSES ... :
@@ -187,9 +187,9 @@ Pour appeler un autre constructeur dans le constructeur, utiliser « this() »;
 	public
 
 ● ... ET DES ATTRIBUTS & MÉTHODES :
-	private		    →	privé à la classe
+	private			→	privé à la classe
 	«par défaut»	→	tout le paquetage
-	protected	    →	paquetage et descendance de la classe
+	protected		→	paquetage et descendance de la classe
 	public
 
 • static :
@@ -300,14 +300,14 @@ _ System.in, System.out
 
 ● COLLECTIONS :
 Interfaces implémentées par des objets stockant des objets.
-⊕ Set :           € de valeurs non dupliquées.
-_ SortedSet :       Set trié.
-⊕ List :          € de valeurs consécutives
+⊕ Set :			   € de valeurs non dupliquées.
+_ SortedSet :	   Set trié.
+⊕ List :		   € de valeurs consécutives
 	.add(val)
 	.remove(index)
 	.get(index)
 ⊕ Map :
-_ hashmap          tableau associatif (PHP), dictionnaire (python), hash (ruby)
+_ hashmap : 	tableau associatif (PHP), dictionnaire (python), hash (ruby)
 	.put(clef, valeur)
 	.remove(clef)
 	.get(clef)
@@ -333,7 +333,7 @@ ou bien
 • Maps :
 itérateur et transtypage de iter.next() vers Map.Entry.
    hash1.forEach( (key, value) -> {
-		    System.out.println(value);
+			System.out.println(value);
 		}
 	);
 
@@ -342,7 +342,7 @@ les méthodes statiques .stream() et .asList() permettet de récupérer
  un itérable :
 	Iterator<String> iter = Arrays.stream(tbl).iterator();
 		while (iter.hasNext()) {
-		    System.out.println(iter.next());
+			System.out.println(iter.next());
 		}
 
 
@@ -372,7 +372,7 @@ acceptent des constructeurs et des propriétés :
 		public String name;
 
 		Val(String name) {
-		    this.name = name;
+			this.name = name;
 		}
 	}
 • enum.values()

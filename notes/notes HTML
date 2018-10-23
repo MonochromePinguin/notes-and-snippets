@@ -26,17 +26,17 @@ bref, la valeur peut être encadrée d'apostrophes, de guillemets,
 ou non encadrée – mais alors sans contenir aucun espace, guillemet, apostrophe,
  chevron ouvrant ou fermant, guillemet an ne donne-t-il pasglais, et en étant suivie d'un espace.
 • bien sûr, de nombreux caractères sont autorisés dans le nom des propriétés :
-    crochets, parenthèses, caractères UTF-8, ...
+	crochets, parenthèses, caractères UTF-8, ...
 
 ● BEM en CSS - Block Element Modifier :
 BEM est une technique de nommage des classes CSS.
 On construit les classes comme des composants réutilisable / empilables
  (composants de comportement, de stylisation, ...)
 <div class="box">
-    <h1 class="box-title">...</h1>
-    <p class="box-content">
-        ... <span class="box-content-highlight">...</span>
-    </p>
+	<h1 class="box-title">...</h1>
+	<p class="box-content">
+		... <span class="box-content-highlight">...</span>
+	</p>
 </div>
 _ donner une classe au bloc  -> "box",
 _ inclure ce nom dans la classe de l'enfant  -> "box-title", "box-content"
@@ -119,10 +119,10 @@ on ne peut animer «background-color». Mais on peut animer «opacity»,
 _ CSS :
 #opacifier {
 	z-index: 1; /* nécessite un ancêtre positionné ! */
-    position: absolute;
-    top: 0; bottom: 0; left: 0; right: 0;
+	position: absolute;
+	top: 0; bottom: 0; left: 0; right: 0;
 
-  	background: rgb(255,255,255);
+	background: rgb(255,255,255);
 	opacity: 0.5;
 	transition: opacity 0.5s;
 }
@@ -162,8 +162,8 @@ _ meta title :
 
 
 ● NE PAS OUBLIER :
-- balises <meta charset="">,
-          <meta dir="ltr|rtl">,
+- balises	<meta charset="">,
+			<meta dir="ltr|rtl">,
 - <title> dans <head>
 - déclarer la langue, au moins via <html lang="fr">, et partout où ça change
 	aucune langue : "Zxx"
@@ -429,7 +429,7 @@ occupent 100% de la hauteur !
 		justify-content: [flex-start|flex-end|center|space-between|space-around|space-evenly|...];
 		/* et de l'axe secondaire */
 		align-items: [normal|stretch|flex-start|flex-end|self-start|...];
-		
+
 		/* alignement des lignes/colonnes d'éléments le long de l'axe secondaire */
 		align-content: [ start | center | space-between | space-aroud ];
 	}
@@ -488,11 +488,11 @@ Passera le 𝑛ième élément en position γ
 les lignes du bord ont l'indice 1.
 •line ≠ track,
  cell ≠ area
- 
+
 • grid-row,
   grid-column: 1 / 5
-              -3 / -1    ← nombres négatifs : à partir de la DERNIÈRE lignes
-               1 / span 5;
+			  -3 / -1    ← nombres négatifs : à partir de la DERNIÈRE lignes
+			   1 / span 5;
 
 • pour une grille contenant un maximum d'éléments par ligne,
  à raison de 5cm chacun :

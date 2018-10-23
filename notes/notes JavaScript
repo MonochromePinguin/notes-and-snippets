@@ -25,7 +25,7 @@ _ exécutés dans l'ordre d'apparition, APRÈS le chargement du document,
   requestAnimationFrame(cbRappel) : peut recevoir une valeur max,
  et doit être appelé pour chaque trame – par ex en fin de f° de MàJ.
  	La cb recoit en param un horodatage epoch ;
-   window.performance.now() permet d'obtenir un 1er horodatage de référence.
+  window.performance.now() permet d'obtenir un 1er horodatage de référence.
 
 •à comparer avec window.setTimeOUt().
 
@@ -184,26 +184,26 @@ ou dans
 
 ● PORTÉE DE « THIS » :
 • dans une simple fonction :
-    la portée globale (l'objet window au sein d'un navigateur)
+	la portée globale (l'objet window au sein d'un navigateur)
 • dans une méthode :
-    l'objet conteneur.
-    -> Mais ce n'est PAS le cas pour une fonction dans une méthode !
+	l'objet conteneur.
+	-> Mais ce n'est PAS le cas pour une fonction dans une méthode !
 • dans une fonction fléchée :
-    le contexte dans lequel elle est déclarée
+	le contexte dans lequel elle est déclarée
 • APPELER UNE FONCTION DANS UN CONTEXTE BIEN DÉFINI :
-    var agent = {
-        name: 'bla';
-        action: function(callback) {
-            callback.call(this);
-        }
-    }
-    
-    // cette fonction est dans le contexte de « Window »
-    function do() {
-        console.log( ... + this.name );
-    }
-    agent.action(do);
-    
+	var agent = {
+		name: 'bla';
+		action: function(callback) {
+			callback.call(this);
+		}
+	}
+
+	// cette fonction est dans le contexte de « Window »
+	function do() {
+		console.log( ... + this.name );
+	}
+	agent.action(do);
+
 -> la callback sera appelée par « .call() » dans le contexte de l'objet.
 
 • fonc.call(this, arg1, arg2, arg3, ...)        -> liste d'arguments
@@ -238,7 +238,7 @@ JSON.parse(ch)      → objet
 ● afficher le contenu d'un objet via console.log() :
 utiliser des virgules pour SÉPARER LES PARAMÈTRES
  → le navigateur affichera l'objet de manière détaillée.
-    console.log("texte", obj)
+	console.log("texte", obj)
 
 
 ---------------------------------- PUR JAVASCRIPT -----------------------------
@@ -262,7 +262,7 @@ val = +'blabla' →    NaN !
 • INDICES – « for ( p in obj )» :
 	parcourt les propriétés, (donc les indices pour un tableau)
 	→ on accède à la valeur via « obj[p] » ...
-	
+
 • tbl.forEach( (val [, index [, array]] ) => ... )
 
 
@@ -283,41 +283,41 @@ _ PAS «let» et «const».
 
 
 ● TYPES DE BASE :
-    Undefined
-    Null
-    Boolean
-    Number
-    String
-    Object
-    Symbol (depuis ES6)
+	Undefined
+	Null
+	Boolean
+	Number
+	String
+	Object
+	Symbol (depuis ES6)
 
 • falsy :
-    undefined
-    null
-    false
-    0
-    chaîne vide ''
-    tableau vide [], objet vide {} SAUF SI CONVERSION EN BOOLÉEN
-    NaN
-    
+	undefined
+	null
+	false
+	0
+	chaîne vide ''
+	tableau vide [], objet vide {} SAUF SI CONVERSION EN BOOLÉEN
+	NaN
+
 • truthy :
-    tout le reste ! chaînes, tableaux et objets ayant contenu ...
+	tout le reste ! chaînes, tableaux et objets ayant contenu ...
 
 • le cas particulier des tableaux vides :
-    let tbl = [];
-    ( tbl == false ) -> true
-    Boolean(tbl)     -> true
+	let tbl = [];
+	( tbl == false ) -> true
+	Boolean(tbl)     -> true
 Un tableau vide est falsy par défaut,
- SAUF en cas de conversion explicite par « Boolean(tbl) » 
+ SAUF en cas de conversion explicite par « Boolean(tbl) »
  ou par la négation « !tbl »
 
 
 ●  typeof() et instanceof ... :
-    if ( typeof(obj) == 'String' )
-        ...
-    if ( obj instanceof MonObjet )
-        ...
- 
+	if ( typeof(obj) == 'String' )
+		...
+	if ( obj instanceof MonObjet )
+		...
+
 
 • pr savoir si un objet X possède la propriété Y :
 « if ( Y in X ) »
@@ -337,16 +337,16 @@ Un tableau vide est falsy par défaut,
 • les opérateurs ===, !== ne sont pas ==, !=   !
 
 • raccourci pour assigner une valeur par défaut :
-    var = val || defaultVal; 
+	var = val || defaultVal;
 
 
 
 MÉTHODES ET FONCTIONS NOTABLES DES OBJETS :
 •supprimer une propriété :
-    delete( obj.prop )
+	delete( obj.prop )
 • avant stringification, on peut aussi utiliser
-    obj.prop = undefined
-car les propriétés indéfinies ne sont pas converties ...    
+	obj.prop = undefined
+car les propriétés indéfinies ne sont pas converties ...
 
 « obj.prop = f° fléchée » est possible ...
 
@@ -354,18 +354,18 @@ car les propriétés indéfinies ne sont pas converties ...
 
 ● MÉTHODES NOTABLES DES TABLEAUX :
 • la seule différence visible entre un tableau et un autre type d'objet, c'est
-        .length
-        
+		.length
+
 tbl.map( v => f(v) )
-    → tableau de même taille
+	→ tableau de même taille
 tbl.filter( v => testBooléen )
-    → tableau ne contenant que les valeurs répondant au critère
+	→ tableau ne contenant que les valeurs répondant au critère
 tbl.reduce( (accum, v) => accum + v, v0DeAccum )
-    → opération cyclique sur toutes les entrées du tableau 
+	→ opération cyclique sur toutes les entrées du tableau
 
 _ fin du tableau :
-    tbl.push()
-    tbl.pop()
+	tbl.push()
+	tbl.pop()
 
 
 
@@ -384,9 +384,9 @@ le paramètre de reste est un TABLEAU
 		//réutilise les mêmes paramètres – ici sans a et b
 		otherFunc(...args);
 		if (args.length > 0) {
-		    //chaque élément du tableau est accessible
-		    fonc2(args[0], args[1]);
-	    }
+			//chaque élément du tableau est accessible
+			fonc2(args[0], args[1]);
+		}
 	}
 _ le paramètre de reste est aussi décomposable en variables distinctes :
 	fonc(...[a, b, c] )
@@ -394,34 +394,34 @@ _ le paramètre de reste est aussi décomposable en variables distinctes :
 
 
 • OPÉRATEUR DE DESTRUCTURATION / « SPREAD » :
-    tbl = [a, b]
-    function f(p1, p2) {... }
+	tbl = [a, b]
+	function f(p1, p2) {... }
 
-    f(...tbl)     // le tableau est décomposé en son contenu
+	f(...tbl)     // le tableau est décomposé en son contenu
 
-    biggerTbl = [ ...tbl, x, y ]    // biggerTbl débute par le contenu de tbl
+	biggerTbl = [ ...tbl, x, y ]    // biggerTbl débute par le contenu de tbl
 
-    var obj1 = {ch1: 1; ch2: 2}     //les propriétés de obj1 sont copiées dans obj2
-    obj2 = { ...obj1, ch3: 3, ch4: 4 }
+	var obj1 = {ch1: 1; ch2: 2}  //les propriétés de obj1 sont copiées dans obj2
+	obj2 = { ...obj1, ch3: 3, ch4: 4 }
 
 • ASSIGNATION DÉSTRUCTURANTE :
-    let a, b,
-        allTheRest;
-    [ a, b ] = [v1, v2];
-        # → a = v1,
-        #   a = v2
-    [ a, b, ...allTheRest] = [1, 2, 4, 8, 16];
-        # → a = 1,
-        #   b = 2,
-        #   allTheRest = [4, 8, 16];
+	let a, b,
+		allTheRest;
+	[ a, b ] = [v1, v2];
+		# → a = v1,
+		#   a = v2
+	[ a, b, ...allTheRest] = [1, 2, 4, 8, 16];
+		# → a = 1,
+		#   b = 2,
+		#   allTheRest = [4, 8, 16];
 
 
 
 ● FONCTIONS FLÉCHÉES (ARROW FUNCTIONS) – ES6 :
-    const fonc = (a,b) => a + b;
-    const fonc = (name) => { console.log(name) }
-    [12, 14, 25, 13].filter( age => age < 18 )
-    
+	const fonc = (a,b) => a + b;
+	const fonc = (name) => { console.log(name) }
+	[12, 14, 25, 13].filter( age => age < 18 )
+
 - pas d'objet «arguments»
 - le «this» est celui du contexte de déclaration
 - ne peuvent servir de constructeur
@@ -433,14 +433,14 @@ Les parenthèses évitent l'interprétation des accolades comme bloc de code.
 	a => ( {val: a} )
 _ reprendre une variable d'entrée dans la construction d'un objet créé
  UN CHAMPS DE MÊME NOM ET VALEUR :
-	value => ({ value, double: a*2 }) 
+	value => ({ value, double: a*2 })
 
 • armer une variable à une fonction SSI cette variable est nulle :
 	var = var || fonc() {};
 	var = var || ( () => {} );	//nécessite des parentèses englobantes !
 
 • décomposition des variables et valeurs par défaut :
-    fonc = (  a, b,         ,     c              )  => ...
+	fonc = (  a, b,         ,     c              )  => ...
 	fonc = ( [a, b] = [1, 2], {x: c} = {x: a + b}) => a + b + c;
 
 
@@ -460,8 +460,8 @@ findMissingLetter= (a) => (
 
 
 ● MODULES ES6 :
-    import * from './nomFichierSansPointJs';
-    import symbol from './nomSansPointJs';
+	import * from './nomFichierSansPointJs';
+	import symbol from './nomSansPointJs';
 
 un peu comme les IIFE ...
 
@@ -522,9 +522,9 @@ provoqué par l'emploi d'un tableau de valeurs à passer en paramètres au POST
 
 
 ● plugins jquery d'intérêt:
-    dataTable   - affichage de tableau triable, recherchable, éditable 
+	dataTable   - affichage de tableau triable, recherchable, éditable
 
 
 • calendrier avancé :
-    fullCalendar    - affichage d'événement, etc.
+	fullCalendar    - affichage d'événement, etc.
 

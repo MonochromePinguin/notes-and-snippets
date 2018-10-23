@@ -4,7 +4,7 @@ _ installer l'installateur symfony (p.ex sous /usr/local/bin ...)
 _ dans le dossier parent du projet à créer :
 	symfony new <nom> <versionSymfony>
 OU
-	 composer create-project symfony/website-skeleton my-project
+	composer create-project symfony/website-skeleton my-project
 
 	→ configurer app/config/parameters.yml (params co' BdD)
 
@@ -359,17 +359,17 @@ ici dans un contrôleur, mais c'est la même syntaxe dans un FormType
 		# l'ORM, pour affiner l'ordre de tri des éléments affichés
 			->add(
 				'reviewAuthor',
-            	EntityType::class,
-            	[
-                	'label' => 'Auteur : ',
-                	'class' => 'AppBundle\Entity\User',
-                	'query_builder' => function(EntityRepository $er) {
-                    	return $er->createQueryBuilder( 'user')
-                    			  ->orderBy('user.lastName', 'ASC');
-                	},
-                	'choice_label' => 'lastName'
-            	]
-        	)
+				EntityType::class,
+				[
+					'label' => 'Auteur : ',
+					'class' => 'AppBundle\Entity\User',
+					'query_builder' => function(EntityRepository $er) {
+						return $er->createQueryBuilder( 'user')
+								  ->orderBy('user.lastName', 'ASC');
+					},
+					'choice_label' => 'lastName'
+				]
+			)
 		#FORMULAIRE IMBRIQUÉ : formulaire géré par la classe «WeaponType»
 		# → sera affiché au sein du précédent
 		# cf plus bas pour la persistence en cascade
@@ -471,14 +471,14 @@ plus exactement, validation de l'objet lié après hydratation par le formulaire
 
 	@Assert\Type("\DateTime")
 
-    /**
-     * @Assert\Range(
-     *      min = 120,
-     *      max = 180,
-     *      minMessage = "You must be at least {{ limit }}cm tall to enter",
-     *      maxMessage = "You cannot be taller than {{ limit }}cm to enter"
-     * )
-     */
+	/**
+	 * @Assert\Range(
+	 *      min = 120,
+	 *      max = 180,
+	 *      minMessage = "You must be at least {{ limit }}cm tall to enter",
+	 *      maxMessage = "You cannot be taller than {{ limit }}cm to enter"
+	 * )
+	 */
 
 
 ● méthode FormType::configureOption() :

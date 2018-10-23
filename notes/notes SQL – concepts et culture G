@@ -2,12 +2,12 @@
 • langage DÉCLARATIF et normalisé.
 • les procédures stockées et trigger ne font PAS partie de SQL,
 ce sont des surcouches :
-    PL/SQL de oracle,
-    transact SQL de cybase (rachetée par µsoft, puis recréée par ses fondateurs)
+	PL/SQL de oracle,
+	transact SQL de cybase (rachetée par µsoft, puis recréée par ses fondateurs)
 
 
 _ clause : WHERE, FROM, SELECT ...
-_ prédicat : CONDITION LOGIQUE 
+_ prédicat : CONDITION LOGIQUE
 
 • DDL, DML, DCL – et DIL :
 3 "sous-ensembles" du langage SQL.
@@ -19,9 +19,9 @@ _ DIL (nouveau) : Data Interrogation Language. Le SELECT et ses subtilités.
 •OLTP :
 « OnLine Transactional Processing »
 Stockage et manipulation de données – grand nombre de petites requêtes
-(p.ex :  transactions bancaires, références produits) 
+(p.ex :  transactions bancaires, références produits)
 •OLAP :
-   « OnLine Analytical Processing »
+	« OnLine Analytical Processing »
 serveur décisionnel ou Data Warehouse, bref entrepôt de données déjà consolidées,
 regroupant différentes sources de données (Oracle, MariaDB, H2, ...),
 utilisées pour le minage de données.
@@ -31,17 +31,17 @@ utilisées pour le minage de données.
 ● ACID :
 • Atomicité :
 	transaction effectuée entièrement, ou pas du tout.
-• Cohérence 
+• Cohérence
 	chaque transaction doit amener à un état valide – selon les règles définies.
 • Isolation :
 	Toute transaction doit d'effectuer comme si elle était la seule sur le
- système – en cas de transactions parallèles, le résultat doit être équivalent à
- une exécution sérielle.
+système – en cas de transactions parallèles, le résultat doit être équivalent à
+une exécution sérielle.
 	En cas de duplication de données (plusieurs serveurs contenant les mêmes
- données), cette contrainte là devient gourmande → NoSQL !
+données), cette contrainte là devient gourmande → NoSQL !
 • Durabilité :
 	persistance des données face aux incidents. Mais là on se limite à l'aspect
- logiciel du terme ...
+logiciel du terme ...
 
 
 
@@ -55,8 +55,7 @@ utilisées pour le minage de données.
  méthode de conception et de développement de projets informatiques ...
 
 _ MCD – Modèle Conceptuel de Données :
-	représentation des données, définition des dépendances fonctionn
-elles
+	représentation des données, définition des dépendances fonctionnelles
  de ces données entre elles.
 - entités et leurs données ; relations entre elles
 	("appartenir", "inscrit à", ...)

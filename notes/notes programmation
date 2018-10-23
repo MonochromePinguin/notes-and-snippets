@@ -147,15 +147,15 @@ et simplement «inline» dans le .c où la fonction est définie ...
 • EXPORTATION DE SYMBOLES D'UNE BIBLIOTHÈQUE & OPTIONS DE COMPILATION DE GCC :
 Si l'option «-fwhole-program» est utilisée, les fonctions non référencées
  dans le code seront éliminées ...
-                                            ┌───────────────┐
+					                        ┌───────────────┐
  → les fonctions à exporter doivent avoir l'│attribut «used»│
  pour être préservées !                     └───────────────┘
 ♦ Pour limiter le nombre de symboles exposés dans la bibliothèque,
  utiliser l'option GCC «-fvisibility=internal» (qui rend les symboles
  «privés» par défaut), et indiquer
-                                    ┌────────────────────┐
+					                ┌────────────────────┐
  les symboles à exporter par l'attribut «│visibility=("default")│»
-                                    └────────────────────┘
+					                └────────────────────┘
 
 ● Au contraire, compiler avec l'option « -rdynamic » inclut les références à de
  nombreux symboles ds le binaire, ce qui permet d'utiliser les f°s

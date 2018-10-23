@@ -58,8 +58,8 @@ Ctrl Maj espace         « smart type completion » (tient compte du contexte)
     x 2 :         itou ( type → collections de ce type ... )
 
 Ctrl Maj Entrée         complétion d'instruction et de structures,
-                        avec éventuel déplacemement
-                        devant une expression : l'englobe dans un appel de f°
+					    avec éventuel déplacemement
+					    devant une expression : l'englobe dans un appel de f°
 
 • ACCEPTER SUGGESTION D'AUTOCOMPLÉTION :
 entrée          → remplace ce qui est à gauche

@@ -11,7 +11,7 @@ Ctrl Maj espace     « smart completion »
 
 • complétion de structures (fonctions, if, while,...) :
 Ctrl Maj Entrée     insère le squelette d'une structure débutant par tel mot-clé
-                    devant une expression : l'englobe dans un appel de f°
+					devant une expression : l'englobe dans un appel de f°
 
 • complétion suffixée :
     <expr>.if <TAB>     →   <expr> englobée dans une structure «if»
