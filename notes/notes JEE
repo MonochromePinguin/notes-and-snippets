@@ -2,50 +2,50 @@
 
 • serveur web : simple serveur de fichiers ;
   serveur d'application : traitement logiciel déclenché par la requête.
-  
+
 → « dans apache, il y a une partie serveur web (le controlleur frontal), et une
-partie serveur d'application »  
+partie serveur d'application »
 
 
 ● WEB-INF :
-    dossier contenant les fichiers accessibles au serveur java – PAS au monde extérieur.
+	dossier contenant les fichiers accessibles au serveur java – PAS au monde extérieur.
 • web.xml :
-    configuration (routage URL/servlet ...) de l'app web.
-    
+	configuration (routage URL/servlet ...) de l'app web.
+
 • gérer la racine du site avec un servlet :
 (ici, DTD pour servlet v2.5)
-    <?xml version="1.0" encoding="ISO-8859-1"?>
-    <!DOCTYPE web-app
-    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.5//EN"
-    "http://java.sun.com/dtd/web-app_2_5.dtd">
+	<?xml version="1.0" encoding="ISO-8859-1"?>
+	<!DOCTYPE web-app
+	PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.5//EN"
+	"http://java.sun.com/dtd/web-app_2_5.dtd">
 
-    <web-app>
-        <servlet>
-            <servlet-name>homepageServlet</servlet-name>
-            <servlet-class>org.monochrome.package.LaClasse</servlet-class>
-        </servlet>
-    
-        <servlet-mapping>
-            <servlet-name>homepageServlet</servlet-name>
-	        <url-pattern>/sonURL</url-pattern>
-         </servlet-mapping>
-    
-        <!-- liste des fichiers servant de page d'accueil -->
-        <welcome-file-list>
-            <!-- → l'URL «/» est donc équivalente à « /sonURL » -->
-            <welcome-file>sonURL</welcome-file>
-            <welcome-file>index.html</welcome-file>
-            <welcome-file>index.htm</welcome-file>
-            <welcome-file>index.jsp</welcome-file>
-        </welcome-file-list>
-    </web-app>
+	<web-app>
+		<servlet>
+			<servlet-name>homepageServlet</servlet-name>
+			<servlet-class>org.monochrome.package.LaClasse</servlet-class>
+		</servlet>
+
+		<servlet-mapping>
+			<servlet-name>homepageServlet</servlet-name>
+			<url-pattern>/sonURL</url-pattern>
+		</servlet-mapping>
+
+		<!-- liste des fichiers servant de page d'accueil -->
+		<welcome-file-list>
+			<!-- → l'URL «/» est donc équivalente à « /sonURL » -->
+			<welcome-file>sonURL</welcome-file>
+			<welcome-file>index.html</welcome-file>
+			<welcome-file>index.htm</welcome-file>
+			<welcome-file>index.jsp</welcome-file>
+		</welcome-file-list>
+	</web-app>
 
 
 
 ● JEE utilise le modèle MVC :
-    modèle :        java BEANS (objets java) fait le lien avec la BdD
-    vue :           page JSP
-    contrôleur :    servlet au sein du serveur d'applications
+	modèle :		java BEANS (objets java) fait le lien avec la BdD
+	vue :			page JSP
+	contrôleur :	servlet au sein du serveur d'applications
 
 
 ● un doGet() de servlet reçoit 2 objets en param :
@@ -57,28 +57,28 @@ TODO: JSTL
 
 
 ● JSP :
-    <%@ include <fichier.jsp> %>
-    <%@ taglib ... %>
-        « Declares a tag library, containing custom actions, used in the page »
-    <%-- commentaire %>
-    <% code; %>
-    <%! déclaration de vars; %>
-    <%= expression %>
+	<%@ include <fichier.jsp> %>
+	<%@ taglib ... %>
+		« Declares a tag library, containing custom actions, used in the page »
+	<%-- commentaire %>
+	<% code; %>
+	<%! déclaration de vars; %>
+	<%= expression %>
 
 
 
 ● JSF – « Java Server Faces » :
 
-TODO !  
+TODO !
 la « face servlet » :
-    le contrôleur frontal qui dispatche les requêtes vers les servlets
-    Facelet : page XHTML (avec nouvelles balises HTML5)
-    
-    
+	le contrôleur frontal qui dispatche les requêtes vers les servlets
+	Facelet : page XHTML (avec nouvelles balises HTML5)
+
+
 ● BIBLIOTHÈQUES À IMPORTER POUR UN PROJET JEE/JSF :
 javax.faces-api-2.3.jar (annotations javax.faces.bean.ManagedBean et autres)
 jsf-api.jar
 jsf-impl.jar
-jstl-1.1.0.jar              (JSTL)
-primefaces-6.1.jar          (import des annotations dans le XHTML)
+jstl-1.1.0.jar			(JSTL)
+primefaces-6.1.jar		(import des annotations dans le XHTML)
 primefaces-6.1-sources.jar

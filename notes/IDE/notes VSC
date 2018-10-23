@@ -1,5 +1,5 @@
 F1 : commande rapide
-    (task, edt, ?, ...)
+	(task, edt, ?, ...)
 
 • F12 :     aller à la définition (du texte sélectionné)
   alt-F12 : afficher la déf°
@@ -15,12 +15,12 @@ Alt + clic : placer autre curseur
 
 
 via extensions :
-    sélectionner une balise pour modifier le tag correspondant
+	sélectionner une balise pour modifier le tag correspondant
 
 ● marque-pages (¿ extension ?) :
-    ctrl+alt+B (perso) : basculer marque-page
-    ctrl+B,
-    ctrl+maj+B (perso): précédent/suivant
+	ctrl+alt+B (perso) : basculer marque-page
+	ctrl+B,
+	ctrl+maj+B (perso): précédent/suivant
 
 ● dash (doc Zeal) :
 _   ctrl+H : recherche sélection, en f° type de fichier

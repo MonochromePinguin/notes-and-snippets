@@ -28,8 +28,8 @@ _ illusion de l'absence d'erreur
 _ planification
 _ conception des tests, choix de la stratégie de tests :
 _ détermination des critères d'acceptation
-     critères d'entrée,
-     et de sortie (p.ex, « il n'y a plus d'anomalies critiques ou bloquantes »)
+	critères d'entrée,
+	et de sortie (p.ex, « il n'y a plus d'anomalies critiques ou bloquantes »)
 _ exécution des tests
 _ gestion des anomalies
 _ clôture des tests
@@ -39,27 +39,27 @@ _ clôture des tests
 _ périmètre à tester
 _ phase d tests
 _ types de test
-_ environnement d testts 
+_ environnement d testts
 _ critères d'acceptation (critères d'E/S)
 _ analyse des risques
 _ outils de tests
 _ gestion des anomalies :
-    sévérité → mineure, moyenne, gave, bloquante
-    criticité : du point de vue métier ???????
-    reproductibilité
-    état du bug ticket (open, assigned, pending, rejected, need exam, closed)
+	sévérité → mineure, moyenne, gave, bloquante
+	criticité : du point de vue métier ???????
+	reproductibilité
+état du bug ticket (open, assigned, pending, rejected, need exam, closed)
 
 
 ● TECHNIQUES DE CONCEPTION DES TESTS :
 • en boite noire :
-    _ partition d'équivalence :
-        « classes d'équivalences » :
-            plages de valeurs ayant même utilisation/signification :
-               p. ex : si nombres acceptés en paramètre € [a...b],
-                → 3 plages d'équivalence : <a, € [a...b], >b
-    _ valeurs limites 
-    _ états-transitions
-    _ table d décision
+	_ partition d'équivalence :
+		« classes d'équivalences » :
+			plages de valeurs ayant même utilisation/signification :
+				p. ex : si nombres acceptés en paramètre € [a...b],
+					→ 3 plages d'équivalence : <a, € [a...b], >b
+	_ valeurs limites
+	_ états-transitions
+_ table d décision
 • boîte blance
 • ... d'après l'expérience ...
 
@@ -68,15 +68,15 @@ _ gestion des anomalies :
 • tests unitaires : composant par composant – par les dév,
 • tests d'intégration : composants tout ensemble – par équipe de tests,
 • tests système / tests de qualification / d'homologation :
-    réalisés avec une volumétrie de données similaire aux conditions réelle
-    → performance, tenue de charge
-    – par équpde de tests indépendante
+	réalisés avec une volumétrie de données similaire aux conditions réelle
+	→ performance, tenue de charge
+	– par équpde de tests indépendante
 • tests d'Acceptation Utilisateurs / U.A.T :
-    VABF Vérification d'Aptitude au Bon Fonctionnement :
-        par quelques groupes d'utilisateurs
-    VSR Vérification du Service Régulier :
-        « test de bout en bout »
-        déploiement en production sur un site pilote
+	VABF Vérification d'Aptitude au Bon Fonctionnement :
+		par quelques groupes d'utilisateurs
+	VSR Vérification du Service Régulier :
+		« test de bout en bout »
+		déploiement en production sur un site pilote
 _ tests de non-régression,
 _ tests d'acceptation (tests recette)
 
@@ -85,23 +85,22 @@ _ tests d'acceptation (tests recette)
 
 ● TYPES DE TESTS :
 • tests fonctionnels :
-    vérification des fonctionnalités métiers / ce qu'attendent les utilisateurs.
+	vérification des fonctionnalités métiers / ce qu'attendent les utilisateurs.
 • tests non-fonctionnels :
-    tests de rendement, de performance, de charge,
-    d'ergonomie, de portabilité, ...
+	tests de rendement, de performance, de charge,
+	d'ergonomie, de portabilité, ...
 • tests de structure / « boîte blanche » (les tests suivant sont en boîte noire)
 • tests liés au changement :
-    tests de confirmation (« le bug est bien résolu »)
-    tests de non-régression
+	tests de confirmation (« le bug est bien résolu »)
+	tests de non-régression
 • tests de maintenance :
-    ?????
+	?????
 
 
 ● objectifs :
-    scénarios (comportement inchangé),
-    non-régression (résultat inchangé),
-    tests de perfomance / de charge
-
+	scénarios (comportement inchangé),
+	non-régression (résultat inchangé),
+	tests de perfomance / de charge
 
 
 

@@ -1,9 +1,9 @@
-Résolution d'algorithmes : 
+Résolution d'algorithmes :
 _ LDA :
-    Langages de description d'algorithme : pas de standard, que des conventions.
-_   Algogramme »
+	Langages de description d'algorithme : pas de standard, que des conventions.
+_ « Algogramme »
 
-_ créer l'algo : 
+_ créer l'algo :
 	définir le problème,
 		les étapes,
 	analyser les données de base,
@@ -18,14 +18,14 @@ _ écrire l'algo :
 _ fonction renvoit résultat, entrées typées.
   méthode : pas de sortie, entrées (généralement) non typées.
 
-_ types primitifs dispo : 
+_ types primitifs dispo :
 	entier,
 	réel,
 	booléen (PAS truthy/falsy),
 	caractère (en algo' pure, pas du tout convertible en sa valeur numérique),
 	chaînes
 _ types complexes :
-	tableaux. 
+	tableaux.
 
 _ symbole d'affectation, variables et constantes :
 	var <- valr
@@ -55,13 +55,13 @@ PROCÉDURES
 		FINFONC
 
 DÉCLARATIONS
-	VAR 
+	VAR
 	    v : ENTIER
 ENTRÉE
 	LIRE v
 
 DÉBUT
-	v := 1O 
+	v := 1O
 	DÉBUTSI expr
 	ALORS
 		code

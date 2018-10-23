@@ -1,43 +1,43 @@
 • AngularJS :
-    framework d'origine (v1.0 en 2012)
+	framework d'origine (v1.0 en 2012)
 • Angular :
-    réécriture (nouveaux concepts, syntaxe, architecture)
+	réécriture (nouveaux concepts, syntaxe, architecture)
 framework MVC possédant la notion de « composant », inspirée de react
 
 • multi-plateforme :
 _ « Progressive Web App » :
-    plateforme permettant d'utiliser une app web à la manière d'un client lourd.
+	plateforme permettant d'utiliser une app web à la manière d'un client lourd.
 Site web embarqué avec son propre serveur, fonctionne en mode déconnecté.
 _ « native » :
-    peut générer des app' NATIVES (si !) grâce à des frameworks
+	peut générer des app' NATIVES (si !) grâce à des frameworks
 (Ionic pour angular, react native, ...).
-    
+
 
 • Angular offre une interface JQuery. Mais ce n'en est PAS une surcouche.
 
 • framework intégré :
-    déboguage, ARIA, internationalisation, ...
+	déboguage, ARIA, internationalisation, ...
 
 
 
 ● LOGICIELS ACCESSOIRES :
 • n :
-    gestionnaire de versions de node.
-    « npm install -g n »
-    
+	gestionnaire de versions de node.
+	« npm install -g n »
+
 • ts-node :
-    console typescript
+	console typescript
 
 • api-json :
-    simule un serveur REST pour tester un front-end.
+	simule un serveur REST pour tester un front-end.
 
 • angular CLI – installable via node :
-    npm install -g @angular/cli
+	npm install -g @angular/cli
 → commande « ng »
-    ng -v
-    ng new nomProjet --style=scss
-    ng build
-    ng serve    
+	ng -v
+	ng new nomProjet --style=scss
+	ng build
+	ng serve
 
 _ « scafolding » :
 installation et construction du squelette des sources de manière automatique,
@@ -51,7 +51,7 @@ nodejs, npm (le gestionnaire de paquet), yam (concurrent à npm)
 • ttes les dépendances sont listées dans « packages.json »
 
 • webpack :
-    bundlelisé avec angular-cli ; gestion automatique.
+	bundlelisé avec angular-cli ; gestion automatique.
 _ lors de la compilation pour production,
  tout est transpilé/minifié dans le dossier « dist »
 _ « live reloading » (rechargement du site),
@@ -59,18 +59,18 @@ _ « hot reloading » (rechargement du composant modifié)
 
 
 • packages.json, section scripts{} :
-    contient les associations "nom"/"commande" utilisables avec «npm run» :
-    "jsonServer": "json-server --port 3000 --watch db/db.json"
+	contient les associations "nom"/"commande" utilisables avec «npm run» :
+	"jsonServer": "json-server --port 3000 --watch db/db.json"
 
 
 ● MODULES ANGULAR :
 ≠ modules ES6 !
-    ng g[enerate] m[odule] <nomModule>
-    ng g m <rép> : si le rép existe, un module y est créé !
+	ng g[enerate] m[odule] <nomModule>
+	ng g m <rép> : si le rép existe, un module y est créé !
 générer un composant dans le module :
-    ng g[enerate] c[omponent] <répModule>/<nomComposant>
+	ng g[enerate] c[omponent] <répModule>/<nomComposant>
 générer un service :
-    ng g s[ervice] <répService>/<nomService> // sera postfixé par «service»    
+	ng g s[ervice] <répService>/<nomService> // sera postfixé par «service»
 
 
 • « module passe-plats » :
@@ -85,15 +85,15 @@ _ templateUrl → lien vers fichier
   template    → contenu texte direct
 _ style / styleUrl : itt ...
 
-• HMR : « Hot Module Reload ». 
+• HMR : « Hot Module Reload ».
 
 
 
 ● package.json :
 _contient aussi ng : TOUT doit être disponible dans le dossier local en cas
-    de téléchargement de source.
-• la section « scripts{} » contient les raccourcis npm des principales commandes 
-    → « npm run start » pour « ng start », etc.
+	de téléchargement de source.
+• la section « scripts{} » contient les raccourcis npm des principales commandes
+	→ « npm run start » pour « ng start », etc.
 
 
 ● RxJS :
@@ -101,60 +101,60 @@ bibliothèque utilisant les promises.
 Observe un flux d'évenement via le pattern « observateur ».
 « Reactive eXtensions for JS »
 _ bibliothèque cross-platform :
-    RxJava, Rx.NET, ...
+	RxJava, Rx.NET, ...
 
 
 ● composants notables :
 • karma.conf.ts :
-    config de l'exécuteur de tests fonctionnels
+	config de l'exécuteur de tests fonctionnels
 • environment/
-    variables d'environnement au sens angular
-     – rien à voir avec les envVar du shell.
+	variables d'environnement au sens angular
+	 – rien à voir avec les envVar du shell.
 
 
 ● COMPOSANTS :
 interfaces notables :
-    onInit      →   méthode ngOnInt()
-        _ meilleur endroit pour souscrire à un Observable RxJS en stockant le handle 
-    onDestroy   →           ngOnDestroy()
-        _ on peut se désabonner d'un Observable ici ...
+	onInit		→	méthode ngOnInt()
+		_ meilleur endroit pour souscrire à un Observable RxJS en stockant le handle
+	onDestroy	→	ngOnDestroy()
+		_ on peut se désabonner d'un Observable ici ...
 
 
 
 ● DATA BINDING :
 • parent→ enfant :
  là, grâce aux crochets [], «attribut» recoit la variable sous forme d'objet :
-    <app-component [attribut]="article" *ngFor="let article of articleList">
+	<app-component [attribut]="article" *ngFor="let article of articleList">
 • enfant→ parent :
-    événement géré via une fonction entre parenthèses
+	événement géré via une fonction entre parenthèses
 • binding bidirectionnel :
-    la banana-in-the-box :
-        <input  [(ngModel)]="article.title">
-     
+	la banana-in-the-box :
+		<input  [(ngModel)]="article.title">
+
 
 ● DIRECTIVES ANGULAR :
-    la valeur de la propriété est du pur JS ... 
+	la valeur de la propriété est du pur JS ...
 • directives modifiant le DOM – avec étoile «*» :
-    *ngIf = "conditionEnJS"
-    *ngFor = "let val of values"
-    
-• directives attributs – avec crochets «[]» : 
-    [ngSwitch] et ses *ngSwitchCase, *ngSwitchDefault
-    
-    @Directive({ selector: '[appBold]' })
-    export class BoldDirective {
-        constructor(el: ElementRef) {
-            el.nativeElement.style['font-weight'] = 'bold';
-        }
-utilisable avec 
-    <p appBold>...</p>
+	*ngIf = "conditionEnJS"
+	*ngFor = "let val of values"
+
+• directives attributs – avec crochets «[]» :
+	[ngSwitch] et ses *ngSwitchCase, *ngSwitchDefault
+
+	@Directive({ selector: '[appBold]' })
+	export class BoldDirective {
+		constructor(el: ElementRef) {
+			el.nativeElement.style['font-weight'] = 'bold';
+		}
+utilisable avec
+	<p appBold>...</p>
 → génère un
-    <p style="...">...</p>
+	<p style="...">...</p>
 
 
 • DÉBOGUER UNE VALEUR À L'AFFICHAGE : via le filtre « json »
-    <p>Valeur : {{obj | jon }}</p>
-    
+	<p>Valeur : {{obj | jon }}</p>
+
 
 
 ● <router-outlet> sera contenu assez haut ds la hiérarchie sous <app> :

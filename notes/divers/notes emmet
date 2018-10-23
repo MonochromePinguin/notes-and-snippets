@@ -2,7 +2,7 @@
 
 ul>(li)*5
 	ul avec 5 enfants li
-	
+
 ul>(li>(p)*2)*5
 	ul avec 5 enfants li avec 2 p chacun
 
@@ -14,5 +14,5 @@ lorem{n} -> lorem de {n} mots
 
 
 ● JAVA :
-    psvm → public static void main(...)
-    sout → System.out.println(...)
+	psvm → public static void main(...)
+	sout → System.out.println(...)
