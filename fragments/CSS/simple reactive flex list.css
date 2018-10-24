@@ -1,5 +1,5 @@
 /*
-flex list with simple reactive positionnement:
+simple flex list, not recursive, with simple reactive positionnement:
 |----------------------------------- .list -------------------------------|
 |xxx .list-title xxx                                                      |
 |xxx .list-about xxx                                                      |
@@ -79,11 +79,14 @@ and in small screen width (arbitrarily <600px):
 
 .list-item {
     display: flex;
-    border: 0.1rem solid var(--col-1);
-
-    flex-flow: row wrap;
     justify-content: center;
     align-items: center;
+
+    border: 0.15rem solid var(--col-1);
+    border-radius: 0.5rem;
+    padding: 0.6rem;
+
+    flex-flow: row wrap;
 
     margin: 1rem 2rem;
 }

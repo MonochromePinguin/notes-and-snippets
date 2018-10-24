@@ -82,10 +82,23 @@ Dans ce code,
 contient un «/jsp» après le nom de domaine !
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-• affichage conditionnel :
+• test :
     <c:if test="${not empty model.field}">
         ...
     </c:if>
+
+• bloc case :
+    <c:choose>
+        <c:when test="${..}">
+            ...
+        </c:when>
+        <c:when test="${..}">
+            ...
+        </c:when>
+        <c:otherwise>
+            ...
+        </c:otherwise>
+    </c:choose>
 
 • boucle :
     <c:forEach items="${users}" var="u">
