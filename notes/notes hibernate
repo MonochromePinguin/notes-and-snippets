@@ -10,7 +10,6 @@
 	optionnel.
 •
 
-• JPA « Java Persistance API », sur laquelle  Hibernate est basée.
 • JTA « Java Transaction API » :
 protocole de commit à 2 phases, très efficace pour transactions courtes,
 mais lourd pour grosses transactions.
@@ -28,14 +27,43 @@ simples classes,
 	_ propriétés persistées privées avec getters/setters
 
 
-● ANNOTATIONS :
+● JPA :
+« Java Persistance API », sur laquelle  Hibernate est basée.
+• par convention, informations sur la couche de persistance stockées dans
+    META-INF/persistence.xml
+
+• démarche par défaut :
+    EntityManagerFactory emf = createEntityManagerFactory("nomTable");
+    EntityManager em = emf.createEntityManager();
+    EntityTransaction tx = em.getTransaction();
+    tx.begin();
+    em.persist(objetÀpersister);
+    tx.commit();
+  
+• méthodes liées aux objets persistants :
+    new()
+    .refresh() (utile en cas d'accès concurents
+    .remove()   → retire l'objet du la gestion par le JPA ET de la BdD
+    .persist()  
+
+    
+● ANNOTATIONS JPA :
 • classes :
-	@Entity
+	@Entity     →   persistance
 	@Table(name = "table", schema = "BdD" [, catalog = ""] )
 • colonnes :
 	@Id
+	@Generatedalue
+	
 	@Column(name = "col")
 	@Column(name="colonne", unique = true, nullable = false)
+    @Column(length = 𝑛)
+
+
+● HQL :
+    Query query = session.createQuery("FROM table");
+    List<Obj> list = query.list();
+
 
 
 ● hibernate.cfg.xml :
