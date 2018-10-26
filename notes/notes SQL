@@ -290,7 +290,7 @@ est équivalent à
 • clause USING( xxx ) :
 Quand le nom de colonne est le même dans les 2 tables, on peut s'en
  servir de raccourci pour
-	ON ( tbl1.xxx = tbl2.xxx )
+	ON ( tbl1.champX = tbl2.champX ) →  tbl1 JOIN tbl2 HAVING(champX)
 
 •  SELECT h.prenom, h.nom,  s.nom,  r.date_et_heure, r.duree
 	FROM reservations AS r

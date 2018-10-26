@@ -1,13 +1,15 @@
 /* the variables for default button color values
     --btn-color
     --btn-bg-color
+    --btn-focus-color
 
-    should be redefined in the main stylesheet, so this currentsheet must be included first.
+    could be redefined in the main stylesheet, so this currentsheet must be included first.
 */
 
 .btn {
     --btn-color: green;
     --btn-bg-color: lightgreen;
+    --btn-focus-color: #20ff20;
 
     display: inline-block;
     margin: 1em;
@@ -30,10 +32,10 @@
 
 
 .btn:hover {
-    box-shadow: 0.3em 0.3em 0.3em var(--btn-color),
-    -0.3em 0.3em 0.3em var(--btn-color),
-    0.3em -0.3em 0.3em var(--btn-color),
-    -0.3em -0.3em 0.3em var(--btn-color);
+    box-shadow: 0.3em 0.3em 0.7em var(--btn-color),
+    -0.3em 0.3em 0.7em var(--btn-color),
+    0.3em -0.3em 0.7em var(--btn-color),
+    -0.3em -0.3em 0.7em var(--btn-color);
 
     color: var(--btn-bg-color);
     background-color: var(--btn-color);
@@ -41,6 +43,25 @@
 
 .btn:active {
     outline: currentColor dashed 0.5em;
+}
+
+
+/* glowing effect on focused button */
+.btn:focus {
+    /* duration timing-function delay iteration-count direction fill-mode play-state name */
+    animation: 0.8s ease-out infinite alternate both glow;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 1px 1px 1px var(--btn-focus-color), -1px 1px 1px var(--btn-focus-color),
+        1px -1px 1px var(--btn-focus-color), -1px -1px 1px var(--btn-focus-color);
+    }
+    to
+    {
+        box-shadow: 1px 1px 0.7em var(--btn-focus-color), -1px 1px 0.7em var(--btn-focus-color),
+        1px -1px 0.7em var(--btn-focus-color), -1px -1px 0.7em var(--btn-focus-color);
+    }
 }
 
 

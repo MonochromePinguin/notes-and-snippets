@@ -24,6 +24,9 @@ Ctrl Maj /                  (dé)commenter bloc /* */
 Ctrl Maj ↑↓     déplacer ligne ds bloc de code
 Alt Maj ↑↓      déplacer ligne comme du texte
 
+• recherche :
+Ctrl Maj RetArr		se rendre au précédent lieu d'édition (inter-fichier)
+Ctrl Maj F7         surligne toutes occurences du mot
 
 F3      (perso)     sélect° prochaine occurence mot
 Maj F3  (perso)     desélection dernière occurence
@@ -40,7 +43,8 @@ Ctrl Maj -
 
 
 ● Entrée ≠ Ctrl Entrée (insère la retLn après le curseur)
- ≠ Ctrl Maj Entrée (complétion de structure, cf ↓)
+_ Maj Entrée		saute vers nouvelle ligne en dessous 
+_ Ctrl Maj Entrée	complétion de structure, cf ↓
 
 ●
 F2              prochaine erreur remarquée
@@ -77,9 +81,8 @@ Ctrl Alt F      "           "       champ
 Ctrl Alt P      "           "       paramètre
 
 
-~~~~~~~~~~~ non vérifiés, pê similaire à phpstorm
-
-Alt ←→      naviguer entre onglets du même groupe
+● NAVIGATION :
+Alt ← →      naviguer entre onglets du même groupe
 
 Alt ↑↓      naviguer entre fonctions/etc.
 

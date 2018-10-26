@@ -146,3 +146,17 @@ Dans la déclaration de servlet
         ...
         <load-on-startup>1</load-on-startup>
     </servlet>
+    
+    
+    
+● SPRING BOOT : 
+conteneur à micro-services.
+Chaque micro-service est fourni par une servlet
+ de cycle de vie indépendant des autre.
+_ ConfigurationService :
+    centralise toutes les configurations, globales et spécifiques à chaque service.
+_ RegistryService :
+    sert de dispatcher entre les microservices.
+_ JMS « Java Messaging Service » :
+    bus de comm' entre microservices.
+

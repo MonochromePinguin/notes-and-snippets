@@ -66,5 +66,12 @@ simples classes,
 
 
 
+● différences d'implémentation entre couches JPA et Hibernate :
+_ standard JPA :
+    TransactionManager → EntityManager → PersistenceUnit → DataSource
+_ Hibernate :                   |       /
+    TransactionManager →     SessionManager → DataSource 
+
+
 ● hibernate.cfg.xml :
 	Doit faire le lien avec les classes utilisées via des entrées «mapping»
