@@ -1,0 +1,101 @@
+• plantText :
+génération de diagrammes UML à partir de code texte
+	cf https://www.planttext.com/  pour le logiciel
+	   http://plantuml.com/			pour le langage
+
+• asciiDoc :
+alternative (dite plus riche) à markDown,
+ très utilisé à SQLI (en f° du client).
+	_ greffons de prévisualisation disponibles pour intelliJ, brackets, ...
+	_ & générateur en ln-de-comm' produisant différents formats (HTML, PDF, ....)
+
+• gestion de projet / planification de tâche :
+	*wikan*
+	*stash* (de Atlasian, qui produit aussi jira)
+	jira
+	trello (pas payant lui)
+
+
+
+● PLATEFORME PIC UTILISÉE À SQLI :
+• GitLab :
+	centralisation et partage de dépôts GIT – comme gitHub
+
+• Jenkins :
+	automatisation d'actions (tests, stockage, déploiement, ...) :
+coordine et contrôle l'exécution de jobs par des agents d'exécution,
+ éventuellement répartis sur tout un ensemble de serveurs.
+«agents d'exécution» / «node» / «slave», assemblés en «pipelines» :
+ 
+• SonarType Nexus :
+	serveur de builds, conservants différentes versions d'un artefact.
+
+_ sonarqube			serveur hébergeant un conglomérat d'outils de test
+					→ « vulnérabilités » : failles de sécurité et autres ...
+• sonarlint :
+	outil (intégrable aux IDE) de détection de bugs et vulnérabilités potentiels
+_ Docker
+
+
+• sources → GitLab → server de build géré par Jenkins, test via JUnit → retours aux dév
+
+• si possible, commit atomique journalier de code qui MARCHE.
+
+• vocabulaire :
+	intégration continue / continuous integration	(code→...→tests)
+	livraison continue	 / continuous delivery		(code→...→release)
+						 / continuous deployment	(code→...→deploy)
+
+
+
+● BASES DES PIC:
+• un logiciel de gestion de version pour tout – « everything is code » :
+→ « tout est traité/versionné comme du code »
+	code,
+	configurations (json, .properties, .xml, ...),
+	doc (asciiDoc, markDown, ...),
+	environnement (docker, ...),
+
+• automatiser le build :
+tout doit être scripté (bash, python ou autre)
+⊕ Maven
+
+• « build self-testing » :
+AU MOINS LES TESTS UNITAIRES.
+Toujours les relancer après développement des fonctionnalités.
+Un build KO doit être aussitôt corrigé.
+⊕ Jenkins
+• commit journalier au minimum, mais toujours fonctionnel.
+À moins de le mettre sur une branche – en général il n'y a de build que sur le master.
+
+• déployer « en intégration » / « sur serveur de test » à chaque build réussi :
+ Un build sera déployé sur ...
+_serveur d'intégration 
+→ serveur de recette (tests par de vrais clients)
+→ serveur de pré-production (tests de charge : « la page charge-t-elle en au
+ plus 1s, même avec 10000 utilisateurs simultannés ? », vérifier fonctionnement
+ en conditions réelles)
+→ serveur en production
+
+• tester sur un environnement le plus proche possible de la production :
+mêmes serveurs, BdD, version d'OS et de bibliothèques, ...
+→ utilisation de conteneurs docker.
+⊕Docker
+
+• rendre rapidement disponibles les artefacts produits :
+stockage, via un script maven, de différentes versions (RELEASE & SNAPSHOT) des artefacts produits.
+_ en Gal, on conserve les RELEASE, et les SNAPSHOTs sont supprimées à la sortie
+de la dernière RELEASE.
+
+• rendre l'information accessible :
+dashboards, notifications, ...
+
+
+● BUILDER du java AVEC MAVEN :
+ _ avec JDK / JRE
+ _ récupérer le zip maven
+ _ armer les envVar JAVA_HOME, M2_HOME, ...
+ 
+ 
+ 
+

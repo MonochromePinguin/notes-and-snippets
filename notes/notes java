@@ -150,6 +150,10 @@ Pour appeler un autre constructeur dans le constructeur, utiliser « this() »;
 	}
 
 
+● priorités opérateurs :
+en particulier,
+ >> >>> <<    →    > <= < <=    →    == !=    →    || &&
+
 
 ● UPCASTING / DOWNCASTING :
 • upcasting :
@@ -158,7 +162,6 @@ Pour appeler un autre constructeur dans le constructeur, utiliser « this() »;
 • downcasting : classe parent vers classe fille.
 	sans downcasting, la JVM vérifie à l'exécution la correspondance des types.
 	avec: pas de tests.
-
 
 
 ● VARIABLE D'INSTANCE :

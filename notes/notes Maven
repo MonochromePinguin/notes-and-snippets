@@ -1,0 +1,30 @@
+• mvn clean
+nettoie le projet (cf make clean)
+
+• mvn package
+compile les sources et créée les .jar
+
+• installer sur dépôt local :
+	mvn install 
+
+• déploie les artefacts :
+	mvn deploy
+p.ex, les envoie vers un serveur d'artefacts nexus
+
+• démarrer les tests sonar :
+	mvn sonar:sonar
+	
+	
+• structure typique d'un projet maven :
+src
+ |_maven
+ |	 |_ java
+ |	 |	 |_ resources
+ |	 |	 |_ *.properties
+ |	 |_ test
+ |		 |_ java
+ |		 |_ resources
+ |_ target				<--- à exclure de git : les artefacts & autres product°
+	 |_ classes					sont stockés ici
+		
+

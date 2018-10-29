@@ -103,8 +103,7 @@ est basée la branche locale, puis lui applique tout nos changements locaux :
 	--global : pour l'utilisateur
 	--local : pour le dépôt
 
-• configurer au moins user.name et user.email ... 
-	git config --global user.name <nom>
+• configurer au moins user.name et user.email ... git config --global user.name <nom>
 
 • autres options utiles :
 	core.editor 		vim
@@ -117,6 +116,21 @@ est basée la branche locale, puis lui applique tout nos changements locaux :
 dans ~/.git,
 	~/.config/git/
 (dont ~/.config/git/ignore listant les fichiers/dossiers à ignorer en tout projet)
+• configuration d'un projet :
+dans .git/gitconfig
+
+• .gitkeep :
+	simple convention : git n'indexe pas les dossiers vide,
+		→ pour pouvoir indexer un dossier vide, on y place un «.gitkeep»
+
+● .GITIGNORE :
+• commentaire :
+lignes DÉBUTANT par un #
+• attention aux espaces, qui sont considérés comme faisant partie des motifs !
+	Y compris en fin de ligne.
+• « .../** » → un dossier et tout ses dossiers
+		/**/*.log	→ ignorer tt les .log des sous-dossiers
+
 
 
 ● initier le contrôle de révision :
@@ -182,21 +196,35 @@ pour ne modifier qu'un seul fichier :
 	git reset <fic>
 
 
-● ANNULER LE DERNIER COMMIT :
-• en retirant le commit de l'historique ET les changements :
-	git reset --hard HEAD~1 #annuler dernière commit
-	git reset --hard <commit>
-• annuler le commit mais garder les changements :
+● ANNULER UN/DES COMMITS :
+• en retirant le commit de l'historique ET LES CHANGEMENTS :
+	git reset --hard HEAD~1			#annuler le derniers commits
+	git reset --hard <commit> 
+
+• annuler le commit mais GARDER LES CHANGEMENTS :
 	git reset --soft <commit>
+	
+• annuler une PLAGE de commits :
+	git reset [--hard|--soft] commit..commit
+p.ex :
+	git reset --hard HEAD~3..HEAD~5
+	
+• annuler un commit déjà PUSHÉ :
+	git reset --hard <commit, p.ex HEAD~2>
+	git push -f
+
 
 • en retournant sur un commit précédent :
-	git chechout <commit d'avant>
+	git checkout <commit d'avant>
 	[faire ses changements ; commiter ]
 Mais il faut toujours qu'un commit soit lié à une branche pour ne pas être supprimé par le ramasse-miettes : il faut donc créer une branche :
 	git checkout -b <nouvelleBranche>
 
 • en annulant le dernier commit via un autre commit :
-	git revert HEAD		→	nouveau commit annulant le précédent
+«git revert» ne supprime pas la commit de l'historique, mais ajoute une commit
+défaisant la précédente.
+	git revert HEAD		→	nouveau commit annulant le dernier
+
 
 
 ● COPIER UN FICHIER ENTRE BRANCHES :
@@ -241,6 +269,12 @@ Ils concernent les fichiers stagés et non stagés,
 	git tag <nom>	→ appliqué à la branche/commit en cours
 	git tag --delete <nom>
 	git tag list ou « git tag »
+• LES TAGS NE SONT PAS POUSSÉS AUTOMATIQUEMENT.
+_ pousser UN tag :
+	git push origin <tagName>
+_ pousser TOUT les tags (attention !) :
+	git push --tags
+
 
 
 ● chercher un mot dans les modifications apportées par les commit :
@@ -260,12 +294,21 @@ ou, plus élégant,
 
 
 
+● LISTER branches et commits :
 • lister les branches :
 	git branch
 • et les commits (éventuellement d'une branche différente) depuiq HEAD :
 	git log
 	git log --oneline
 	git log <branche>
+
+• les commits concernant un fichier :
+_ sans tenir compte des changements de nom :
+	git log -- <fic-ou-motif>
+_ en suivant les renommages :
+	git log --follow <fic-ou-motif>
+
+
 
 • enregistrer un commit :
  	git commit -a -m "<texte descriptif>"		# -a : pour "tout les fichiers"

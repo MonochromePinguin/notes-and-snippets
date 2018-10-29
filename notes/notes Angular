@@ -1,3 +1,10 @@
+• utilisé dans des architectures MVCC :
+MVCC « MVC Client» :
+	La comm' entre le serveur et le client est réduite le plus possible à
+l'échange de données; la mise en forme de l'affichage est réalisée sur le
+ client.
+
+
 • AngularJS :
 	framework d'origine (v1.0 en 2012)
 • Angular :

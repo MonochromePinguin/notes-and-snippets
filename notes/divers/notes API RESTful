@@ -3,9 +3,35 @@
 architecture SOA :
 	«Service Oriented Architecture»
 
-• BASÉ SUR HTTP – méthodes GET, POST, PATCH, PUT, DELETE
+● BASÉ SUR HTTP – méthodes GET, POST, PATCH, PUT, DELETE
+• PUT: 
+	envoyer la totalité d'une entité → code de ret 200 OK
+• DELETE:
+	→ 200 OK
+• codes de retour communs :
+200					OK
+201					forbidden
+404 not found		objet introuvable
+400 bad request		requête mal formattée	
+500
+501 Not Implemented
 
 • chaque ressource est identifiable via une URI unique
+
+
+
+● BONNE PRATIQUE :
+_ versionner les API, pour rester compatible avec anciennes versions des clients.
+	p.ex « GET /api/v1/client/all »
+_ « documenter » les API :
+	p.ex, sous java, annoter les points d'entrées pour ensuite générer une doc
+	OpenAPI (swagger) et la fournir aux dév du front-end.
+	
+	@ApiOperation(...)
+	@ApiResponse(...)
+	@ApiParam(...)
+
+
 
 ● Règles API REST :
 • client-serveur
@@ -16,6 +42,7 @@ architecture SOA :
 	le serveur ne s'occupe pas de la mise en cache
 •
 •
+
 
 ● niveaux REST :
 • 1 :
@@ -37,6 +64,7 @@ Assez peu utilisé.
 ● GET /api/resource HTTP/1.1
 	  ~~~~~~~~~~~~~ ← "EndPoint" : c'est juste l'URI de la ressource
 
+
 ● AVEC SYMFONY, on peut utiliser la classe JsonResponse :
 	return new JsonResponse( [
 		'name' => $name,
@@ -44,6 +72,6 @@ Assez peu utilisé.
 	]);
 • JMSSerialize :
 	sérialisateur d'objets
-• FOSRestBundle :
+• FOSRestBundle
 
 
