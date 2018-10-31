@@ -1,4 +1,4 @@
-●objets notables :
+● objets notables :
 • SessionFactory :
 	abstraction de la BdD
 • Session :
@@ -33,18 +33,18 @@ simples classes,
     META-INF/persistence.xml
 
 • démarche par défaut :
-    EntityManagerFactory emf = createEntityManagerFactory("nomTable");
-    EntityManager em = emf.createEntityManager();
-    EntityTransaction tx = em.getTransaction();
-    tx.begin();
-    em.persist(objetÀpersister);
-    tx.commit();
+	EntityManagerFactory emf = createEntityManagerFactory("nomTable");
+	EntityManager em = emf.createEntityManager();
+	EntityTransaction tx = em.getTransaction();
+	tx.begin();
+	em.persist(objetÀpersister);
+	tx.commit();
   
 • méthodes liées aux objets persistants :
-    new()
-    .refresh() (utile en cas d'accès concurents
-    .remove()   → retire l'objet du la gestion par le JPA ET de la BdD
-    .persist()  
+	new()
+	.refresh() (utile en cas d'accès concurents)
+	.remove()   → retire l'objet du la gestion par le JPA ET de la BdD
+	.persist()  
 
     
 ● ANNOTATIONS JPA :

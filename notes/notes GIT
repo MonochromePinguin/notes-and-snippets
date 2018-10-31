@@ -103,7 +103,8 @@ est basée la branche locale, puis lui applique tout nos changements locaux :
 	--global : pour l'utilisateur
 	--local : pour le dépôt
 
-• configurer au moins user.name et user.email ... git config --global user.name <nom>
+• configurer au moins user.name et user.email ... 
+ git config --global user.name <nom>
 
 • autres options utiles :
 	core.editor 		vim
@@ -128,9 +129,8 @@ dans .git/gitconfig
 lignes DÉBUTANT par un #
 • attention aux espaces, qui sont considérés comme faisant partie des motifs !
 	Y compris en fin de ligne.
-• « .../** » → un dossier et tout ses dossiers
+• « xxx/** » → un dossier et tout ses dossiers
 		/**/*.log	→ ignorer tt les .log des sous-dossiers
-
 
 
 ● initier le contrôle de révision :

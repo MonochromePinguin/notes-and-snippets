@@ -1,21 +1,51 @@
-• mvn clean
-nettoie le projet (cf make clean)
+● pom.xml :
+POM → « Project Object Model »
+• pom.xml minimal :
+	<project>
+		<modelVersion>4.0.0</modelVersion>
+		<groupId>org.monochrome.nomApp</groupId>
+		<artifactId>nom-de-app</artifactId> 	# artefact == projet
+		<version>1</version>
+	</project>
 
-• mvn package
-compile les sources et créée les .jar
 
-• installer sur dépôt local :
-	mvn install 
 
-• déploie les artefacts :
-	mvn deploy
+• la propriété <version> (de <dependency>, <release>, ...) :
+_ RELEASE		→	la dernière version stable
+_ LATEST		→	le dernier snapshot ou release
+
+
+● « build lifecycle phases » :
+quelques phases notables :
+_ validate : projet correct avec toutes informations nécessaires
+_ compile
+_ test : peut utiliser un framework de test arbitraire.
+_ package : compile l'artefact au format approprié (.jar, .war, .ear, ...)
+_ integration-test: déploie le package dans un environnement de test d'intégration
+_ verify : tests de qualité du package
+_ install : installe l'artefact dans un dépôt local (p.ex un serveur nexus)
+_ deploy
+
+
+● commandes / «goals» :
+• mvn clean :
+	nettoie le projet (cf make clean)
+• mvn package :
+	compile les sources et créée les .jar
+• mvn install :
+	installer sur dépôt local
+• mvn deploy :
+	déploie les artefacts
 p.ex, les envoie vers un serveur d'artefacts nexus
-
-• démarrer les tests sonar :
-	mvn sonar:sonar
+• « mvn sonar:sonar » :  
+	démarrer les tests sonar
+•« mvn archetype:generate -DgroupId=org.monochrome.app -DartifactId=<nomApp>
+ -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false » :
+ initialise un nouveau projet dans un dossier <nomApp> créé à partir du
+téléchargement de l'archétype correspondant	
 	
-	
-• structure typique d'un projet maven :
+• structure typique d'un projet maven : ça dépends !
+pom.xml
 src
  |_maven
  |	 |_ java
@@ -26,5 +56,19 @@ src
  |		 |_ resources
  |_ target				<--- à exclure de git : les artefacts & autres product°
 	 |_ classes					sont stockés ici
-		
+
+ou bien 
+
+nomApp
+ |_pom.xml
+ |_src
+ |	 |_ main
+ |	 |	 |_ java
+ |	 |		 |_ ...
+ |	 |_ test
+ |		 |_ java
+ |			 |_ ...
+ |_ target				<--- à exclure de git : les artefacts & autres product°
+	 |_ classes					sont stockés ici
+
 
