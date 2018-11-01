@@ -150,8 +150,7 @@ Dans la déclaration de servlet
     
     
 ● SPRING BOOT : 
-• plus simple que spring MVC :
-config centralisée dans resources/applications.properties :
+• config centralisée dans resources/applications.properties :
 	spring.datasource.url = jdbc:mysql://localhost:3306/studentProject
 	spring.datasource.username = javaStudent
 	spring.datasource.password = Turlututu!
@@ -160,6 +159,25 @@ config centralisée dans resources/applications.properties :
 	#spring.datasource.validationQuery = SELECT 1
 	spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5Dialect
 
+• classe principale :
+	@SpringBootApplication
+	//définit le ou les packages where @Components should be loaded from
+	@ComponentScan(basePackages = "org.monochrome.servlets") 
+	public class Main {
+
+		public static void main(String[] args) {
+			SpringApplication.run(Main.class, args);
+		}
+	}
+
+• dans org.monochrome.servlets :
+	@RestController, @Controller
+• pour les entités :
+	@Entity
+	@Table(name="...")
+ainsi que
+	@Column(name="", nullable="", ...)	
+	
 
 conteneur à micro-services.
 Chaque micro-service est fourni par une servlet

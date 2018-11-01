@@ -64,6 +64,19 @@ _ NoSQL : pour données brutes – plus performant en lecture pour de gros volum
 
 
 
+●MySQL et fuseau horaire :
+Par défaut, MySQL utilise le fuseau horaire système.
+→ pour Stocker par défaut les «datetime» en heure UTC, il faut éditer 
+la configuration, par exemple /etc/mysql.conf.d/my.cnf:
+	[mysqld]
+		default-time-zone = '+00:00'	#décallage par rapport à UTC
+
+• obtenir les réglages du fuseau horaire :
+	SELECT @@global.time_zone;		# → réglage global de la BdD
+	SELECT @@session.time_zone;		# → réglage de la connexion utilisée
+
+
+
 ● CLÉ PRIMAIRE, CLÉ SECONDAIRE, CLÉ ÉTRANGÈRE :
 • clé primaire :
 	PRI
@@ -374,6 +387,7 @@ _ PARSE(ch, typeDest)
 	substring(ch,pos,nb), substring(ch,pos), ...
 	upper(ch), lower(ch),
 	...
+
 
 
 ● TIMESTAMP VERS DATETIME OU DATE :

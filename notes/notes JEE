@@ -65,6 +65,11 @@ TODO: JSTL
 	<%! déclaration de vars; %>
 	<%= expression %>
 
+• une variable déclarée dans un bloc <%! ... %> n'est pas accessible dans EL !
+→ la déclarer comme attribut via
+	<c:set var="nom" scope="page|request|session|application" value="${expr}"/>
+
+
 • accéder à un attribut dans une expression EL :
 Dans ce code,
     ${ fn:escapeXml(requestScope.value) }

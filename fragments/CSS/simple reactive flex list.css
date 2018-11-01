@@ -1,13 +1,13 @@
 /*
-simple flex list, not recursive, with simple reactive positionnement:
+flex list with simple reactive positionnement:
 |----------------------------------- .list -------------------------------|
 |xxx .list-title xxx                                                      |
 |xxx .list-about xxx                                                      |
 | |--------------------------- .list-container -------------------------| |
-| | | --- .list-item ---|  | --- .list-item ---|  | --- .list-item ---| | |
+| | |---- .list-item ---|  |---- .list-item ---|  |---- .list-item ---| | |
 | | |-------------------|  |-------------------|  |-------------------| | |
 | |                                                                     | |
-| | | --- .list-item ---|  | --- .list-item ---|                        | |
+| | |---- .list-item ---|  |---- .list-item ---|                        | |
 | | |-------------------|  |-------------------|                        | |
 | |                                                                     | |
 | |---------------------------------------------------------------------| |
@@ -17,24 +17,30 @@ simple flex list, not recursive, with simple reactive positionnement:
 |xxx .list-title xxx                                                      |
 |xxx .list-about xxx                                                      |
 | |--------------------------- .list-container -------------------------| |
-| | | --- .list-item ---|                                               | |
-| | |-------------------|                                               | |
+| | | ----------------- .list-item --------------|                      | |
+| | |             |--.list-item-content-vertic--||                      | |
+| | |             |          subitem1           ||                      | |
+| | | item1 item2 |          subitem2           ||                      | |
+| | |             |-----------------------------||                      | |
+| | |--------------------------------------------|                      | |
 | |                                                                     | |
 | |---------------------------------------------------------------------| |
 |------------------------------------------------------- -----------------|
+
+(↑see here the facultative vertical-flex container class «.list-item-content-vertic »)
 
 and in small screen width (arbitrarily <600px):
 |----------.list ------------|
 |    xxx .list-title xxx     |
 |    xxx .list-about xxx     |
 | |---- .list-container ---| |
-| | | --- .list-item ---|  | |
+| | |---- .list-item ---|  | |
 | | |-------------------|  | |
 | |                        | |
-| | | --- .list-item ---|  | |
+| | |---- .list-item ---|  | |
 | | |-------------------|  | |
 | |                        | |
-| | | --- .list-item ---|  | |
+| | |---- .list-item ---|  | |
 | | |-------------------|  | |
 | |------------------------| |
 |----------------------------|
@@ -43,7 +49,7 @@ and in small screen width (arbitrarily <600px):
 |    xxx .list-title xxx     |
 |    xxx .list-about xxx     |
 | |---- .list-container ---| |
-| | | --- .list-item ---|  | |
+| | |---- .list-item ---|  | |
 | | |-------------------|  | |
 | |------------------------| |
 |----------------------------|
@@ -60,11 +66,13 @@ and in small screen width (arbitrarily <600px):
 }
 
 .list-title {
+    margin: 0.5em 1em;
     font-size: 2rem;
     color: var(--col-1);
 }
 
 .list-about {
+    margin: 0.5em 1em;
     font-style: italic;
     color: var(--col-intro);
 }
@@ -79,6 +87,7 @@ and in small screen width (arbitrarily <600px):
 
 .list-item {
     display: flex;
+    flex-flow: row wrap;
     justify-content: center;
     align-items: center;
 
@@ -86,14 +95,20 @@ and in small screen width (arbitrarily <600px):
     border-radius: 0.5rem;
     padding: 0.6rem;
 
-    flex-flow: row wrap;
-
     margin: 1rem 2rem;
 }
 
 .list-item-title {
     font-size: 1.5rem;
 }
+
+.list-content-vertic {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
 
 
 @media all and (min-width: 600px) {

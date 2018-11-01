@@ -379,3 +379,10 @@ acceptent des constructeurs et des propriétés :
 		}
 	}
 • enum.values()
+
+
+
+● DateTime et Cie :
+• obtenir date & heure en UTC :
+	LocalDateTime.now( Clock.systemUTC() );
+où Clock.systemUTC() sera plutôt stocké dans une var ...
