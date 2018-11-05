@@ -1,9 +1,17 @@
+● NAVIGATION :
 Ctrl Maj A      action rapide
+
+Ctrl E      liste derniers fichiers ouverts
 
 Alt 1       panneau fichiers
 Alt 2       panneau « favoris »
+Alt 9		GIT et assimilés
+Alt F12		terminal
 
-Ctrl E      liste derniers fichiers ouverts
+Alt ← →      naviguer entre onglets du même groupe
+
+Alt ↑↓      naviguer entre fonctions/etc.
+
 
 
 ● ÉDITION :
@@ -14,10 +22,12 @@ Ctrl Maj W      étendre/restreindre sélection aux mots/lignes/blocs
 Ctr Maj D (perso)   dupliquer ligne
 Ctr Y               supprimer ligne
 
-
 Ctrl :
   ou Ctrl / du pav.num      (dé)commenter lignes //
 Ctrl Maj /                  (dé)commenter bloc /* */
+
+Ctrl Alt T : « entourer par » ...
+
 
 
 • déplacer code :
@@ -81,11 +91,7 @@ Ctrl Alt F      "           "       champ
 Ctrl Alt P      "           "       paramètre
 
 
-● NAVIGATION :
-Alt ← →      naviguer entre onglets du même groupe
-
-Alt ↑↓      naviguer entre fonctions/etc.
-
+~~~~~~~~~~~~~~~~~~~
 
 • complétion suffixée :
     <expr>.if <TAB>     →   <expr> englobée dans une structure «if»
@@ -93,7 +99,6 @@ Alt ↑↓      naviguer entre fonctions/etc.
 (pr suggestions d'autocomplétion) :
 Ctrl Maj Entrée → corrige la construction courante
 
-~~~~~~~~~~~~~~~~~~~
 
 ● LIVE TEMPLATES PERSO :
 • intelliJ pro :

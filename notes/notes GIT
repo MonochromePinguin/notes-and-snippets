@@ -120,9 +120,23 @@ dans ~/.git,
 • configuration d'un projet :
 dans .git/gitconfig
 
+
+• ne pas retaper son pseudo lors de l'authentification d'un projet :
+L'authentification est gérée séparément pour chaque dépôt source.
+→ éditer ~/.git/gitconfig, toutes les sections [remote "nomOrigin"] :
+glisser le nom d'utilisateur dans l'URL façon <protocole>://<pseudo>@<site>,
+sous encodage URL pour les caractères non-ASCII :
+
+	[remote "origin"]
+	url = https://monochrome%40orange.fr@gitlab.bordeaux.sqli.com/jns-bank.git
+→ pour un compte nommé « monochrome@orange.fr » !
+
+
 • .gitkeep :
 	simple convention : git n'indexe pas les dossiers vide,
 		→ pour pouvoir indexer un dossier vide, on y place un «.gitkeep»
+
+
 
 ● .GITIGNORE :
 • commentaire :
@@ -203,7 +217,7 @@ pour ne modifier qu'un seul fichier :
 
 • annuler le commit mais GARDER LES CHANGEMENTS :
 	git reset --soft <commit>
-	
+
 • annuler une PLAGE de commits :
 	git reset [--hard|--soft] commit..commit
 p.ex :
@@ -212,6 +226,10 @@ p.ex :
 • annuler un commit déjà PUSHÉ :
 	git reset --hard <commit, p.ex HEAD~2>
 	git push -f
+
+• juste pour un fichier :
+	git reset --[soft|hard] -- <fichier>
+
 
 
 • en retournant sur un commit précédent :
@@ -318,14 +336,7 @@ _ en suivant les renommages :
 	git commit
  qui ajoute à l'index les modifications de <xxx>, <yyy>, <zzz> et les commits.
 
-● retirer un commit de l'historique (pas comme «reverse»)
-tout en conservant les changements sur disque :
- 	git reset HEAD~
 
-• remettre le dépôt dans son dernier état – sans conserver les changements :
- 	git reset
-• ou juste un fichier :
-	git reset <chemin>
 
 ● git status :
 Liste, entre autres, les fichiers non suivis,
@@ -336,9 +347,10 @@ Liste, entre autres, les fichiers non suivis,
 depuis le départ, 1 patch/commit :
 	git format-patch origin
 
+
+
 ● lister les fichiers sous contrôle de version :
  	git ls-tree -r [HEAD|nom-de-branche] --name-only
- «HEAD» pour la branche actuelle, et [Nombranche] pour ceux de
- la branche/commit/etc. nommée.
-
+ «HEAD» pour la branche actuelle,
+ et [Nombranche] pour ceux de la branche/commit/etc. nommée.
 

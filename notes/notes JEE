@@ -65,18 +65,6 @@ TODO: JSTL
 	<%! déclaration de vars; %>
 	<%= expression %>
 
-• une variable déclarée dans un bloc <%! ... %> n'est pas accessible dans EL !
-→ la déclarer comme attribut via
-	<c:set var="nom" scope="page|request|session|application" value="${expr}"/>
-
-
-• accéder à un attribut dans une expression EL :
-Dans ce code,
-    ${ fn:escapeXml(requestScope.value) }
-« requestScope.value » est l'équivalent de
-    <%! String value = ""; %>
-    <% value = request.getAttribute("value"); %>
-
 • déconseillé d'utiliser des URI absolue :
 →
     <%= request.getContextPath() %>
@@ -113,6 +101,34 @@ contient un «/jsp» après le nom de domaine !
             <td>${u.activated}</td>
         </tr>
     </c:forEach>
+
+
+
+● JSP ≥ 2.0 ACCEPTE LES EXPRESSIONS E.L.:
+• une variable déclarée dans un bloc <%! ... %> n'est pas accessible dans EL !
+→ la déclarer comme attribut via
+	<c:set var="nom" scope="page|request|session|application" value="${expr}"/>
+
+
+• accéder à un attribut dans une expression EL :
+Dans ce code,
+    ${ fn:escapeXml(requestScope.value) }
+« requestScope.value » est l'équivalent de
+    <%! String value = ""; %>
+    <% value = request.getAttribute("value"); %>
+
+• quelques objets implicites :
+  header :	les entêtes de la requête HTTP
+	${header["host"]}
+  param :	les paramètres POST ou queryString de la requête.
+	${param['org.config1']}
+ mais aussi
+  les attributs de telle ou telle portée
+ (requestScope, sessionScope, servletScope, ...) :
+	${sessionScope.productList.nb}
+  les cookies :
+	${cookie["nomCookie"]}
+	
 
 
 
