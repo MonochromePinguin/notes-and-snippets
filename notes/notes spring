@@ -29,9 +29,30 @@ _ 2004 : ... devenu String 1.0
 	échanges via SOAP
 
 ● Spring :
-_ framework basé sur l'IOD.
+_ framework basé sur l'IOD «Injection Of Dependencies».
 _ un .xml ou des annotations indiquent les classes à instancier pour injection.
-_ architecture AOP – « Aspect Oriented Programming »
+_ architecture AOP – « Aspect Oriented Programming » :
+	d'un côté, le code métier, déclenché à certain moments par spring
+	de l'autre, l'aspect technique (logs, gestion erreur)
+_ conteneur d'objets gérant leur cycle de vie et leur dépendances.
+
+• démarrage en plusieurs passes :
+_ parse la config
+	(XML, (dès 3.1) annotations, (dès 4.0, voire moins) javaConfig)
+_ ???? « empreinte mémoire » ???
+_ résoude les dépendances entre beans
+_ instancie dans le bon ordre les beans et leur injecte leurs dépendances 
+_ ???? 
+
+
+● AOP :	
+	code métier + transactions + logging.
+	
+• code métier entrecoupé de «pointcuts» :
+	appels de services, etc.
+
+• «aspect» :
+	module définissant l'ordonnancement des codes métier / transaction / etc.
 
 
 
@@ -171,7 +192,49 @@ Dans la déclaration de servlet
 	}
 
 • dans org.monochrome.servlets :
-	@RestController, @Controller
+	@Controller,
+	@RestController
+
+	@RestController
+	public class AgentApiController {
+
+		@Autowired #la propriété est injectée par le framework
+		private AgentApiService service;
+
+		@GetMapping("/agent/1/client/{id:\\d+}") # {nomParam:regEx java}
+		@ResponseBody							 #gère les codes de retour HTTP
+		# ↓ visibilité des champs annotés par @JsonView ds les modèles 
+		@JsonView(JacksonViews.ClientView.class)
+		public ResponseEntity<Client> getClient(@PathVariable(name="id") Long id) {
+		    Client result = service.getClient(id);
+
+		    return new ResponseEntity<Client>(
+		        result,
+		        result != null ? HttpStatus.OK : HttpStatus.NOT_FOUND
+		    );
+		}
+	}
+	
+@PathVariable(name="...") : variable dans l'URL.
+@RequestParam(name="...", ...) : paramètre de requête	
+
+• pour les services :
+	@Service
+Ce sont les proxy, mis en place automatiquement par spring sur tout les types
+de beans, qui démarrent et gèrent automatiquement les transactions
+ sur les services.
+→ en dehors des services, il faut ABSOLUMMENT utiliser «@Transactional» pour
+que ttes les opérations soient incluses en une seule transaction.
+
+
+• pour les repositories :
+	@Repository
+	public interface ClientRepository  extends JpaRepository<Client, Long> {
+		...
+	}
+l'interface «JpaRepository» offre des fonctions de pagination et de conversion
+ de type (p.ex, possibilité de méthodes renvoyant directement un objet ou un itérable) dont ne dispose pas, par ex, «CrudRepository».
+
 • pour les entités :
 	@Entity
 	@Table(name="...")

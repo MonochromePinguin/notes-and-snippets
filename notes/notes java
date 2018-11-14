@@ -249,6 +249,15 @@ _ générique :
 	}
 
 
+● FORMATAGE DE CHAÎNES :
+• format similaire à printf et consorts, même modificateurs :
+	String.format(
+		"Cette chaîne contient un entier «%i» & une chaîne «%s»\n,
+		unInt,
+		uneString
+	);
+
+
 ● CONCATÉNATION DE CHAÎNES :
 	StringBuilder > StringBuffer > str.concat() > opérateur «+»
 • on peut appeler des méthodes sur une chaîne littérale :

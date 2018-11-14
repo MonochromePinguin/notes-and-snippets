@@ -7,7 +7,7 @@ let a = true
 • paramètre optionnel :
 postfixé d'un «?». (pas comme en PHP où celà signifie « paramètre nullable »)
 → si non indiqué, vaut « undefined ».
-	function fonc( param1: number, param2: number, lastParam?: string { ... }
+	function fonc( param1: number, param2: number, lastParam?: string) { ... }
 
 • valeur par défaut d'un paramètre :
 	function fonc( lastParam = 'blabla' ) { ... }
