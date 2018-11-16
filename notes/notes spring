@@ -73,6 +73,14 @@ _ Cette méthode est utilisable pour toute propriété, de type simple ou non :
 		<property name="intProp" value="43"/>
 		<property name="injectedVariable" value=${name.space.of.value} />
 	</bean>
+	
+• injection d'une propriété tirée de «app.properties» dans une prop' d'un objet :
+	@Value("chaîne litérale")
+	private String errorMessageOne;
+	@Value("${msg.error.two}")
+	private String errorMessageTwo;
+
+
 _ les « inner beans » : beans injectés dans un bean :
 	...
 		<property name="innerBean">

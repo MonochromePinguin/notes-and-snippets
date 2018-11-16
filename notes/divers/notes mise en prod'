@@ -6,7 +6,7 @@ configurer saufegardes automatiques (site et BdD),
 "	"	le DNS,
 "	"	le SSL,
 "	"	reverse proxy (nginx) et serveur cache,
-"	"	balanceur de charge,
+"	"	balanceur de charge / répartiteur de charge,
 
 • serveur de pré-production / « staging » :
 _ avec une config la plus proche possible de celle du serveur de prod'
@@ -63,6 +63,25 @@ _ SaaS	Software	(logiciel fourni, on ne fait que l'utiliser)
 
 • «Let's encrypt» : un script installable en local permettant de générer le
  certificat SSL localement (et gratuitement !)
+
+
+• répartiteur de charge :
+_ Le front requête sur le répartiteur de charge, qui dispatche les requêtes
+via différentes techniques (round-robin, test de charge)
+ sur les serveurs répartis
+	H.a.
+	proxy,
+	F5,
+	simple apache, ...
+
+	front → répartiteur	→ serveur1		→|→ BdD 1
+						→ serveur2		→|→ BdD 2
+						→ ...			→|→ BdD 3
+
+_ De même, les requêtes sur BdD sont réparties sur plusieurs serveurs,
+	par exemple en shardant les données
+		(« id de 0 à m, serveur A, id de m+1 à n, serveur B, ... »)
+
 
 
 

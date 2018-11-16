@@ -1,0 +1,81 @@
+● swagger API :
+_ outil permettant de générer de la doc d'API à partir d'annotations,
+_ ou de générer un squelette à partir de la doc (méthode « contract first »),
+_ et de les tester via un point d'entrée exposé par le serveur ayant importé la bibliothèque :
+
+
+• dans POM.xm :
+	$VERSION == p.ex, 2.6.1
+	
+	groupId				artifactId
+	
+	io.springfox		springox-swagger2
+	"	"				springfox-swagger-ui
+	"	"				springfox-bean-validators
+	"	"				springfox-staticdocs
+Ces bibliothèques vont exposer sur « {{HOST}}/swagger-ui.html » une API
+ affichant la doc' et permettant de la tester	
+	
+	
+	
+• puis il faut que les bibliothèques soient utilisés :
+→ créer une classe de config dans les sources.
+	@Configuration
+	@EnableSwagger2
+	@Profile("dev")		//activé  en profil spring «dev»
+	public class SwaggerConfig {
+		...
+		
+		@Bean
+		public Docket api() { // ← défini ce qu'on attends de l'app ...
+			... // définir les formats attendus,
+				// la liste des URL à documenter, 
+		}
+	
+	}
+
+
+● profil spring utilisé :
+• tiré du app.properties, clef « profile.active »,
+• ou du pom.xml :
+_ le profil utilisé :
+	<settings>
+		...
+		<activeProfiles>
+			<activeProfile>profile-1</activeProfile>
+		</activeProfiles>
+		...
+	</settings>
+_ définitions des profils :
+au même niveau que <dependencies>,
+	<profiles>
+		<profile>
+			<id>nomProfil</id>
+				<build>
+					...
+				</build>
+				<activation>
+					...
+				</activation>
+		</profile>
+	</profiles>
+
+
+• 3 niveaux de documentation :
+	swagger1, swagger2, OpenAPI 3
+
+
+● ANNOTATIONS :
+@ApiOperation(value = "createclient", note = "infos ...")
+@ApiResponses({
+	@ApiReponse(code = 201, message = "entité créée"),
+	...
+	})
+
+
+● swaggerHub :
+app.swaggerub.com 
+_ peut importer la description d'API générée en JSON pour la tester ...
+
+	
+

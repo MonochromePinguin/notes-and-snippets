@@ -26,6 +26,14 @@ _ « native » :
 	déboguage, ARIA, internationalisation, ...
 
 
+● installation, bootstraper projet :
+• installer la cli angular :
+	npm install [-g] @angular/cli
+• créer un projet :
+	ng new <nomProjet> --style=[scss|...]
+• mettre à jour / télécharger les dépendances du projet :
+	npm install
+
 
 ● LOGICIELS ACCESSOIRES :
 • n :
