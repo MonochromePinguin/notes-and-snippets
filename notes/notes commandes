@@ -7,6 +7,13 @@
 	realpath
 	whereis
 
+• realpath :
+_ realpath <fic> :
+ chemin absolu du fichier après résolution des liens symboliques et autres ".."
+_ realpath --relative-to <rép> <fic> :
+	chemin relatif menant à <fic> depuis <rép>
+
+
 ● contourner les alias de BASH :
 par exemple pour «grep» :
 	/usr/bin/grep
