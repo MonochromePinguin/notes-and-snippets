@@ -44,12 +44,26 @@ Ctrl Maj ↑↓     déplacer ligne ds bloc de code
 Alt Maj ↑↓      déplacer ligne comme du texte
 
 • recherche :
-Ctrl Maj RetArr		se rendre au précédent lieu d'édition (inter-fichier)
 Ctrl Maj F7         surligne toutes occurences du mot
 
 F3      (perso)     sélect° prochaine occurence mot
 Maj F3  (perso)     desélection dernière occurence
 Ctrl Alt Maj J      toutes les occurences
+
+
+
+● NAVIGATION DU CODE :
+Ctrl Maj RetArr		se rendre au précédent lieu d'édition (inter-fichier)
+
+Ctrl Alt clic		aller à l'implémentation
+
+• trouver les usages d'une méthode :
+Ctrl F7			trouver les usages *dans le fichier* d'une méthode
+					&/OU de sa méthode d'interface
+
+Alt F7
+Ctrl Maj F7	(perso)	 trouver les usages d'une méthode &/OU son interface
+
 
 
 ● REPLIER/DÉPLIER BLOC :
