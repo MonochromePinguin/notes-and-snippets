@@ -67,11 +67,22 @@ simples classes,
 
 
 ● différences d'implémentation entre couches JPA et Hibernate :
-_ standard JPA :
+• standard JPA :
     TransactionManager → EntityManager → PersistenceUnit → DataSource
-_ Hibernate :                   |       /
+• Hibernate :                   |       /
     TransactionManager →     SessionManager → DataSource 
 
 
 ● hibernate.cfg.xml :
 	Doit faire le lien avec les classes utilisées via des entrées «mapping»
+	
+• DÉBOGUAGE - afficher les requêtes SQL exécutées par hibernate :
+
+<hibernate-configuration>
+	<session-factory>
+		...
+		<!-- Echo all executed SQL to stdout -->
+		<property name="show_sql">false</property>
+		<property name="format_sql">false</property>
+		...
+		
