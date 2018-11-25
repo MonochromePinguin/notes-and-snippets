@@ -1,3 +1,4 @@
+#!/bin/bash
 #La dernière commande d'un tuyau EXÉCUTÉ EN AVANT-PLAN ne sera pas exécutée
 # dans un processus-fils
 shopt -s lastpipe
