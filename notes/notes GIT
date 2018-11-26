@@ -27,18 +27,23 @@ On peut avoir plusieurs dépôts distants !
   git remote rm <alias>
   git remote rename <de> <vers>
 
-• pousser vers dépôt distant :
-La 1ère fois, il faut lier la branche distante "origin" à la
- branche locale	<branche>:
-	git push -u <$origin> <branche>
-ensuite, un simple « git push » suffira.
-
   git pull [distant | ] :
  	systématique avant de push, pour vérifier/corriger les conflits
 
   git fetch [dépôt|]	récupère la liste des branches
   git fetch -p			"	"	" ET vide le cache des références inexactes
 
+
+• pousser vers dépôt distant :
+La 1ère fois, il faut lier la branche distante (dans le dépôt distant) à la
+ branche locale :
+	git push -u <nomDépôt> <branche>
+p.ex,
+	git push -u origin nomBranche
+pour le dépôt "origin"
+ensuite, un simple « git push » suffira.
+
+Mais on peut aussi ↓ :
 
 • ajouter une nouvelle branche au dépôt distant :
 	git push --set-upstream <origin> <branche>
@@ -77,6 +82,12 @@ Supprimer les branches supprimées, vider le cache de branches distantes :
 	git remote prune <origin>
 
 (voir aussi git fetch -p)
+
+
+● OPTIMISATION / NETTOYAGE DE DÉPÔT LOCAL :
+	git gc --aggressive
+→ suppression d'objets inutilisés, compressions de divers fichiers.
+
 
 
 ● fusion de diffs en conflit :
@@ -213,7 +224,7 @@ pour ne modifier qu'un seul fichier :
 ● ANNULER UN/DES COMMITS :
 • en retirant le commit de l'historique ET LES CHANGEMENTS :
 	git reset --hard HEAD~1			#annuler le derniers commits
-	git reset --hard <commit> 
+	git reset --hard <commit>
 
 • annuler le commit mais GARDER LES CHANGEMENTS :
 	git reset --soft <commit>
@@ -222,7 +233,7 @@ pour ne modifier qu'un seul fichier :
 	git reset [--hard|--soft] commit..commit
 p.ex :
 	git reset --hard HEAD~3..HEAD~5
-	
+
 • annuler un commit déjà PUSHÉ :
 	git reset --hard <commit, p.ex HEAD~2>
 	git push -f
