@@ -1,0 +1,20 @@
+- image docker == données stockées sur le disque
+- conteneur == instance en  mémoire en cours d'exécution
+
+
+_ COMMANDES DOCKER :
+docker run --name xxx ...
+
+docker start <nomContainer>
+		démarre un conteneur déjà existant
+
+docker exec -ti <nomContainer> <nomCommande>
+		exécute une commande en avant-plan
+
+docker inspect <nomContainer>
+		liste les infos sur un conteneur, notamment les Volumes partagés (« bind mounts ») sous l'arborescence «Volumes:"
+
+docker image -a
+		liste les images
+		
+docker rm <nomImage>
