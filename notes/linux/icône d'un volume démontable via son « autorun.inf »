@@ -1,0 +1,13 @@
+Pour assigner une icône par défaut, sous toute machine, à un périphérique :
+
+_ créer dans la racine du volume un fichier « autorun.inf » contenant :
+	[autorun]
+	ico=<nomIcône>
+
+_ y recopier aussi l'icône
+
+_ rendre les fichiers invisibles :
+	_ le nom de l'icône pourra commencer par un point
+	_ créer un fichier « .hidden », listant les noms des fichiers à cacher, 1/ln
+
+

@@ -555,6 +555,7 @@ _ lscgroup
 ● STATISTIQUES SYSTÈME :
 •«top», «powertop», «iotop»
 • «iostat» (statistiques d'E/S pour un périphérique donné).
+_ dstat
 
 _ tload affiche la charge système en ln-de-comm'
 

@@ -1,6 +1,11 @@
 #!/bin/bash
 #Test d'une f° destinée à màj.sauvegardes.sh
 
+readonly cN=$(tput sgr0)
+readonly cR=$(tput setaf 1)
+
+
+
 
 paralleliseParcourt()
 #Cette fonction permet de répartir le parcourt du dossier $2 entre $4 instances
