@@ -264,7 +264,7 @@ les expressions rationnelles s'écrivent entre guillements simples «'».
 	ORDER BY "xxx" [ASC|DESC]	← «ascendant»/«descendant»
 • pas plus de 𝑛 entrées renvoyées :
 	MySQL :	 LIMIT 𝑛
-	Oracle :	WHERE ROWID < 𝑛
+	Oracle :	WHERE ROWNUM < 𝑛
 	SQLserver : SELECT TOP 𝑛 ...
 
 
@@ -372,12 +372,26 @@ _ PARSE(ch, typeDest)
 	YEAR(),
 	MONTH(),
 	DATEDIFF() → différence entre 2 dates,
-	
+
+•(ORACLE) fonctions de calcul de dates :
+	LAST_DAY(date) → arme la date au dernier jour du mois contenu
+_ opérations avec les «INTERVAL» :
+	uneDate + INTERVAL 'nb' [YEAR|MONTH|DAY|HOUR|MINUTE];
+p.ex 
+	table.colonneDate + INTERVAL '5' DAY
+
+
+• utiliser « to_date( 'date', 'format') » :
+bonne pratique pour se rendre indépendant du format de date par défaut.
+p.ex,
+	to_date( '14/06/2000', 'dd/MM/yyyy')
+
+
 • FONCTIONS D'AGGRÉGATION :
 	COUNT(), SUM(), MAX(), MIN(), AVG(), ...
 • HAVING :
 	s'utilise avec les fonctions d'aggrégations comme le WHERE.
-	 
+
 
 ● FONCTIONS DE TRAITEMENT DE TEXTE :
 	replace(ch,de,vers)
@@ -484,7 +498,7 @@ BIGINT		8oct
 		WHERE
 
 
-● CRÉATION / SUPPRESSION D'UNE TABLE EN MySQL :
+● (MySQL) CRÉATION / SUPPRESSION D'UNE TABLE EN MySQL :
   CREATE TABLE <MA_ION
 	id INT PRIMARY KEY AUTO_INCREMENT,
 			→ clé primaire numérique : plus rapide pour les recherches
@@ -551,7 +565,7 @@ est équivalent à
 	mysql -u <user> [-p|] --database <BdD> < <fic.sql>
 
 
-● réinitialisation du MdP root :
+●(MySQL) réinitialisation du MdP root :
 _ arrêter le service
 _ mysqld_safe --skip-grant-tables :
 	redémarrer le démon en mode sûr, SANS charger la table de droits

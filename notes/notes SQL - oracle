@@ -1,0 +1,27 @@
+● FAITS NOTABLES DU SQL ORACLE :
+« uncommited » par défaut.
+
+• limiter le nombre de lignes du résultat :
+WHERE ROWNUM < 𝑛
+
+OFFSET premLn ROWS FETCH NEXT nbLn ROWS ONLY;
+
+FETCH FIRST num% PERCENT ROWS ONLY;
+
+
+
+● FONCTIONS :
+• calcul de dates :
+	LAST_DAY(date) → arme la date au dernier jour du mois contenu
+
+_ opérations avec les «INTERVAL» :
+	uneDate + INTERVAL 'nb' [YEAR|MONTH|DAY|HOUR|MINUTE];
+p.ex 
+	table.colonneDate + INTERVAL '5' DAY
+
+
+• utiliser « to_date( 'date', 'format') » :
+bonne pratique pour se rendre indépendant du format de date par défaut.
+p.ex,
+	to_date( '14/10/2010', 'dd/MM/yyyy')
+
