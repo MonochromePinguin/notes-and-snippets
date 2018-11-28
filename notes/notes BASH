@@ -12,7 +12,16 @@
 •comparaison de chaînes :
 	if [ $var == 'xxxxxx' ] est possible sous Bash,
 	if [ $var = 'xxxxxx' ] seule option sous Dash (pas de double-égual «==» !)
-•pas de [[ ]], de $(( )), ...
+•pas de [[ ]],de tableaux, ...
+
+• substitutions valables sous DASH :
+	${var#motif}
+	${var##motif}
+	${var%motif}
+	${var%%motif}
+	${#var}
+	${var:-defaut}, ${var:=default}, ${var:+defaut}, ${var:?[msg]}
+	_ substitution arithmétique $(( ... ))
 
 
 
@@ -134,20 +143,24 @@ _ et sed remplace les virgules par des points pour que bc comprenne :-( ...
 • extglob	→ syntaxe des globs étendus : [+?*]\(motif(|motif)*\) ...
 
 
-● guillemets & assignations :
+
+● GUILLEMETS & ASSIGNATIONS :
 •Les guillemets ne sont pas nécessaires pour 
+les assignations sans "export" ni espace :
 	var=f*
 	var=$v0
+	var=$( commande )
  car le découpage en mots et le développement des chemins n'ont pas lieu.
-• MAIS ils sont nécesssaires quand il y a des espaces dans la valeur assignée 
+• MAIS ils sont nécesssaires quand il y a des espaces dans la valeur assignée :
 	v=" a b c"		sinon : exécution de «a» avec paramètres «b» et «c»
 	var="a b c"		sinon : «b» est exécuté avec en paramètre «c» et l'envVar
  «var» armée à «a»
-• Et pour la commande :
+• nécessaires avec la commande «export» :
 	export var="a"
-•Et quand on veut éviter le développement du tilde :
+• nécessaires quand on veut éviter le développement du tilde :
 	var=~/rép		→	var == $HOME/rép
 	var='~/rép'		→	var == ~/rép
+
 
 
 ● expressions rationnelles de BASH :
@@ -173,7 +186,7 @@ _ pour comparer l'expression rationnelle à la totalité de la chaîne cible,
 	tbl[𝑛]=v𝑛
 	echo ${tbl[𝑛]}
 
-• Attention à $IFS !
+• Attention à $IFS lors de l'assignation !
 
 • ajout d'un nouvel élément à un tableau :
 	tbl+=(v𝑛)
@@ -198,8 +211,8 @@ Le traitement de "${tbl[@]}" est similaire à celui de "$@" :
  modification éventuelle – ici par «//».
 
 • ce bout de code :
-	liste=•${tbl/%''/•, •}
-	echo "liste : ${liste%, •}"
+	liste=•${tbl/%''/•, •}			#remplacement de suffixe
+	echo "liste : ${liste%, •}"		#suppression de suffixe
 affiche tt les éléments du tableau encadrés de petits disques et séparés par
  des virgules. Jouer des modificateurs de variable /% et /# !
 
@@ -337,7 +350,7 @@ La commande interne «exec» peut appliquer les redirections à l'interpréteur
 
 
 ● CAPTURER LA SORTIE D'ERREUR MAIS AFFICHER LA SORTIE STANDARD :
-	{ sortieErr="$( commande 2>&1 1>&3 )"; } 3>&1; 3>&-
+	{ sortieErr=$( commande 2>&1 1>&3 ); } 3>&1; 3>&-
 _ stderr de «commande» est redirigé vers l'ancien stdout, et stdout
  vers le DF n°3,
 puis sortieErr capture la sortie-d'erreur-redirigée-vers-stdin
@@ -345,8 +358,8 @@ _ le DF n°3 de la liste de commandes est redirigé vers stdin
 _ enfin, le DF n°3 est fermé
 
 • au sein d'une conduite, chaque commande est exécutée dans son
- sous-interpréteur, sauf pour la dernière si l'option lastpipe est activée ET
- si elle est en avant-plan.
+ sous-interpréteur, sauf pour la dernière si l'option lastpipe est activée
+ ET si elle est en avant-plan.
  Donc,
 	var="A"
 	commande | while read x
@@ -363,6 +376,14 @@ affichera "A" ! car $var est modifiée dans le processus-fils.
 	do
 		...
 	done < $unFIFO
+
+
+● TERMINER UNE LISTE DE COMMANDE DÈS LA 1ère ERREUR :
+via
+	set -o pipefail
+et $? donnera alors le code de retour de la commande ayant renvoyé un code ≠ 0,
+ou 0 en l'absence d'erreur.
+
 
 
 ● surveiller un fichier en tâche de fond :
