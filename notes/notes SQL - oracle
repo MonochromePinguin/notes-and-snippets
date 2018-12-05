@@ -20,8 +20,97 @@ p.ex
 	table.colonneDate + INTERVAL '5' DAY
 
 
-• utiliser « to_date( 'date', 'format') » :
+• afficher composants d'une date ou timestamp :
+	to_char( <date>, <format> )
+p.ex
+	to_char(colDate, 'HH24:MI')	//heure & minutes (format 24h)
+	to_char(colDate, 'DD/MM/IYYY') // n°jour/n°mois/année s/ 4 chiffres
+pour le format, cf
+	https://docs.oracle.com/cd/B19306_01/server.102/b14200/sql_elements004.htm#i34510
+
+• utiliser « to_date( <date>, <format>) » :
 bonne pratique pour se rendre indépendant du format de date par défaut.
 p.ex,
 	to_date( '14/10/2010', 'dd/MM/yyyy')
+
+
+
+● PL/SQL :
+• fonction nommée == fonction stockée :
+CREATE OR REPLACE FUNCTION closeInterlappingLinksBaeDre
+	RETURN number IS
+(...)
+
+• fonction anonyme :
+fonction démarrant directement par un «BEGIN», directement exécutée :
+
+-- pour sqlplus ou sqlDeveloper : 
+set serveroutput on;
+
+BEGIN
+	DECLARE
+		-- a cursor is used to walk a list of row results
+		CURSOR pairList IS
+		    SELECT DISTINCT lbd.bae_id, lbd.dre_id 
+		    FROM link_bae_dre lbd
+		    ORDER BY lbd.bae_id, lbd.dre_id ;
+
+		pair_bae_id number(19,0);
+		pair_dre_id number(19,0);
+
+        lastLbdId number(19,0);
+        lastEndDate date;
+
+    BEGIN
+        open pairList;
+        loop
+            fetch pairList into pair_bae_id, pair_dre_id;
+            EXIT WHEN pairList%NOTFOUND;
+            
+            -- debug
+            dbms_output.put_line( chr(10) || '● paire ' || pair_bae_id || '/' || pair_dre_id || ' : ');
+
+            -- ID and end date of the last parsed link_bae_dre (ordered by lbd_start_date ASC, lbd_end_date_ASC)
+            lastLbdId := NULL;
+            lastEndDate := NULL;
+
+            
+            for line in (
+                select * from link_bae_dre lbd
+                    where lbd.dre_id = pair_dre_id and lbd.bae_id = pair_bae_id
+                    order by lbd.lbd_start_date, lbd.lbd_end_date,lbd.lbd_id
+            )
+            loop
+                dbms_output.put_line(
+                    'lbd_id = ' || line.lbd_id ||
+                    ', lbd_bae_id = ' || line.bae_id ||
+                    ', lbd_dre_id = ' || line.dre_id ||
+                    ', lbd_start_date = ' || line.lbd_start_date ||
+                    ', lbd_end_date = ' || line.lbd_end_date
+                );
+                
+                if (lastLbdId is not null)
+                then
+                    -- close the previous link_bae_dre if it is still open
+                    -- at the start date of the current one
+                    if line.lbd_start_date <= lastEndDate
+                    then
+                        dbms_output.put_line(
+                            '    • requête exécutée : ' ||
+                            'update link_bae_dre set lbd_end_date = ' ||
+                            (line.lbd_start_date - interval '1' day) ||
+                            ' where lbd_id = ' || lastLbdId
+                        );
+                        
+                    end if;
+                end if;
+               
+               lastLbdId := line.lbd_id;
+               lastEndDate := line.lbd_end_date;
+            end loop;
+
+        end loop;
+    END;
+END;
+
 

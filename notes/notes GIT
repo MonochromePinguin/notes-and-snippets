@@ -335,7 +335,7 @@ ou, plus élégant,
 _ sans tenir compte des changements de nom :
 	git log -- <fic-ou-motif>
 _ en suivant les renommages :
-	git log --follow <fic-ou-motif>
+	git log --follow -- <fic-ou-motif>
 
 
 

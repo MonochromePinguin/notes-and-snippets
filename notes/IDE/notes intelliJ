@@ -66,6 +66,18 @@ Ctrl Maj F7	(perso)	 trouver les usages d'une méthode &/OU son interface
 
 
 
+● ANALYSE DE CODE :
+Ctrl Alt H			hiérarchie des appels
+
+
+● DÉBOGUAGE :
+_ F7			step into
+_ F8			step over
+⊕ Maj-F8		step out
+⊕ Maj-F9		va au curseur
+
+
+
 ● REPLIER/DÉPLIER BLOC :
 Ctrl +  ou Ctrl =
 Ctrl -

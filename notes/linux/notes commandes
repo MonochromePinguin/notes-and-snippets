@@ -7,6 +7,13 @@
 	realpath
 	whereis
 
+• realpath :
+_ realpath <fic> :
+ chemin absolu du fichier après résolution des liens symboliques et autres ".."
+_ realpath --relative-to <rép> <fic> :
+	chemin relatif menant à <fic> depuis <rép>
+
+
 ● contourner les alias de BASH :
 par exemple pour «grep» :
 	/usr/bin/grep
@@ -23,7 +30,7 @@ Seul bc affiche les résultats en virgule flottante ...
  si on lui ordonne « scale=𝑛 » !!! OU si on exécute « bc -l » (précision : 20)
 
 •ex :
-faire la moyenne ligne par lignes de colonnes de nombres, stockées chaqu'une dans un fichier :
+faire la moyenne ligne par lignes de colonnes de nombres, stockées chacune dans un fichier :
 	 { echo scale=2; paste -d+ rés.* | sed 's/,/./g' | while read ln; do  echo "($ln)/10"; done } | bc
 _ paste insère des + entre les nombres, pour que ce soit interprété comme addition par bc ;
 _ et sed remplace les virgules par des points pour que bc comprenne :-( ...
@@ -467,10 +474,9 @@ exit, logout	→	 "	"
 
 ⏎~
 
-_ et bien sûr,
-	« ssh utilisateur@hôte commande »,
-	« ssh utilisateur@hôte < listeCommandes »,
-	...
+_ et bien sûr, « ssh utilisateur@hôte commande »,
+	     « ssh utilisateur@hôte < listeCommandes »,
+	     ...
 
 
 ●ADMINISTRATION SYSTÈME & UTILISATEURS :
@@ -507,8 +513,6 @@ _ le dossier «Documentation» des sources du noyau (... en partie seulement)
 ● afficher température(s) interne(s) :
 	sensors (paquet lm-sensors)
 
-● afficher liste mutex, sémaphores, segments mémoire partagée, ... :
-	ipcs
 
 ● commandes administratives :
 •«logger», «notify-send» & leurs options,
@@ -528,7 +532,17 @@ _ le dossier «Documentation» des sources du noyau (... en partie seulement)
 	-s bascule aussitôt vers le VT)
 • «deallocvt» libère les données des VT inutilisés (sans programme les utilisant)
 
-• «/proc/filesystem» contient la liste les pilotes de système de fichiers en mémoire - PAS la totalité de ceux supportés !
+• «/proc/filesystem» contient la liste les pilotes de système de fichiers
+ en mémoire - PAS la totalité de ceux supportés !
+
+
+• tuer un programme par son nom :
+	pkill -<n°Signal> -f <motifÀchercher>
+-f : rechercher le motif dans le chemin complet,
+	 pas juste dans le nom de l'exécutable
+
+• tuer le programme écoutant à tel port :
+cf « • quel processus écoute sur tel port »
 
 
 
@@ -551,6 +565,7 @@ _ lscgroup
 ● STATISTIQUES SYSTÈME :
 •«top», «powertop», «iotop»
 • «iostat» (statistiques d'E/S pour un périphérique donné).
+_ dstat
 
 _ tload affiche la charge système en ln-de-comm'
 
@@ -703,9 +718,9 @@ _ getent ahosts <nomHôte> :
   lsof -Pnl +M -i4 : liste les ports ip4 ouverts
   lsof -Pnl +M -i6 : '' ''	'' ip6
 
-• obtenir le PID du programme écoutant sur tel port :
-	sudo ss -lptn 'sport = :8080'
-
+• quel processus écoute sur tel port :
+en tant qu'admin,
+	ss -lptn 'sport = :<n°Port>'
 
 • nmap est un outils de scan de ports :
 nmap -p<port(s)> <hôte> ...

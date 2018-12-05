@@ -2,19 +2,31 @@
 - conteneur == instance en  mémoire en cours d'exécution
 
 
-_ COMMANDES DOCKER :
+● CONTENEURS :
 docker run --name xxx ...
 
-docker start <nomContainer>
-		démarre un conteneur déjà existant
+docker start|stop <nomContainer>
+		démarre/arrête un conteneur déjà existant
 
 docker exec -ti <nomContainer> <nomCommande>
 		exécute une commande en avant-plan
 
 docker inspect <nomContainer>
-		liste les infos sur un conteneur, notamment les Volumes partagés (« bind mounts ») sous l'arborescence «Volumes:"
+		liste les infos sur un conteneur, notamment les Volumes partagés (« bind mounts ») sous l'arborescence «Volumes»:
 
+
+
+● IMAGES :
 docker image -a
 		liste les images
 		
 docker rm <nomImage>
+
+• renommer une image :
+via un tag :
+	docker tag <ancNom> <nouvNom>; docker rmi <ancNom>
+
+
+• cloner un conteneur vers nouvelle image :
+à partir d'un conteneur en cours d'exécution :
+	docker commit <conteneurActif> <nomNouvelleImage>
