@@ -17,16 +17,71 @@ docker inspect <nomContainer>
 
 
 ● IMAGES :
-docker image -a
-		liste les images
-		
-docker rm <nomImage>
+• lister les images :
+	docker images
+
+• cloner un conteneur vers nouvelle image :
+à partir d'un conteneur en cours d'exécution :
+	docker commit -p  <IDconteneurf> <repoImage/nomImage>
+-p	→	mettre en pause le conteneur
+L'image créée aura un ID mais pas de «tag».
+p.ex :
+	docker commit -p cee9fce17e35 registry-private.docker.iscbordeaux.lan.bdx.sqli.com/oracleserver/entreprise
+
+•nommer une image (lui attribuer un tag) :
+	docker tag <IDimage> <repo/nomImage>
+
+
+• supprimer une image :
+	docker images rm <IDimage> ...
 
 • renommer une image :
 via un tag :
 	docker tag <ancNom> <nouvNom>; docker rmi <ancNom>
 
 
-• cloner un conteneur vers nouvelle image :
-à partir d'un conteneur en cours d'exécution :
-	docker commit <conteneurActif> <nomNouvelleImage>
+	
+• privilégier l'image de la distro « Alpine », la plus minimaliste disponible
+
+• les conteneurs docker sont sans-état / stateless :
+→ dans le cas d'une BdD, if faut donc sauvegarder régulièrement l'image,
+et reconstruire la BdD au lançement de l'image à partir de scripts SQL
+ si le conteneur tombe ...
+
+
+• exécuter une image avec des ports mappés :
+	docker run -d -p <portHôte>:<portConteneur> <image> <commande>
+
+
+
+● on peut en une commande télécharger (depuis le « hub » d'images)
+ et exécuter une image ...
+• ¿ quid de la configuration des MdP ?
+	Elle est effectuée via des variables d'environnement !
+
+• ET les dockerfile :
+	FROM node:alpine
+	WORKDIR .
+	COPY package*.json ./
+	RUN npm install
+	COPY . .
+	EXPOSE 3000					← ouvre au web le port 3000 du conteneur
+	cmd ["node", "app.js"]		← exécute ces 2 commandes
+
+
+
+● configurer un ensemble de services :
+ via un fichier « docker-compose.yml » accédé par docker-compose ...
+
+qui liste en particulier les services à démarrer en conteneur, leurs noms d'ĥôte,
+les ports réseau à ouvrir et mapper, ...
+
+
+
+● systèmes spécialisés pour docker :
+• images :
+_ CoreOS (linux minimaliste)
+_ snappy (spécialisés dans les paquets snaps d'ubuntu)
+• OS dédiés à la gestion de fermes de conteneurs :
+_ kubernetes
+_ swarm (de docker)

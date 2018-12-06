@@ -254,6 +254,17 @@ Mais il faut toujours qu'un commit soit lié à une branche pour ne pas être su
 défaisant la précédente.
 	git revert HEAD		→	nouveau commit annulant le dernier
 
+● FUSIONNER DES COMMITS :
+• git rebase -i <premierCommit> :
+	-i pour «--interactive»
+L'éditeur ouvert va permettre de choisir les différentes opérations à appliquer,
+(p.ex «squash» pour fusionner des commits.)
+
+p.ex
+	git rebase -i HEAD~2
+pour fusionner les 2 derniers commits.
+
+
 
 
 ● COPIER UN FICHIER ENTRE BRANCHES :
@@ -276,7 +287,7 @@ Ils concernent les fichiers stagés et non stagés,
   git stash -u :
 	 enregistre les changements de TOUT les fichiers.
 • bonne pratique :
-	nommer les stash via « git stash save <msg> »
+	nommer les stash via « git stash push -m <msg> »
 
   git stash pop [stash@{𝑛}] :
 	 applique les changements du [dernier|] stash et le supprime
@@ -335,7 +346,6 @@ ou, plus élégant,
 _ sans tenir compte des changements de nom :
 	git log -- <fic-ou-motif>
 _ en suivant les renommages :
-	git log --follow -- <fic-ou-motif>
 
 
 

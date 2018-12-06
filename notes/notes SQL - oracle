@@ -1,3 +1,13 @@
+● IMPORTER UN DUMP :
+	impdp <utilisateur>/<MdP>@<hôte> directory=<dump_dir> dumpfile=<dump.dmp> \
+		[logfile=<log.log>] schemas=CREMA,CREMA_LEC,CREMA_EAI \
+		[ TABLE_EXISTS_ACTION=REPLACE ]
+où
+ <dump_dir> est le dossier contenant le dump à importer,
+ <dump.dmp> le fichier .dmp présent dans ce dossier
+TABLE_EXISTS_ACTION=REPLACE :
+	permet de remplacer les tables déjà existantes (l'action par défaut est de les conserver)
+
 ● FAITS NOTABLES DU SQL ORACLE :
 « uncommited » par défaut.
 
