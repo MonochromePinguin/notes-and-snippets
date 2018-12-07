@@ -8,9 +8,18 @@ _ Hibernate inspections ?
 
 
 ● NAVIGATION :
+échap			éditeur
+
 Ctrl Maj A      action rapide
 
-Ctrl E      liste derniers fichiers ouverts
+Ctrl E			liste derniers fichiers ouverts
+Ctrl Maj E		go to file
+Alt home		barre de navigation
+
+Ctrl Maj T		aller au fichier du T.U. (ou le créer)
+
+Ctrl F12			navigation dans structure du fichier (p.ex méthodes)
+Ctrl F12 Ctrl F12	une 2e fois, affiche aussi membres interfaces & superclasse
 
 Alt 1       panneau fichiers
 Alt 2       panneau « favoris »
@@ -19,7 +28,28 @@ Alt F12		terminal
 
 Alt ← →      naviguer entre onglets du même groupe
 
-Alt ↑↓      naviguer entre fonctions/etc.
+Alt ↑↓		entre fonctions/etc.
+
+
+
+● NAVIGATION DU CODE :
+Ctrl Maj RetArr			se rendre au précédent lieu d'édition (inter-fichier)
+
+Ctrl Alt clic (perso)	aller à l'implémentation
+
+Ctrl N				go to class
+Ctrl Alt Maj N		go to symbol
+
+Ctrl U			go to superclass
+Ctrl Alt B		got to derived class (choix)
+
+
+• trouver les usages d'une méthode :
+Ctrl F7			trouver les usages *dans le fichier* d'une méthode
+					&/OU de sa méthode d'interface
+
+Alt F7
+Ctrl Maj F7	(perso)	 trouver les usages d'une méthode &/OU son interface
 
 
 
@@ -49,20 +79,6 @@ Ctrl Maj F7         surligne toutes occurences du mot
 F3      (perso)     sélect° prochaine occurence mot
 Maj F3  (perso)     desélection dernière occurence
 Ctrl Alt Maj J      toutes les occurences
-
-
-
-● NAVIGATION DU CODE :
-Ctrl Maj RetArr		se rendre au précédent lieu d'édition (inter-fichier)
-
-Ctrl Alt clic		aller à l'implémentation
-
-• trouver les usages d'une méthode :
-Ctrl F7			trouver les usages *dans le fichier* d'une méthode
-					&/OU de sa méthode d'interface
-
-Alt F7
-Ctrl Maj F7	(perso)	 trouver les usages d'une méthode &/OU son interface
 
 
 
