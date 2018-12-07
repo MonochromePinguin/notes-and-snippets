@@ -8,6 +8,18 @@ où
 TABLE_EXISTS_ACTION=REPLACE :
 	permet de remplacer les tables déjà existantes (l'action par défaut est de les conserver)
 
+
+● DROP :
+• utilisateur :
+	DROP USER <utilisateur> CASCADE;
+• table :
+	PURGE TABLESPACE <table>;
+
+• espace de tables :
+	DROP TABLESPACE <espaceDeTables> [INCLUDING CONTENTS [AND DATAFILES] [CASCADE CONSTRAINTS]];
+
+
+
 ● FAITS NOTABLES DU SQL ORACLE :
 « uncommited » par défaut.
 

@@ -268,7 +268,7 @@ pour fusionner les 2 derniers commits.
 
 
 ● COPIER UN FICHIER ENTRE BRANCHES :
-	git checkout <branche/commit> <fic>
+	git checkout <branche|commit> -- <fic>
 
 
 ● SUPPRIMER UN FICHIER DE TOUTE L'HISTORIQUE :
@@ -305,17 +305,25 @@ Ils concernent les fichiers stagés et non stagés,
   git stash -p (...) : pour stasher changements partiels
 
 
-● git tag :
-	git tag <nom>	→ appliqué à la branche/commit en cours
-	git tag --delete <nom>
-	git tag list ou « git tag »
+● TAGS :
+Sont appliqués à la branche ou au commit en cours.
+  git tag <nom>			→ appliqué à la branche/commit en cours
+  git tag --delete <nom>
+  git tag list ou « git tag »
+
 • LES TAGS NE SONT PAS POUSSÉS AUTOMATIQUEMENT.
-_ pousser UN tag :
-	git push origin <tagName>
-_ pousser TOUT les tags (attention !) :
-	git push --tags
+  git push origin <tagName>		pousser UN tag
+  git push --tags				pousser TOUT les tags (attention !)
+
+  git checkout tags/<nomTag>
+  git checkout tags/<nomTag> -b <nouvelleBranche> :
+		créé une nouvelle branche à partir du tag
 
 
+● montrer les commits présents dans la branche "Old" mais pas la "Nouv" :
+  git log <Nouv>..<Old>
+• montrer le diff de ces commits :
+  git diff <Nouv>...<Old>	← attention : 3 points.
 
 ● chercher un mot dans les modifications apportées par les commit :
 	git log -G <mot>
