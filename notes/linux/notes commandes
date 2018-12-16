@@ -151,6 +151,17 @@ Si le fichier ZZZ a été effaçé mais est encore ouvert par un programme,
  -P → utilise des PCRE
  -z → transforme les \n en \0 avant examen
 
+• grep avec PCRE :
+	grep -P
+p.ex :
+_ rechercher les séquences de majuscules séparées du début de ligne par
+ 2 espaces, et les afficher sur une seule ligne et séparées par un pipe :
+		sdparm /dev/sr1 | grep -oP '(?<=^\s{2})[[:upper:]]+' \
+		| tr '\n' '|' | sed 's/|$//'
+
+• grep avec affichage ligne-par-ligne et non quand le tampon de sortie est plein :
+	grep --line-buffered
+
 
 
 ● tee + substitution de processus de BASH
@@ -465,6 +476,12 @@ peuvent être affichés en Δt depuis l'epoch. Et ...
 → l'option «--line-buffered» permet d'afficher un résultat
  à chaque sortie de tail !
 
+● faire une entrée sans mise en tampon par certaines programmes :
+Quand sa sortie n'est pas reliée à un tuyau, grep la stocke dans un tampons puis
+fournit ce dernier une fois rempli ; pour forcer un affichage ligne-par-ligne,
+utiliser le «--line-buffered» vu ci-dessus ↑.
+  grep --line-buffered
+  unbuffer <prog>		désactive la mise-en-tampon de la sortie de <prog>
 
 
 ● SSH - raccourcis clavier :
@@ -691,15 +708,19 @@ _ getent ahosts <nomHôte> :
 •"ip address show", "ip link list", "ip neigh show" :
  fournit les addresses IP/les liens/ le cache ARP de nos interfaces
 
-• iw dev wlan0 station dump	:
- liste les clients connectés par wlan0
-• iw dev wlan0 scan :
- liste capacités matérielles de wlan0
-
-
+_ ETHERNET :
 • mii-tool -v <inteface>	:
  fournit les principales caractéristiques de l'interface physique
 • ethtool <iface>		: itou en plus lisible
+
+_ WIFI :
+• iw list :
+	liste & capacités matérielles des interfaces wifi.
+• iw <phy0> :
+	capacités matérielles de l'interface <phy0>.
+• iw dev wlan0 station dump	:
+	liste les clients connectés par wlan0
+
 
 •«route» fournit la table de routage du noyau,
  dans laquelle on peut voir le nom DNS du routeur-modem local ...
