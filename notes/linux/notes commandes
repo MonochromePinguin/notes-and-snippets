@@ -691,15 +691,19 @@ _ getent ahosts <nomHôte> :
 •"ip address show", "ip link list", "ip neigh show" :
  fournit les addresses IP/les liens/ le cache ARP de nos interfaces
 
-• iw dev wlan0 station dump	:
- liste les clients connectés par wlan0
-• iw dev wlan0 scan :
- liste capacités matérielles de wlan0
-
-
+_ ETHERNET :
 • mii-tool -v <inteface>	:
  fournit les principales caractéristiques de l'interface physique
 • ethtool <iface>		: itou en plus lisible
+
+_ WIFI :
+• iw list :
+	liste & capacités matérielles des interfaces wifi.
+• iw <phy0> :
+	capacités matérielles de l'interface <phy0>.
+• iw dev wlan0 station dump	:
+	liste les clients connectés par wlan0
+
 
 •«route» fournit la table de routage du noyau,
  dans laquelle on peut voir le nom DNS du routeur-modem local ...
