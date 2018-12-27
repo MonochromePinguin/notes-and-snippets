@@ -7,6 +7,12 @@ _ Hibernate inspections ?
 ⊕ SonarLint (linteur java)
 
 
+● NE PAS STEPPER À TRAVERS CERTAINES CLASSES :
+	File -> Settings... -> Build, Execution, Deployment -> Debugger -> Stepping,
+et entrer un motif des classes à exclure du déboguage.
+
+
+
 ● NAVIGATION :
 échap			éditeur
 

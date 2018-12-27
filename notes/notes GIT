@@ -201,6 +201,7 @@ pour ne modifier qu'un seul fichier :
 	git show
 • lister les fichiers modifiés par une commit :
 	git show --name-only <commit|HEAD|etc.>
+	git show --name-only --pretty="" <commit|HEAD|etc.> | sort | uniq
 
 
 ● SYNONYMES :
@@ -214,8 +215,13 @@ pour ne modifier qu'un seul fichier :
 	git commit --amend --no-edit	** NE JAMAIS FAIRE ÇA SUR COMMIT PUSHÉE **
 
 
-● annuler les changements d'un fichier indexé :
-	git checkout HEAD -- <fic>
+● annuler les changements d'un fichier indexé ou non :
+	git checkout [HEAD|branche|commit|...] -- <fic>
+ou
+	git checkout <fic> qui peut être confondu avec un checkout de branche si homonymie
+==
+	git checkout -- <fic>
+
 
 ● défaire un « git add » – retirer un fichier du suivi avant commit :
 	git reset <fic>
@@ -320,13 +326,38 @@ Sont appliqués à la branche ou au commit en cours.
 		créé une nouvelle branche à partir du tag
 
 
+
 ● montrer les commits présents dans la branche "Old" mais pas la "Nouv" :
   git log <Nouv>..<Old>
 • montrer le diff de ces commits :
   git diff <Nouv>...<Old>	← attention : 3 points.
 
-● chercher un mot dans les modifications apportées par les commit :
-	git log -G <mot>
+
+
+● LISTER branches et commits :
+• lister les branches :
+	git branch
+• et les commits (éventuellement d'une branche différente) depuiq HEAD :
+	git log
+	git log --oneline
+	git log <branche>
+
+
+
+● LISTER LES COMMITS AYANT ENTRAINÉ CERTAINES MODIFICATIONS :
+Pas d'espace entre l'option et le paramètre !
+
+• chercher une expression rationnelle dans le texte du patch :
+	git log -G<regex>
+
+• chercher différence sur NOMBRE D'OCCURENCES D'UNE CHAÎNE :
+	git log -S<chaîne>
+
+• chercher les commits concernant un fichier :
+_ sans tenir compte des changements de nom :
+	git log -- <fic-ou-motif>
+_ en suivant les renommages :
+	xxxxxxxx
 
 
 ● CHERCHER UN FICHIER (PEUT-ÊTRE NON EXISTANT DANS LA BRANCHE ACTUELLE)
@@ -342,20 +373,18 @@ ou, plus élégant,
 
 
 
-● LISTER branches et commits :
-• lister les branches :
-	git branch
-• et les commits (éventuellement d'une branche différente) depuiq HEAD :
-	git log
-	git log --oneline
-	git log <branche>
+● lister les fichiers sous contrôle de version :
+ 	git ls-tree -r [HEAD|nom-de-branche] --name-only
+ «HEAD» pour la branche actuelle,
+ et [Nombranche] pour ceux de la branche/commit/etc. nommée.
 
-• les commits concernant un fichier :
-_ sans tenir compte des changements de nom :
-	git log -- <fic-ou-motif>
-_ en suivant les renommages :
+● git status :
+Liste, entre autres, les fichiers non suivis,
+ s'il y a des changements non commités, ...
 
-
+• générer les patches permettant de parvenir à la branche actuelle
+depuis le départ, 1 patch/commit :
+	git format-patch origin
 
 • enregistrer un commit :
  	git commit -a -m "<texte descriptif>"		# -a : pour "tout les fichiers"
@@ -364,22 +393,4 @@ _ en suivant les renommages :
 	git add <xxx> <yyyy> <zzz>
 	git commit
  qui ajoute à l'index les modifications de <xxx>, <yyy>, <zzz> et les commits.
-
-
-
-● git status :
-Liste, entre autres, les fichiers non suivis,
- s'il y a des changements non commités, ...
-
-
-• générer les patches permettant de parvenir à la branche actuelle
-depuis le départ, 1 patch/commit :
-	git format-patch origin
-
-
-
-● lister les fichiers sous contrôle de version :
- 	git ls-tree -r [HEAD|nom-de-branche] --name-only
- «HEAD» pour la branche actuelle,
- et [Nombranche] pour ceux de la branche/commit/etc. nommée.
 
