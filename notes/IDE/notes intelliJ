@@ -107,7 +107,12 @@ F7			step into
 F8			step over
 Maj F8		step out
 Maj F9		va au curseur
+• zone « variables » du cadre de déboguage :
+clic droit s/ une liste ou tableau, «Filter» 
+				→ ajout d'expression pour n'afficher que le contenu concordant.
 
+• clic droit sur une marque de point d'arrêt dans la fenêtre d'édition : 
+	édition des propriétés du point d'arrêt.
 
 
 ● REPLIER/DÉPLIER BLOC :

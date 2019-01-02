@@ -387,10 +387,27 @@ p.ex,
 	to_date( '14/06/2000', 'dd/MM/yyyy')
 
 
+• FONCTIONS D'AGGRÉGATION ≠ FONCTIONS SCALAIRES :
+_ f° d'aggrégation :
+	opèrent sur un ou des aggrégats (des ensembles de valeurs)
+p.ex :
+	MAX( SELECT col1 FROM tbl ).
+
+_ f° scalaires :
+	opèrent sur une ou des valeurs scalaires
+p.ex :
+	GREATEST(v1, v2, ... vₙ)
+
+
 • FONCTIONS D'AGGRÉGATION :
 	COUNT(), SUM(), MAX(), MIN(), AVG(), ...
 • HAVING :
 	s'utilise avec les fonctions d'aggrégations comme le WHERE.
+
+• FONCTIONS SCALAIRES :
+	LEAST()		→ valeur minimale
+	GREATEST()	→ valeur maximale
+
 
 
 ● FONCTIONS DE TRAITEMENT DE TEXTE :
