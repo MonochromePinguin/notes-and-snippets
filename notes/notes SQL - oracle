@@ -44,7 +44,11 @@ le CONTENEUR COURANT courant peut être la racine du CDB ou un PDB.
 	ALTER PLUGGABLE DATABASE <nomPDB> OPEN; # autoriser les accès
 
 • créer une PDB à partir d'une PDB existante :
-	CREATE PLUGGABLE DATABASE <nomNouvellePDB> FROM <anciennePDB>;
+	CREATE PLUGGABLE DATABASE <nouvellePDB> FROM <ancPDB> \
+		FILE_NAME_CONVERT = (
+			'/opt/oracle/oradata/<dossierCDB>/<ancPDB>/',
+			'/opt/oracle/oradata/<dossierCDB>/<nouvPDB>/'
+		);
 
 • lister les CDB :
 seul moyen connu :
@@ -77,6 +81,12 @@ et spécifier le nom d'hôte dans l'URI :
 	DROP USER <utilisateur> CASCADE;
 • table :
 	PURGE TABLESPACE <table>;
+
+• PDB :
+il faut d'abord clore et débrancher la PDB du CDB avant de la supprimer :
+	ALTER PLUGGABLE DATABASE <PDB> CLOSE;
+	ALTER PLUGGABLE DATABASE <PDB> UNPLUG INTO 'xxx.xml'; 
+	DROP PLUGGABLE DATABASE <PDB> [|INCLUDING DATAFILES];
 
 • espace de tables :
 	DROP TABLESPACE <espaceDeTables> [INCLUDING CONTENTS [AND DATAFILES] [CASCADE CONSTRAINTS]];

@@ -139,6 +139,44 @@ la « face servlet » :
 	le contrôleur frontal qui dispatche les requêtes vers les servlets
 	Facelet : page XHTML (avec nouvelles balises HTML5)
 
+• mise à jour d'un élément via ajax :
+	<p:ajax
+		listener="#{référence.de.la.callback}"
+		update="idElement-à-updater idElement2-à-updater ..." />
+par ex :	
+		 
+			<p:outputPanel styleClass="filters">
+				<h:outputLabel for="monthfilter" value="Mois : " />
+				<p:outputPanel styleClass="filterBlock">
+					<p:selectOneMenu id="monthfilter"
+						value="#{receiptFilesController.receiptFilesBean.monthFilterSelectedValue}"
+						required="true" label="Mois">
+						<p:ajax
+							listener="#{receiptFilesController.onMonthChange}"
+							update="receiptFilesAccordion :messages" />
+						<f:selectItems
+							value="#{receiptFilesController.receiptFilesBean.monthFilterValues.entrySet()}"
+							var="monthentry" itemValue="#{monthentry.key}"
+							itemLabel="#{monthentry.value}">
+						</f:selectItems>
+					</p:selectOneMenu>
+				</p:outputPanel>
+
+				<h:outputLabel for="statusfilter" value="Statut : " />
+				<p:outputPanel styleClass="filterBlock">
+					<p:selectOneMenu id="statusfilter"
+						value="#{receiptFilesController.receiptFilesBean.statusFilterSelectedValue}"
+						required="true" label="Statut">
+						<p:ajax listener="#{receiptFilesController.onStatusFilterChange}"
+							update="receiptFilesAccordion :messages originfilter" />
+						<f:selectItems
+							value="#{receiptFilesController.receiptFilesBean.statusFilterValues.entrySet()}"
+							var="statusentry" itemValue="#{statusentry.key}"
+							itemLabel="#{statusentry.value}">
+						</f:selectItems>
+					</p:selectOneMenu>
+				</p:outputPanel>
+
 
 
 ● JPA :
@@ -146,7 +184,7 @@ la « face servlet » :
 
 
 
-● BIBLIOTHÈQUES À IMPORTER POUR UN PROJET JEE/JSF :
+● (INTELLIJ) BIBLIOTHÈQUES À IMPORTER POUR UN PROJET JEE/JSF :
 javax.faces-api-2.3.jar (annotations javax.faces.bean.ManagedBean et autres)
 jsf-api.jar
 jsf-impl.jar

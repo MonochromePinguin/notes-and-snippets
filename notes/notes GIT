@@ -342,6 +342,11 @@ Sont appliqués à la branche ou au commit en cours.
 	git log --oneline
 	git log <branche>
 
+● LISTER LES BRANCHES CONTENANT UN CERTAIN COMMIT :
+• dans les branches locales :
+	git branch --contains <commit>
+• dans les branches distantes :
+	git branch -r --contains <commit>
 
 
 ● LISTER LES COMMITS AYANT ENTRAINÉ CERTAINES MODIFICATIONS :

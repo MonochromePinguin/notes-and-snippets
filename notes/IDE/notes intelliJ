@@ -24,7 +24,7 @@ Alt home		barre de navigation
 
 Ctrl Maj T		aller au fichier du T.U. (ou le créer)
 
-Ctrl F12			navigation dans structure du fichier (p.ex méthodes)
+Ctrl F12			« structure du fichier » – méthodes & variables
 Ctrl F12 Ctrl F12	une 2e fois, affiche aussi membres interfaces & superclasse
 
 Alt 1       panneau fichiers
