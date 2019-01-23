@@ -54,7 +54,6 @@ Ctrl Alt B		got to derived class (choix)
 Ctrl F7			trouver les usages *dans le fichier* d'une méthode
 					&/OU de sa méthode d'interface
 
-Alt F7
 Ctrl Maj F7	(perso)	 trouver les usages d'une méthode &/OU son interface
 
 
@@ -173,11 +172,17 @@ Ctrl Maj Entrée → corrige la construction courante
 
 
 ● LIVE TEMPLATES PERSO :
+situés dans Settings/Editor/Live Templates
+
 • intelliJ pro :
-_ JSP:
+_ JSP :
     fore → <c:forEach ...>
-_ java:
+_ java :
     psf →  private static final
-    pusf →  public static final
+    pusf → public static final
+    psfs → private static final String
     pvf → public void function
     rsa → request.setAttribute(...)
+_SQL :
+	td → TO_DATE('...', 'YYYYMMDD')
+

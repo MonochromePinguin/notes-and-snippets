@@ -8,6 +8,11 @@
  « ERROR : ORA-01033: ORACLE initialization or shutdown in progress » :
 La BdD doit être ré-ouverte. (¿pourquoi?)
 Ce qui a marché sous « sqlplus / as sysdba » :
+
+_ DERNIÈRE VERSION :
+	ALTER PLUGGABLE DATABASE D12UTF8PDB_3_4_2_20181210 OPEN READ WRITE;
+
+_ ANCIENNE VERSION :
 	SHUTDOWN IMMEDIATE			# redémarrer la BdD : ¿ utile ?
 	STARTUP						# ¿?
 	ALTER SESSION SET CONTAINER = D12UTF8PDB_3_4_1_20181226_516;
@@ -112,6 +117,18 @@ FETCH FIRST num% PERCENT ROWS ONLY;
 
 
 ● FONCTIONS :
+• utiliser « TO_DATE( <date>, <format>) » :
+bonne pratique pour se rendre indépendant du format de date par défaut.
+p.ex,
+	TO_DATE('14/10/2010', 'DD/MM/YYYY')
+
+• TRUNC(Date, <format>) :
+TRUNC() renvoit une DATE (quelque soit le format de date d'entrée) tronquée
+suivant l'unitée spécifiée par <format> :
+	TRUNC( TO_DATE('14/10/2010', 'DD/MM/YYYY'), 'MONTH' )	==	01/10/2010
+	TRUNC( TO_DATE('14/10/2010', 'DD/MM/YYYY'), 'YEAR' )	==	01/01/2010
+
+
 • calcul de dates :
 	<date> - 𝑛		→ soustrait 𝑛 jours à la date donnée.
 						fonctionne pour les DATE mais pas les TIMESTAMP.
@@ -125,17 +142,13 @@ p.ex
 
 
 • afficher composants d'une date ou timestamp :
-	to_char( <date>, <format> )
+	TO_CHAR( <date>, <format> )
 p.ex
-	to_char(colDate, 'HH24:MI')	//heure & minutes (format 24h)
-	to_char(colDate, 'DD/MM/IYYY') // n°jour/n°mois/année s/ 4 chiffres
+	TO_CHAR(colDate, 'HH24:MI')	//heure & minutes (format 24h)
+	TO_CHAR(colDate, 'DD/MM/IYYY') // n°jour/n°mois/année s/ 4 chiffres
 pour le format, cf
 	https://docs.oracle.com/cd/B19306_01/server.102/b14200/sql_elements004.htm#i34510
 
-• utiliser « to_date( <date>, <format>) » :
-bonne pratique pour se rendre indépendant du format de date par défaut.
-p.ex,
-	to_date( '14/10/2010', 'dd/MM/yyyy')
 
 
 
