@@ -78,6 +78,8 @@ Utiliser le nom du SERVICE hébergeant la PDB, récupéré via
 	« lsnrctl service »
 et spécifier le nom d'hôte dans l'URI :
 	sqlplus <user>[|/<MdP>]@//<hôte[|<port>]>/<service>
+p.ex :
+	sqlplus SYSTEM/MotDePasse@//localhost/d12utf8pdb_3_4_1_20190129_0630
 
 
 
@@ -113,6 +115,30 @@ WHERE ROWNUM < 𝑛
 OFFSET premLn ROWS FETCH NEXT nbLn ROWS ONLY;
 
 FETCH FIRST num% PERCENT ROWS ONLY;
+
+
+
+● RECHERCHER UNE COLONNE OU UNE CONTRAINTE :
+• trouver une contrainte de CLEF PRIMAIRE :
+	SELECT * FROM USER_CONSTRAINTS
+	WHERE
+		CONSTRAINT_NAME = '...'
+	  AND
+		CONSTRAINT_TYPE = 'P';
+
+• trouver une COLONNE :
+	SELECT * FROM ALL_TAB_COLUMNS
+	WHERE COLUMN_NAME = '...';
+
+
+
+• CHANGER LE SCHÉMA ACTUEL :
+	ALTER SESSION SET CURRENT_SCHEMA = <nomSchémaSansGuillemets>;
+
+
+
+● SÉQUENCES :
+	SELECT * FROM ALL_SEQUENCES
 
 
 

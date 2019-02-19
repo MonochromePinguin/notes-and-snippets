@@ -20,6 +20,18 @@ SELECT COUNT(*) AS nbInscription FROM EMPLOYE E
 
 
 
+-- ... le nombre de liens dont la date de fin est armée à décembre 2099 pour chaque paire BAE/DRE
+SELECT paire, count(*)
+FROM (
+  SELECT  BAE_ID || '/' || DRE_ID AS paire
+  FROM LINK_BAE_DRE
+  WHERE trunc( LBD_END_DATE, 'MONTH') = TO_DATE('20991201', 'YYYYMMDD')
+  ORDER BY paire, LBD_START_DATE, LBD_END_DATE
+)
+GROUP BY paire
+ORDER BY paire;
+
+
 -- récupère tt les employé inscrits à un séminaire et leur nombre de séminaires
 SELECT CONCAT(E.NOMEMP, ' ', E.PRENOMEMP) as employé, COUNT(*) AS Séminaires
 	FROM EMPLOYE E

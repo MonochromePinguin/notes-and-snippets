@@ -1,3 +1,10 @@
+● PROBLÈMES :
+• bug en 2017.03 – si un fichier, pourtant présent dans les sources,
+ n'est pas trouvé dans l'environnement de test :
+« As a workaround please manually change the value from $MODULE_DIR$
+ to %MODULE_WORKING_DIR% for 'Working Directory' in Run/Debug configuration »
+
+
 ● greffons notables :
 ⊕ AsciiDoc
 _ Emmet everywhere ?
@@ -185,4 +192,15 @@ _ java :
     rsa → request.setAttribute(...)
 _SQL :
 	td → TO_DATE('...', 'YYYYMMDD')
+
+
+● console SQL :
+_ dans onglet «Database» :
+F4		ouvrir console SQL par défaut
+F5		choix de la console SQL
+
+
+• changer le dialecte SQL :
+dans properties, choisir «Drivers» / Oracle, combo «Dialect»
+
 
