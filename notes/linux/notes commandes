@@ -433,20 +433,20 @@ cut -c8- affiche de la colonne 8 à la fin de la ligne.
 	iconv -f UTF-8 -t ISO-8859-15 in.txt > out.txt
 
 
-● OUTILS .PDF :
-_ ps2pdf
-_ pdfchain : modification simple de pdf (ajout/extraction de pages, rotations,
-	mise-à-l'échelle, ...) sous X11
-_ qpdf : itou en ln-de-comm'
-
-
-
 ● DÉCODAGE DE TEXTES MIME, XML, ENTITÉS HTML :
   qprint pour MIME (paquet qprint),
   xmlstarlet (un)escape pour XML (paquet xmlstarlet),
  ET SURTOUT
   ascii2uni -aQ  en tant que filtre pour traduire les entités HTML en unicode
  (paquet uni2ascii) !
+
+
+● OUTILS .PDF :
+_ ps2pdf
+_ pdfchain : modification simple de pdf (ajout/extraction de pages, rotations,
+	mise-à-l'échelle, ...) sous X11
+_ qpdf : itou en ln-de-comm'
+
 
 
 ● RECHERCHER & SUPPRIMER LES DOUBLONS :

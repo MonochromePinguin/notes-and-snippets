@@ -101,7 +101,7 @@ _ annotés @Component
 
 
 ● PORTÉES DES BEAN ( @scope(<portées>) ) :
-• singleton (par défaut) :
+• singleton (PAR DÉFAUT) :
 	1 seule instance par ApplicationContext
 • prototype :
 	nouvelle instance à chaque requête de Bean
