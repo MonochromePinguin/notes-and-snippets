@@ -1,5 +1,5 @@
 	┏━━━━━━━━━━━━━┓
-	┃ NOTES JAVA :┃
+	┃ NOTES JAVA :  ┃
 	┗━━━━━━━━━━━━━┛
 
 ● COMPILER EN CLI :
@@ -178,6 +178,12 @@ en particulier,
 ┃	« == tests for reference equality. (useful for interned strings)
 ┃	 .equals() tests for value equality. »
 ┃
+┃• matcher une regEx :
+┃	ch.matches("regExAvecAntislashDoublé")
+┃p.ex
+┃	boolean test = str.matches("\\d{1,3}(,\\d{1,3})?");
+
+
 ┃• ne pas oublier la syntaxe «for( compteur : iterable )» :
 ┃	int[][] tbl = { { 1, 2, 3}, {10, 20, 30} };
 ┃	for ( int[] sousTableau : tbl )
