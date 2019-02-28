@@ -445,7 +445,8 @@ _ qpdf : itou en ln-de-comm'
   qprint pour MIME (paquet qprint),
   xmlstarlet (un)escape pour XML (paquet xmlstarlet),
  ET SURTOUT
-  ascii2uni -aQ  en tant que filtre pour traduire les entités HTML en unicode
+  ascii2uni -aQ en tant que filtre pour traduire les entités HTML en unicode
+  ascii2uni -aJ 							les URI (octets UTF8 précédés par %)
  (paquet uni2ascii) !
 
 
