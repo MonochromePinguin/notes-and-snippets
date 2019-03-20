@@ -120,13 +120,19 @@ FETCH FIRST num% PERCENT ROWS ONLY;
 
 ● RECHERCHER UNE COLONNE, CONTRAINTE, OU INDEX :
 • trouver une contrainte de CLEF PRIMAIRE :
-	SELECT * FROM USER_CONSTRAINTS
+	SELECT * FROM [USER_CONSTRAINTS|ALL_CONSTRAINTS|DBA_CONSTRAINTS]
 	WHERE
 		CONSTRAINT_NAME = '...'
 	  AND
 		CONSTRAINT_TYPE = 'P'
 	  AND
 		TABLE_NAME = '...' ;
+  USER_CONSTRAINTS :
+    contraintes possédées par l'utilisateur
+  ALL_CONSTRAINTS : 
+    constraints visibles par l'utilisateur
+  DBA_CONSTRAINTS :
+    toutes les contraintes
 
 • trouver un index :
 	SELECT * FROM USER_INDEXES
@@ -205,8 +211,29 @@ si un fichier ne se termine pas par un slash, sqlplus affichera
 • largeur d'affichage des résultats :
 	set lin[|esize] <largeur> 
 
+● PL/SQL – structures :
+• variables :
+	DECLARE
+		nom TYPE;
+		...
 
-● PL/SQL :
+• conditions :
+	IF ... THEN
+		...
+	[ELSIF ...]
+	[ELSE]
+		...
+	END IF
+
+• boucles :
+	LOOP
+		...
+		EXIT WHEN ...;
+	END LOOP;
+	
+	
+● PL/SQL – divers :
+
 • exécuter une procédure :
 	execute <nomProc>
 

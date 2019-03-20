@@ -12,6 +12,7 @@ _ Hibernate inspections ?
 ⊕ PlantUML integration
 ⊕ PlantUML syntax check
 ⊕ SonarLint (linteur java)
+	Ne pas oublier de régler le serveur d'où obtenir les réglages.
 
 
 ● NE PAS STEPPER À TRAVERS CERTAINES CLASSES :

@@ -370,7 +370,7 @@ _ PARSE(ch, typeDest)
 		DATE( NOW() ) → date actuelle
 		YEAR( NOW() ) → une année sous forme de nombre 
 	YEAR(),
-	MONTH(),
+	(MySQL) MONTH(), (Oracle) EXTRACT(MONTH FROM ..)
 	DATEDIFF() → différence entre 2 dates,
 
 •(ORACLE) fonctions de calcul de dates :

@@ -56,7 +56,15 @@ annotations Vs XML (TODO)
 TODO: JSTL
 
 
-● JSP :
+● JSP – « Java Server Page » :
+_ Technique permettant de créer dynamiquement du code HTML, XML ou autre,
+_ et d'ajouter du code java dans un contenu statique via des balises XML (« actions JSP »).
+_ compilées par un compilateur JSP pour devenir des servlets Java : JSP (→ java)? → bytecode.
+
+• « taglib » : bibliothèque de balises JSP
+• EL – « Expression Langage »
+
+
 	<%@ include <fichier.jsp> %>
 	<%@ taglib ... %>
 		« Declares a tag library, containing custom actions, used in the page »
@@ -133,6 +141,13 @@ Dans ce code,
 
 
 ● JSF – « Java Server Faces » :
+_ framework java pour le développement d'app web, basé s/ notion de composant.
+_ peut utiliser JSP ou non.
+
+• différence entre #{} et ${} :
+_ ${} : expression immédiate calculée 1 fois.
+_ #{} : « deferred expression » : accès en L/E à un bean ou appel de f° dépendant du cycle de vie de la page.
+
 
 TODO !
 la « face servlet » :

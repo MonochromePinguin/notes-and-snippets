@@ -31,6 +31,10 @@ en-tête (imports, déclaration de package)
 définition de la classe – contenant le corps de la classe
 
 public class ... {
+	//s'il y a un bloc d'init statique
+	static {
+		...
+	}
 	//s'il y a un main
 	public static void main(String[] args) {
 		...
@@ -222,8 +226,11 @@ en particulier,
 • static final → constante !
 
 ● PORTÉES PAR DÉFAUT :
+• «private package » – limitée au paquetage.
+
 • attributs dans une interface :
 	STATIC FINAL par défaut
+
 • enum dans une autre classe :
 	STATIC par défaut
 
@@ -258,7 +265,7 @@ _ générique :
 ● FORMATAGE DE CHAÎNES :
 • format similaire à printf et consorts, même modificateurs :
 	String.format(
-		"Cette chaîne contient un entier «%i» & une chaîne «%s»\n,
+		"Cette chaîne contient un entier «%i» & une chaîne «%s»\n",
 		unInt,
 		uneString
 	);
@@ -381,7 +388,7 @@ les méthodes statiques .stream() et .asList() permettet de récupérer
 
 ● ENUM :
 N'est PAS une classe !
-acceptent des constructeurs et des propriétés :
+accepte des constructeurs et des propriétés :
 	public static enum Val {
 		VAL1, VAL2, ... VAL𝑛;
 		ou
@@ -389,11 +396,30 @@ acceptent des constructeurs et des propriétés :
 
 		public String name;
 
+		//afin d'implémenter une méthode valueOf()
+		private Map<string, Val> map = new HashMap();
+		
+		//remplit cette map ↑
+		static {
+			for (Val v : Val.values()) {
+				map.put(v.name, v);
+		}
+		
 		Val(String name) {
 			this.name = name;
+		} 
+
+		public static Val valueOf(final string key) {
+			return (Val) map.get(key);
 		}
 	}
+
 • enum.values()
+
+• int → enum :
+	 enumVar.ordinal()
+• enum → int :
+	enumClass.values()[intVal]
 
 
 

@@ -93,6 +93,83 @@ simples classes,
     Query query = session.createQuery("FROM table");
     List<Obj> list = query.list();
 
+• joins implicites par les références et les ID :
+	SELECT 	obj
+	JOIN obj.autreObj
+• et quand il n'y a pas de champs communs :
+	SELECT obj, obj2, obj3
+
+• JOIN FETCH :
+	récupère l'entité liée pour accès ultérieur.
+
+	<!--trouver tt les mois pour lesquels un ajustement a lieu pendant un effacement :
+	la déclaration d'effacement « Declaration » (sur EDE) doit être simultanée à un Adjustment (sur EDA),
+	les EDA et EDE liées par une LinkBalancingEntityToDemandResponseEntity valide à cette date,
+	la CalculationProgress, correspondante à la paire EDA/jour de version la plus élevée, être à l'état «validé»
+		et sans date d'export CREME déjà armée.
+	POSTULAT : Les déclarations démarrent et s'arrêtent à minuit !
+	-->
+	<query name="findAllMonthToReplayForCremeExport">
+		<![CDATA[
+			select distinct TRUNC(rev.date, 'MONTH')
+			from RealizedErasedSimultaneousVolume rev,
+				LinkBalancingEntityToDemandResponseEntity lbd,
+				Adjustment adj,
+				Declaration dec
+			join rev.calculationProgress cp
+			inner join cp.balancingEntity bae
+			inner join lbd.demandResponseEntity dre
+			where
+				TRUNC(rev.date, 'MONTH') between TRUNC(:oldestMonth, 'MONTH') and TRUNC(:lastMonth, 'MONTH')
+				and cp.version = (
+					select MAX(version)
+					from CalculationProgress cp2
+					where
+					cp2.balancingEntity.id = cp.balancingEntity.id
+					and cp2.date = cp.date
+				)
+				and cp.state in (:validatedStates)
+				and cp.exportRealizedVolumesForCremeDate is null
+
+				and lbd.balancingEntity.id = bae.id
+				and cp.date between lbd.startDate and lbd.endDate
+
+				and adj.balancingEntity.id = bae.id
+				and adj.date between lbd.startDate and lbd.endDate
+
+				and dec.demandResponseEntity.id = lbd.demandResponseEntity.id
+				and dec.date between lbd.startDate and lbd.endDate
+				and TRUNC(dec.date, 'DAY') between TRUNC(adj.startDate, 'DAY') and TRUNC(adj.endDate, 'DAY')
+			group by TRUNC(rev.date, 'MONTH')
+			order by TRUNC(rev.date, 'MONTH') DESC
+		]]>
+	</query>
+
+	<!--on ne peut utiliser DISTINCT avec un ORDER BY un champs non SELECTionné !
+	 Donc pas de ORDER BY rev.date, cp.balancingentity.code -->
+	<query name="findRealizedErasedSimultaneousVolumeForMonth">
+		<![CDATA[
+			select distinct rev
+			from RealizedErasedSimultaneousVolume rev
+			inner join rev.calculationProgress cp
+			left join fetch rev.realizedErasedSimultaneousVolumeValues
+			where
+				TRUNC(rev.date, 'MONTH') = TRUNC(:month, 'MONTH')
+				and cp.version = (
+					select MAX(version)
+					from CalculationProgress cp2
+					where
+					  cp2.balancingEntity.id = cp.balancingEntity.id
+					  and cp2.date = cp.date
+				)
+				and cp.state in (:validatedStates)
+				and (
+					cp.exportRealizedVolumesForCremeDate is null
+					or :isReplay is false
+				)
+			order by rev.date
+		]]>
+	</query>
 
 
 ● différences d'implémentation entre couches JPA et Hibernate :
@@ -114,4 +191,8 @@ simples classes,
 		<property name="show_sql">false</property>
 		<property name="format_sql">false</property>
 		...
-		
+
+• DÉBOGUAGE – BdD en .xml pour DbUnit :
+ Sans l'option «ColumnSensing», la 1ère ligne d'une table défini les colonnes attendues.
+ → la 1ère ligne doit être occupée par une entité contenant tout les champs utilisés. 
+
