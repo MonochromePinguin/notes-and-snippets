@@ -47,7 +47,7 @@ then
 		texte=${2//€[/<span weight=\"bold\">}
 		texte=${texte//€]/</span>}
 
-		WINDOWID=  zenity --question \
+		WINDOWID=''  zenity --question \
 			--title "${titre//&/&amp;}" --text "${texte//&/&amp;}" 2> /dev/null
 		return $?
 	}

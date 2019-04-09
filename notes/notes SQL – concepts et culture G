@@ -13,7 +13,7 @@ _ prédicat : CONDITION LOGIQUE
 3 "sous-ensembles" du langage SQL.
 _ DDL – « Data Description Langage » → tt ce qui est relatif à la structure BdD
 _ DML –  manipulation   → changer les données
-_ DCL – contrôle (GRANT, REVOKE, LOCK, COMMIT ROLLBACK)
+_ DCL – contrôle (GRANT, REVOKE, LOCK, COMMIT, ROLLBACK)
 _ DIL (nouveau) : Data Interrogation Language. Le SELECT et ses subtilités.
 
 •OLTP :
