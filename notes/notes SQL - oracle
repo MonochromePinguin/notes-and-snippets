@@ -171,14 +171,18 @@ FETCH FIRST num% PERCENT ROWS ONLY;
 
 
 
-● FONCTIONS :
+● DATES – FONCTIONS :
 • utiliser « TO_DATE( <date>, <format>) » :
 bonne pratique pour se rendre indépendant du format de date par défaut.
 p.ex,
 	TO_DATE('14/10/2010', 'DD/MM/YYYY')
 
+• EXTRACT(Date, <unité>) :
+_ EXTRACT() renvoit le champs demandé :
+	EXTRACT(&date, [SECOND|MINUTE|HOUR|DATE|WEEK|MONTH|DAY_OF_WEEK|DAY_OF_MONTH|...])
+
 • TRUNC(Date, <format>) :
-TRUNC() renvoit une DATE (quelque soit le format de date d'entrée) tronquée
+TRUNC() renvoit une DATE (quelque soit le format de date d'entrée) TRONQUÉE
 suivant l'unitée spécifiée par <format> :
 	TRUNC( TO_DATE('14/10/2010', 'DD/MM/YYYY'), 'MONTH' )	==	01/10/2010
 	TRUNC( TO_DATE('14/10/2010', 'DD/MM/YYYY'), 'YEAR' )	==	01/01/2010
@@ -204,7 +208,11 @@ p.ex
 pour le format, cf
 	https://docs.oracle.com/cd/B19306_01/server.102/b14200/sql_elements004.htm#i34510
 
-
+• SYSDATE ≠ CURRENT_DATE :
+_ SYSDATE :
+	date courante sur le SERVEUR. Retour dépendant de NLS_DATE_FORMAT.
+_ CURRENT_DATE :
+	données dans la zone de temps de la SESSION
 
 
 ● SQLPLUS :
@@ -226,8 +234,10 @@ si un fichier ne se termine pas par un slash, sqlplus affichera
 	set lin[|esize] <largeur> 
 
 • définir une variable :
-	define var=val
-	//utilisation via & :
+	def var = val
+ou
+	define var = val
+	//l'utilisation de la variable se fait via le préfixe & :
 	... &var ...
 	
 
