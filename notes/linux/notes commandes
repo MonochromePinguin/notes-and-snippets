@@ -4,7 +4,7 @@
 
 
 • [temporaire] commandes à retenir :
-	realpath
+	realpath, readlink
 	whereis
 
 • realpath :
@@ -291,6 +291,11 @@ mais les 3 conduites en substitution de proc' écrivent s/ la même sortie,
   extundelete,
   ext4magic,
   foremost
+
+
+●● lecture données SMART du dd :
+  skdump (paquet libatasmart-bin)
+  sktest pour démarrer l'autotest SMART (paquet libatasmart-bin)
 
 
 ●●(DÉ)COMPRESSEURS DISPONIBLES :

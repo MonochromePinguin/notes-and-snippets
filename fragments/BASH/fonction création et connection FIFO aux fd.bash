@@ -53,8 +53,7 @@ nouvelleFifo()
 
 	#il est ERRONÉ d'appeler cette f° sans son paramètre numérique
 	#
-	[ $# = 1 ]\
-	&& [[ $1 == +([0-9]) ]]\
+	{ [ $# = 1 ]  &&  [[ $1 == +([0-9]) ]]; } \
 	|| {
 		echo "$cR$fonc : il FAUT appeler nouvelleFifo() avec UN paramètre numérique ! Abandon.$cN" >&2
 		return 3
@@ -113,8 +112,8 @@ nouvelleFifo()
 	#Création de la FIFO proprement dite
 	#
 	fifo=$( mktemp -u -p "$repFifo" fifo-$BASHPID.XXX )	#nom de la FIFO
-	[ -n $fifo ]\
-	&& mkfifo -m 600 "$fifo" \
+	{ [[ -n $fifo ]] \
+	  &&  mkfifo -m 600 -- "$fifo"; } \
 	|| {
 		echo "$cR$fonc : impossible de créer la fifo. Abandon.$cN" >&2
 		return 2
