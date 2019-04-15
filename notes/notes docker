@@ -3,17 +3,25 @@
 
 
 ● CONTENEURS :
+• créer conteneur :
 docker run --name xxx ...
 
+• démarrer/arrêter conteneur :
 docker start|stop <nomContainer>
 		démarre/arrête un conteneur déjà existant
 
+• renommer conteneur :
+	docker rename <ancNom> <nouvNom>
+
+• 
+
+• exécuter commande dans conteneur :
 docker exec -ti <nomContainer> <nomCommande>
 		exécute une commande en avant-plan
 
+• informations sur conteneurs :
 docker inspect <nomContainer>
 		liste les infos sur un conteneur, notamment les Volumes partagés (« bind mounts ») sous l'arborescence «Volumes»:
-
 
 
 ● IMAGES :
@@ -41,7 +49,7 @@ via un tag :
 
 
 	
-• privilégier l'image de la distro « Alpine », la plus minimaliste disponible
+• privilégier l'image de la distro « Alpine », la plus minimaliste disponible.
 
 • les conteneurs docker sont sans-état / stateless :
 → dans le cas d'une BdD, if faut donc sauvegarder régulièrement l'image,
