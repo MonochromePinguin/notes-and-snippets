@@ -12,13 +12,37 @@ docker exec -ti <nomContainer> <nomCommande>
 		exécute une commande en avant-plan
 
 docker inspect <nomContainer>
-		liste les infos sur un conteneur, notamment les Volumes partagés (« bind mounts ») sous l'arborescence «Volumes»:
+	liste les infos sur un conteneur, notamment
+		les Volumes partagés (« bind mounts ») sous l'arborescence «Volumes»:
 
 
 
-● IMAGES :
+● PRINCIPALES COMMANDES :
 • lister les images :
-	docker images
+	docker image ls
+	docker images (ancienne syntaxe < 1.13)
+
+•nommer une image (lui attribuer un tag) :
+_ Un tag est une référence vers une image,
+_ chaque image peut en avoir en quantité indéfinie.
+	docker tag <IDimage> [|dépôt/]<nomTag>[|:version]
+
+
+
+• Un tag peut indiquer l'adresse du dépôt distant où pusher/puller l'image :
+Utiliser le format
+	[|URL_ou_adresse_dépôt[|:port]/]<nomImage>[|:version]
+
+• push/pull d'images :
+	docker push <tag>
+	docker pull <tag>[|:version]
+
+• supprimer une image :
+	docker images rm <IDimage> ...
+
+• renommer une image :
+via un tag :
+	docker tag <ancNom> <nouvNom>; docker rmi <ancNom>
 
 • cloner un conteneur vers nouvelle image :
 à partir d'un conteneur en cours d'exécution :
@@ -28,19 +52,9 @@ L'image créée aura un ID mais pas de «tag».
 p.ex :
 	docker commit -p cee9fce17e35 registry-private.docker.iscbordeaux.lan.bdx.sqli.com/oracleserver/entreprise
 
-•nommer une image (lui attribuer un tag) :
-	docker tag <IDimage> <repo/nomImage>
 
 
-• supprimer une image :
-	docker images rm <IDimage> ...
 
-• renommer une image :
-via un tag :
-	docker tag <ancNom> <nouvNom>; docker rmi <ancNom>
-
-
-	
 • privilégier l'image de la distro « Alpine », la plus minimaliste disponible
 
 • les conteneurs docker sont sans-état / stateless :
@@ -50,7 +64,9 @@ et reconstruire la BdD au lançement de l'image à partir de scripts SQL
 
 
 • exécuter une image avec des ports mappés :
-	docker run -d -p <portHôte>:<portConteneur> <image> <commande>
+	docker run -d -p <portHôte>:<portConteneur>
+		-e <envVarExportée=valeur>
+		<image> <commande>
 
 
 
@@ -59,16 +75,32 @@ et reconstruire la BdD au lançement de l'image à partir de scripts SQL
 • ¿ quid de la configuration des MdP ?
 	Elle est effectuée via des variables d'environnement !
 
-• ET les dockerfile :
+
+● DOCKERFILES :
+chaque instruction FROM ou RUN conduit à la création d'une image empilée sur les autres
 	FROM node:alpine
+	FROM img2
+	FROM img3
 	WORKDIR .
 	COPY package*.json ./
 	RUN npm install
 	COPY . .
-	EXPOSE 3000					← ouvre au web le port 3000 du conteneur
+	EXPOSE 3000				← expose ce port au sein du réseau interne à docker
 	cmd ["node", "app.js"]		← exécute ces 2 commandes
 
+• principales commandes du docker file :
+_ FROM
+_ COPY <sourceHôte> <destinationDsConteneur>
+_ EXPOSE <port à ouvrir sur le réseau interne à docker>
+_ RUN <commande à exécuter au sein du conteneur>
+_ WORKDIR <au sein du conteneur>
+_ CMD <commande finale à exécuter au sein du conteneur>
 
+• générer l'image :
+docker image build <dockerfile>
+
+• sauvegarder une image :
+docker image save -o <archive.tar>
 
 ● configurer un ensemble de services :
  via un fichier « docker-compose.yml » accédé par docker-compose ...

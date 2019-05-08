@@ -44,9 +44,18 @@ l'objet global au sein d'un onglet de navigateur (MAIS « global » sous node).
 insérer les nœuds dans «frag» via frag.appendChild(), puis l'insérer dans
  le futur parent des nœuds.
 • insertion d'éléments :
-	préférer insertAdjacentHTML() à .innerHTML (ne modifie pas les éventuels éléments déjà présents dans le conteneur),
+	préférer insertAdjacentHTML() à .innerHTML (ne modifie pas les éventuels
+ éléments déjà présents dans le conteneur),
 	voire un DOMParser.
 • document.createTextNode(<chaîne>) ...
+
+
+● supprimer des éléments d'une HTMLElementCollection :
+getElementsByClassName(), getElementsByTagName(), elem.children, ...
+sont de type HTMLCollection :
+une collection « live », dont les manipulations se reflètent dans le DOM.
+→ NE PAS SUPPRIMER DES ÉLEMENTS DEPUIS LE DÉBUT DE LA LISTE !
+Plutôt supprimer à partir du dernier (utiliser liste.length).
 
 
 ● armer la position d'un élément :
@@ -149,6 +158,29 @@ _ Si armée via elem.style.setProperty(),
 • ou, si on est sûr d'avoir une feuille de style :
 	var sheet = window.document.styleSheets[0];
 	sheet.insertRule('strong { color: red; }', sheet.cssRules.length);
+
+• récupérer une règle CSS :
+Cette fonction part du postulat qu'il y a UNE feuille de style (styleSheets[0]).
+_ Parcourir «document.styleSheets[𝑛].cssRules»,
+_  tester la prop «selectorText»
+→ renvoit une «CSSStyleRule»
+    function getStyle(selector)
+    {
+        const rules = document.styleSheets[0].cssRules;
+        const l = rules.length;
+
+        for (let i = 0; i < l; ++i) {
+            if (rules[i].selectorText == selector) {
+                return rules[i];
+            }
+        }
+        return null;
+    }
+
+• modifier une «CSSStyleRule» :
+ex :
+	CSSStyleRule.style.display = 'none';
+etc.
 
 
 ● en HTML < 5, Il fallait :

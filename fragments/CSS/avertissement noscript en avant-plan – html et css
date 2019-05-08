@@ -1,0 +1,41 @@
+• HTML :
+
+	<noscript id="no-script">
+		<p>
+			<em>Certaines fonctionnalités de cette page nécessitent JavaScript – en l'occurence, l'ajout dynamique de sections.
+			<br>
+			Désolé !</em>
+		</p>
+	</noscript>
+
+
+• CSS :
+
+avant-plan en surimpression,
+contenu centré par flex,
+contenu stylé via cet unique sélecteur CSS.
+
+    #no-script {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        opacity: 0.8;
+        background-color: lightgray;
+
+		/* style du contenu */
+
+        text-align: center;
+
+        color: red;
+        font-size: large;
+        font-weight: : bold;
+    }
+
+

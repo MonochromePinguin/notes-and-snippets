@@ -1,5 +1,9 @@
 ● RACCOURCIS NOTABLES :
 
+•édition :
+
+Ctrl + retArr/suppr, Ctrl + maj + retArr/suppr ...
+
 Ctrl + Maj + espace :
  sélectionne tout jusque délimiteurs (< ", etc.) englobant
 
@@ -9,9 +13,15 @@ Ctrl + Maj + ↑↓		↑↓ ligne
 
 Ctrl + Maj + D 		dupliquer sél° / ligne
 
-Ctrl + []			indenter/désindenter
-
 Ctrl + Maj + V		collage avec indentation
 
 
 Alt + Maj + W		entourer la sélection d'un élément
+
+
+• formatage :
+Ctrl + []           indenter/désindenter
+
+
+• navigation :
+F12         aller à la définition de l'élém sous curseur
