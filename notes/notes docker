@@ -3,21 +3,29 @@
 
 
 ● CONTENEURS :
+• créer conteneur :
 docker run --name xxx ...
 
+• démarrer/arrêter conteneur :
 docker start|stop <nomContainer>
 		démarre/arrête un conteneur déjà existant
 
+• renommer conteneur :
+	docker rename <ancNom> <nouvNom>
+
+•
+
+• exécuter commande dans conteneur :
 docker exec -ti <nomContainer> <nomCommande>
 		exécute une commande en avant-plan
 
+• informations sur conteneurs :
 docker inspect <nomContainer>
 	liste les infos sur un conteneur, notamment
 		les Volumes partagés (« bind mounts ») sous l'arborescence «Volumes»:
 
 
-
-● PRINCIPALES COMMANDES :
+● IMAGES :
 • lister les images :
 	docker image ls
 	docker images (ancienne syntaxe < 1.13)

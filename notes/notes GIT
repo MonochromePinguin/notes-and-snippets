@@ -278,9 +278,13 @@ pour fusionner les 2 derniers commits.
 
 
 ● SUPPRIMER UN FICHIER DE TOUTE L'HISTORIQUE :
+• supprimer un fichier, mais sans le faire disparaitre de l'historique :
 	git rm --cached <fic>
 	git commit ...
 	git push
+
+• supprimer totalement un fichier du dépôt GIT y compris de l'historique :
+	<TODO>
 
 
 ● git stash :

@@ -437,6 +437,12 @@ cut -c8- affiche de la colonne 8 à la fin de la ligne.
 ● CONVERSION D'ENCODAGE DE CARACTÈRES :
 	iconv -f UTF-8 -t ISO-8859-15 in.txt > out.txt
 
+● DÉTECTION DE L'ENCODAGE D'UN FICHIER :
+	chardet3 <fic(s)> (paquet python3-chardet)
+
+	file -bi <fic(s)>
+
+
 
 ● DÉCODAGE DE TEXTES MIME, XML, ENTITÉS HTML :
   qprint pour MIME (paquet qprint),

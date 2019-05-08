@@ -279,7 +279,9 @@ les expressions rationnelles s'écrivent entre guillements simples «'».
 • WHERE EXISTS (requête)
 	EXISTS(...) est vrai quand la sous-requête ne renvoit pas NULL 
 
-
+•(Oracle) :
+	on peut utiliser des WHERE IN portant sur des n-uplets :
+	WHERE (col,col,...) IN ( (v1,v2,...), (v1,v2,...), (v1,v2,...), ...)
 
 ● DISTINCT :
 	SELECT DISTINCT(xxx) FROM yyy;
