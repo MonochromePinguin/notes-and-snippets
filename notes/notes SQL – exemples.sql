@@ -203,3 +203,54 @@ SELECT C1.PAYS pays, LEAST(C1.NOM, C2.NOM) n1, GREATEST(C1.NOM, C2.NOM) n2 FROM 
 	ORDER BY E1.SALAIRE, E1.NOMEMP;
 
 
+
+--● SUPPRIMER TOUTES LES LIGNES SURNUMÉRAIRES DONT CETTE COLONNE EST DOUBLONNÉE :
+-- LISTE LES LIBELLÉS DOTÉS DE DOUBLONS :
+
+-- 1) sélectionner les nombres de lignes et l'id (le plus bas) de la ligne à conserver :
+SELECT
+  ECHEANCE_LIBELLE libelle,
+  count(*)         nb,
+  min(ECHEANCE_ID) idConserve
+FROM DIA_ECHEANCE
+HAVING count(*) > 1
+GROUP BY ECHEANCE_LIBELLE;
+
+-- 2) LISTE LES LIGNES SURNUMÉRAIRES À SUPPRIMER :
+WITH liste as (
+  SELECT
+    ECHEANCE_LIBELLE libelle,
+    count(*)         nb,
+    min(ECHEANCE_ID) idConserve
+  FROM DIA_ECHEANCE
+  HAVING count(*) > 1
+  GROUP BY ECHEANCE_LIBELLE
+)
+SELECT *
+FROM DIA_ECHEANCE e
+where
+  e.ECHEANCE_LIBELLE in (SELECT libelle FROM liste)
+  and e.ECHEANCE_ID not in (SELECT idConserve FROM liste)
+ORDER BY ECHEANCE_LIBELLE
+;
+
+-- 3) supprime toutes les lignes surnuméraires :
+DELETE
+FROM DIA_ECHEANCE
+WHERE ECHEANCE_ID IN (
+  WITH liste AS (
+      SELECT
+        ECHEANCE_LIBELLE libelle,
+        min(ECHEANCE_ID) idConserve
+      FROM DIA_ECHEANCE
+      HAVING count(*) > 1
+      GROUP BY ECHEANCE_LIBELLE
+  )
+  SELECT ECHEANCE_ID
+  FROM DIA_ECHEANCE e
+  WHERE
+    e.ECHEANCE_LIBELLE IN (SELECT libelle
+                           FROM liste)
+    AND e.ECHEANCE_ID NOT IN (SELECT idConserve
+                              FROM liste)
+

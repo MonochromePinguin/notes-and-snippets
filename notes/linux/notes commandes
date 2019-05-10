@@ -1008,6 +1008,10 @@ et	« gvfs-set-attribute -t string <RÉP> metadata::custom-icon file:///usr/shar
 Le .xsl indique comment formater la sortie ...
 
 
+● validation de xml vis-à-vis d'un XSD :
+	xmllint --schema <schéma.XSD> <fichier.XML> [|--noout]
+
+
 ●CONCATÉNER DES .XPM :
  l'en-tête est de 105 octets & uniquement ds le 1er fichier, donc :
 	"tail -c +105 <fic1> > <res> && cat <fic2> >> <res>"

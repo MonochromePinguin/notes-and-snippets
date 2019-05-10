@@ -215,6 +215,38 @@ _ CURRENT_DATE :
 	données dans la zone de temps de la SESSION
 
 
+
+● GROUP BY / ORDER BY :
+• optimisation possible :
+Utiliser une sous-requête contenant le GROUP BY, trier dans la requête principale :
+
+	-- • combien de courbes à remonter chaque semaine ?
+	SELECT TRUNC(DATE_COURBE, 'MONTH') Mois, COUNT(COURBE_ID) "nb courbes"
+	FROM DIA_COURBES
+	WHERE
+	  (TYPE_COURBE = 9 OR TYPE_COURBE = 10)
+	  AND EST_DERNIERE_VERSION = 1
+	  AND PUBLIABLE = 1
+	GROUP BY TRUNC(DATE_COURBE, 'MONTH')
+	ORDER BY TRUNC(DATE_COURBE, 'MONTH') DESC;
+devient :
+	WITH unsorted as (
+		SELECT
+		  TRUNC(DATE_COURBE, 'MONTH') Mois,
+		  COUNT(COURBE_ID)            "nb courbes"
+		FROM DIA_COURBES
+		WHERE
+		  (TYPE_COURBE = 9 OR TYPE_COURBE = 10)
+		  AND EST_DERNIERE_VERSION = 1
+		  AND PUBLIABLE = 1
+		group by TRUNC(DATE_COURBE, 'MONTH')
+	)
+	select *
+	from unsorted
+	ORDER BY Mois DESC;
+
+
+
 ● SQLPLUS :
 • connexion :
 sqlplus						→	à la BdD par défaut

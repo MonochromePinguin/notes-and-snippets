@@ -1,10 +1,35 @@
  Tomcat, glassfish ...
 
-• serveur web : simple serveur de fichiers ;
-  serveur d'application : traitement logiciel déclenché par la requête.
+• serveur web :
+	simple serveur gérant HTTP.
+• serveur d'application :
+  _serveur web + conteneur web (contexte d'exécution pour code php, java, ...).
+  _ traitement logiciel déclenché par la requête.
 
-→ « dans apache, il y a une partie serveur web (le controlleur frontal), et une
+→ « dans apache, il y a une partie serveur web (le contrôleur frontal), et une
 partie serveur d'application »
+
+→ Tomcat : serveur d'application :
+apache + conteneur web java (qui contient moteur JSP & moteur servlets,
+ et fournit les API nécessaires au déploiement d'un WAR)
+
+● JEE :
+ extension de java avec bibliothèques supplémentaire pour serveurs d'application.
+
+● WAR :
+structure prédéfinie :
+	META-INF/						(privé)
+		MANIFEST.MF
+	WEB-INF/						(accessible depuis web, toutes ressources)
+		web.xml
+		jsp/
+		    les *.jsp
+		classes/
+		    static/
+		    templates/
+		    application.properties
+		lib/
+			les *.jar
 
 
 ● WEB-INF :
