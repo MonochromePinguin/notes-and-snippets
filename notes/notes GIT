@@ -336,6 +336,8 @@ Sont appliqués à la branche ou au commit en cours.
 • montrer le diff de ces commits :
   git diff <Nouv>...<Old>	← attention : 3 points.
 
+● LISTER LES BRANCHES CONTENANT DES COMMITS NON MERGÉS dans la branche <cible> :
+  git branch --no-merged <cible>
 
 
 ● LISTER branches et commits :
