@@ -1,0 +1,10 @@
+• dans un élément de type complexe « <xs:complexType> »,
+ les attributs sont placés APRÈS les éléments fils (eux-même dans une « <sequence> » ou équivalent).
+ 
+• commentaires :
+    <xs:annotation>
+        <xs:documentation>
+            ... commentaire ...
+        </xs:documentation>
+    </xs:annotation>
+

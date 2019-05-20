@@ -282,16 +282,30 @@ _ générique :
   etc. etc.
 
 
-● TRY/CATCH/FINALLY:
+● TRY/CATCH/FINALLY :
 Chaînage de blocs catch{},
  ou classes d'exceptions multiples dans un même catch, séparées par des «|»;
 	try {
 		...
-	} catch (ArithmeticException | blablaException e) {
+	} catch (final ArithmeticException | blablaException e) {
 		...
-	} catch (Exception e) {
+	} catch (final Exception e) {
 		...
 	}
+
+● TRY-WITH-RESOURCES :
+Les ressources déclarées dans le 1er bloc seront automatiquement closes en fin de try{}.
+Ce doit être des ressources implémentant l'interface java.lang.AutoCloseable (
+  qui inclut les objets implémentant java.io.Closeable)
+	try (
+		res1 = ...;
+		res2 = ...;
+	) {
+		...
+	}
+→ appel de res2.close() puis res1.close()
+	
+→ Pas de problème d'exception levée dans un finally{} lors d'un appel à xxx.close() ! 
 
 
 

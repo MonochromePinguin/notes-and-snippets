@@ -30,15 +30,33 @@ où
  <dump.dmp> le fichier .dmp présent dans ce dossier
  <logfile> le fichier de log dans lequel on journalisera.
 TABLE_EXISTS_ACTION=REPLACE :
-	permet de remplacer les tables déjà existantes (l'action par défaut est de les conserver)
+	permet de remplacer les tables déjà existantes
+	(l'action par défaut est de les conserver)
 FULL :
 	import de TOUTE la DB, pas seulement des schémas
 PARALLEL=𝑛 :
 	nombre de threads autorisés. 2x le nombre de cœurs conseillé.
 
 
+● SCHEMA :
+correspond à un utilisateur.
+
+
+
 ● TABLESPACES :
- xxxxx <TODO> xxxxx
+Chaque tablespace correspond à un ou plusieurs fichiers,
+_ contenant des « extends »,
+ blocs de données de même nature stockés dans le fichier, liés par des pointeurs,
+ optimisable pour différents utilisations :
+→ on placera à la création les tables ou index dans différents tablespaces en f° des besoins.
+
+_ en général, 1 tablespace pour les index, 1 autre pour les données.
+
+_ create tablespace tbs_data
+    datafile '/opt/oracle/oradata/PLSQLUTF8/data.dbf'
+    size                                  10M;
+
+• lister les tablespaces :
 	SELECT TABLESPACE_NAME, BLOCK_SIZE, STATUS, CONTENTS, EXTENT_MANAGEMENT, ALLOCATION_TYPE, SEGMENT_SPACE_MANAGEMENT FROM DBA_TABLESPACES ORDER BY TABLESPACE_NAME;
 
 
@@ -87,20 +105,33 @@ et spécifier le nom d'hôte dans l'URI :
 p.ex :
 	sqlplus SYSTEM/MotDePasse@//localhost/d12utf8pdb_3_4_1_20190129_0630
 
-● CREATE USER :
-• utilisateur commun :
+● CREATE :
+• créer un utilisateur commun à tous PDB :
 	prefixé par [cC]##
 
 Peut se connecter à toute PDB.
 doit être créé depuis le CDB racine.
 	CREATE USER c##<user> CONTAINER=ALL;
 
+• créer un index :
+	CREATE INDEX nomIndex ON tableCible(col[|, col]*) [| TABLESPACE nomTBS];
+
+• créer une table à partir de données :
+	CREATE TABLE ... AS ( SELECT * FROM ...);
+
 
 ● DROP :
 • utilisateur :
 	DROP USER <utilisateur> CASCADE;
-• table :
-	PURGE TABLESPACE <table>;
+• objet tel que table, index :
+	DROP TABLE <table> [|PURGE];
+	DROP INDEX <index>;
+
+_ DROP TABLE <tbl> → table mise dans la « recycle bin » et donc récupérable 
+_ DROP TABLE <tbl> → table définitivement perdue
+
+≠ TRUNCATE TABLE (ne vide que les données),
+≠ PURGE TABLESPACE <table>;
 
 • PDB :
 il faut d'abord clore et débrancher la PDB du CDB avant de la supprimer :
@@ -118,6 +149,13 @@ _ all_tab_columns		tout les noms de colonnes
 	select table_name from all_tab_columns where column_name='xxx';
 _ DBA_PDBS				vue listant toutes les PluggableDataBase
 _ DBA_USERS
+
+• DUAL :
+Sous oracle, le FROM du SELECT est obligatoire.
+DUAL permet d'exprimer le fait qu'on ne sélecte d'aucune table.
+→ SELECT 'const' (MySQL) == SELECT 'const' FROM DUAL ...
+
+select sysdate from dual;
 
 
 ● FAITS NOTABLES DU SQL ORACLE :
@@ -168,6 +206,41 @@ FETCH FIRST num% PERCENT ROWS ONLY;
 
 ● SÉQUENCES :
 	SELECT * FROM ALL_SEQUENCES
+
+
+
+● TYPES ORACLE – chaînes :
+attention à l'encocage des caractères, prévoir assez de place.
+
+_ CHAR(lng)
+	longueur fixe (1 par défaut, jusque 32Ko)
+
+_ VARCHAR2(lng [|BYTE|CHAR])
+	longueur variable, valeur stockée séparémment de la table y faisant référence.
+
+SELECT LENGTH('ÉLECTRICITÉ'), LENGTHB('ÉLECTRICITÉ') FROM DUAL
+	→ 11 CHAR, 13 BYTES
+
+● TYPES – timezone :
+• timezone de la connexion, de la base de données, et du serveur hébergeant cette dernière. 
+
+● TYPES – date :
+• ATTENTION, oracle stocke les millisecondes par défaut.
+_ TIMESTAMP
+_ TIMESTAMP WITH TIME ZONE
+_ TIMESTAMP WITH LOCAL TIMEZONE
+
+
+
+● ENCODAGE :
+• les plus courants : 
+	WE8MSWIN1252
+	AL32UTF8
+• définit au niveau de la BdD, et de la colonne.
+
+
+● FONCTIONS :
+_ NVL(v1, v2) : renvoit v2 si v1 == NULL
 
 
 
