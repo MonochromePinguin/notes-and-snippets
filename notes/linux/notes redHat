@@ -1,0 +1,19 @@
+• équivalents redHat / debian :
+	rpm	→	dpkg
+	yum	→	apt
+
+• options communes :
+	-v	verbeux
+	-h	barre de progression
+
+• lister les paquets :
+	rpm -qa
+
+• installer un paquet :
+	rpm -i <paquet local>
+	yum install <paquet distant>
+
+_ mettre à jour ou installer un paquet :
+	rpm -U
+
+_ avec une version spécifique :

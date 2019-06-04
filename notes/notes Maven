@@ -43,7 +43,13 @@ p.ex, les envoie vers un serveur d'artefacts nexus
  -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false » :
  initialise un nouveau projet dans un dossier <nomApp> créé à partir du
 téléchargement de l'archétype correspondant	
-	
+
+
+• montée de version :
+	mvn release update-versions
+ou
+	mvn versions:set -DnewVersion=xx.yy.zz.bb
+
 • structure typique d'un projet maven : ça dépends !
 pom.xml
 src

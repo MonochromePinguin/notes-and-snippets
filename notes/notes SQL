@@ -287,7 +287,7 @@ les expressions rationnelles s'écrivent entre guillements simples «'».
 ● WHERE :
 	BETWEEN ... AND ...
 	IN ( ..., ..., ..., ... )
-	LIKE
+	LIKE				# plus lent que « where substr(...) = '...' »
 	=, <>, =>, <=, >, <
 	AND, OR, NOT,
 	... IS NULL / IS NOT NULL,
@@ -389,7 +389,7 @@ _ TRIM()
 _ UPPER(), LOWER()
 _ length(ch)
 _ replace(ch, de, vers)
-_ substring(ch, i, nb) ← index **à partir de 1**
+_ substr(ch, i, nb) ← index **à partir de 1**		#plus rapide que « where ... like ... »
 _ left(ch, 1)		   ← substr() depuis la gauche
 _ 
 _ concat(ch1, ch2)
