@@ -1,13 +1,9 @@
 ● RACCOURCIS NOTABLES :
 
-•édition :
+•ÉDITION :
 
 Ctrl + retArr/suppr, Ctrl + maj + retArr/suppr ...
 
-Ctrl + Maj + espace :
- sélectionne tout jusque délimiteurs (< ", etc.) englobant
-
- Ctrl + Maj + A 	sélection élément englobant, puis parent, ...
 
 Ctrl + Maj + ↑↓		↑↓ ligne
 
@@ -15,13 +11,37 @@ Ctrl + Maj + D 		dupliquer sél° / ligne
 
 Ctrl + Maj + V		collage avec indentation
 
+Ctrl + Y (perso),
+Ctrl + Maj + K      supprimer ligne
 
-Alt + Maj + W		entourer la sélection d'un élément
+• SÉLECTION :
+Ctrl + Maj + espace :
+        sélectionne tout jusque délimiteurs (<>''"", etc.) englobant
 
+Ctrl + Maj + A      sélection élément englobant, puis parent, ...
 
-• formatage :
+Alt + Maj + W       entourer la sélection d'un élément
+(Ctrl + L           sélectionner ligne – écrasé)
+
+ctrl + D            multi-curseur – sélectionne prochaine occurence mot
+
+Ctrl + E (perso),
+Ctrl + F3           multi-curseur – sélectionne toutes occurences mot
+
+• FORMATAGE :
 Ctrl + []           indenter/désindenter
 
 
-• navigation :
+• CASSE :
+Ctrl + U  (perso),
+Ctrl + K Ctrl + U   majuscule
+
+Ctrl + L (perso),
+Ctrl + K Ctrl + L   minuscule
+
+
+• NAVIGATION :
 F12         aller à la définition de l'élém sous curseur
+
+Ctrl + Maj + RetArr (perso)     aller édition précédente
+Alt + Maj + RetArr (perso)     aller édition suivante

@@ -19,7 +19,15 @@ _ exécutés dans l'ordre d'apparition, APRÈS le chargement du document,
 	mais AVANT l'éven DOMContentLoaded
 → il faut utiliser « document.addEventListener('DOMContentLoaded', f°, ...) » !
 
-
+• attention à la combinaison async + addEventListener('DOMContentLoaded') :
+l'évenement attendu peut être lancé AVANT l'appel à addEventListener(), et
+dans ce cas la cb ne sera jamais exécutée.
+→ si document.readyState != 'loading', il est trop tard, exécuter la cb manuellement.
+Il **semble** que «document.readyState» ne change pas pendant l'exécution de JS :
+_ JS est **monothread**,
+_ les références des callbacks & blocs de code à exécuter sont enlistées dans
+ une queue, et chaque code code est exécuté séquentiellement.
+¿ MAIS EST-CE QUE ÇA S'APPLIQUE AUSSI À document.readystate ?
 
 ● exécuter du code à la fréquence de rafraichissement de l'écran :
   requestAnimationFrame(cbRappel) : peut recevoir une valeur max,
