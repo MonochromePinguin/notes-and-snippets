@@ -30,15 +30,33 @@ où
  <dump.dmp> le fichier .dmp présent dans ce dossier
  <logfile> le fichier de log dans lequel on journalisera.
 TABLE_EXISTS_ACTION=REPLACE :
-	permet de remplacer les tables déjà existantes (l'action par défaut est de les conserver)
+	permet de remplacer les tables déjà existantes
+	(l'action par défaut est de les conserver)
 FULL :
 	import de TOUTE la DB, pas seulement des schémas
 PARALLEL=𝑛 :
 	nombre de threads autorisés. 2x le nombre de cœurs conseillé.
 
 
+● SCHEMA :
+correspond à un utilisateur.
+
+
+
 ● TABLESPACES :
- xxxxx <TODO> xxxxx
+Chaque tablespace correspond à un ou plusieurs fichiers,
+_ contenant des « extends »,
+ blocs de données de même nature stockés dans le fichier, liés par des pointeurs,
+ optimisable pour différents utilisations :
+→ on placera à la création les tables ou index dans différents tablespaces en f° des besoins.
+
+_ en général, 1 tablespace pour les index, 1 autre pour les données.
+
+_ create tablespace tbs_data
+    datafile '/opt/oracle/oradata/PLSQLUTF8/data.dbf'
+    size                                  10M;
+
+• lister les tablespaces :
 	SELECT TABLESPACE_NAME, BLOCK_SIZE, STATUS, CONTENTS, EXTENT_MANAGEMENT, ALLOCATION_TYPE, SEGMENT_SPACE_MANAGEMENT FROM DBA_TABLESPACES ORDER BY TABLESPACE_NAME;
 
 
@@ -87,20 +105,36 @@ et spécifier le nom d'hôte dans l'URI :
 p.ex :
 	sqlplus SYSTEM/MotDePasse@//localhost/d12utf8pdb_3_4_1_20190129_0630
 
-● CREATE USER :
-• utilisateur commun :
+● CREATE :
+• créer un utilisateur commun à tous PDB :
 	prefixé par [cC]##
 
 Peut se connecter à toute PDB.
 doit être créé depuis le CDB racine.
 	CREATE USER c##<user> CONTAINER=ALL;
 
+• créer un index :
+	CREATE INDEX nomIndex ON tableCible(col[|, col]*) [| TABLESPACE nomTBS];
+
+• créer une séquence :
+	CREATE SEQUENCE [|START WITH 𝑛] [|MINVALUE 𝑛] [|MAXVALUE 𝑛] [| [| INCREMENT BY 𝑛]
+
+• créer une table à partir de données :
+	CREATE TABLE ... AS ( SELECT * FROM ...);
+
 
 ● DROP :
 • utilisateur :
 	DROP USER <utilisateur> CASCADE;
-• table :
-	PURGE TABLESPACE <table>;
+• objet tel que table, index :
+	DROP TABLE <table> [|PURGE];
+	DROP INDEX <index>;
+
+_ DROP TABLE <tbl> → table mise dans la « recycle bin » et donc récupérable 
+_ DROP TABLE <tbl> → table définitivement perdue
+
+≠ TRUNCATE TABLE (ne vide que les données),
+≠ PURGE TABLESPACE <table>;
 
 • PDB :
 il faut d'abord clore et débrancher la PDB du CDB avant de la supprimer :
@@ -118,6 +152,13 @@ _ all_tab_columns		tout les noms de colonnes
 	select table_name from all_tab_columns where column_name='xxx';
 _ DBA_PDBS				vue listant toutes les PluggableDataBase
 _ DBA_USERS
+
+• DUAL :
+Sous oracle, le FROM du SELECT est obligatoire.
+DUAL permet d'exprimer le fait qu'on ne sélecte d'aucune table.
+→ SELECT 'const' (MySQL) == SELECT 'const' FROM DUAL ...
+
+select sysdate from dual;
 
 
 ● FAITS NOTABLES DU SQL ORACLE :
@@ -167,8 +208,57 @@ FETCH FIRST num% PERCENT ROWS ONLY;
 
 
 ● SÉQUENCES :
-	SELECT * FROM ALL_SEQUENCES
+• lire la dernière valeur :
+	SELECT <nomSEQ>.nextVal FROM DUAL;
 
+• lister les séquences :
+	SELECT * FROM ALL_SEQUENCES;
+
+• options de création utiles (non exhaustif !) :
+	CREATE SEQUENCE [|START WITH 𝑛]
+		[|MINVALUE 𝑛] [|MAXVALUE 𝑛]
+		[|INCREMENT BY 𝑛]
+		[|CACHE 𝑛|NOCACHE]	# CACHE : met en cache en mémoire les 𝑛 prochaines valeurs. 
+							# 		valeurs perdues en cache de panne ou autre.
+
+• réarmer la valeur : 
+le plus simple est de détruire & recréer la séquence ...
+
+● TYPES ORACLE – chaînes :
+attention à l'encocage des caractères, prévoir assez de place.
+
+_ CHAR(lng)
+	longueur fixe (1 par défaut, jusque 32Ko)
+
+_ VARCHAR2(lng [|BYTE|CHAR])
+	longueur variable, valeur stockée séparémment de la table y faisant référence.
+
+SELECT LENGTH('ÉLECTRICITÉ'), LENGTHB('ÉLECTRICITÉ') FROM DUAL
+	→ 11 CHAR, 13 BYTES
+
+● TYPES – timezone :
+• timezone de la connexion, de la base de données, et du serveur hébergeant cette dernière. 
+
+● TYPES – date :
+• ATTENTION, oracle stocke les millisecondes par défaut.
+_ TIMESTAMP
+_ TIMESTAMP WITH TIME ZONE
+_ TIMESTAMP WITH LOCAL TIMEZONE
+
+
+
+● ENCODAGE :
+• les plus courants : 
+	WE8MSWIN1252
+	AL32UTF8
+• définit au niveau de la BdD, et de la colonne.
+
+
+● FONCTIONS :
+_ NVL(v1, v2) : renvoit v2 si v1 == NULL
+
+_ OPÉRATEUR «q» : permet de définir un caractère d'encadrement alternatif pour remplacer les guillemets :
+	q'!a'b'c!' → le contenu de la chaîne est délimité par !
 
 
 ● DATES – FONCTIONS :
@@ -215,147 +305,33 @@ _ CURRENT_DATE :
 	données dans la zone de temps de la SESSION
 
 
-● SQLPLUS :
-• connexion :
-sqlplus						→	à la BdD par défaut
-sqlplus <NOM>@<BdD>
-sqlplus <NOM>/<MdP>@<BdD>	moins sécurisé
 
+● GROUP BY / ORDER BY :
+• optimisation possible :
+Utiliser une sous-requête contenant le GROUP BY, trier dans la requête principale :
 
-
-• exécuter un script :
-	@<fichier>
-
-• les blocs de code doivent SE TERMINER PAR UN SLASH pour être exécutés :
-si un fichier ne se termine pas par un slash, sqlplus affichera
- un prompt débutant par un n° de ligne en attendant plus de code.
-
-• largeur d'affichage des résultats :
-	set lin[|esize] <largeur> 
-
-• définir une variable :
-	def var = val
-ou
-	define var = val
-	//l'utilisation de la variable se fait via le préfixe & :
-	... &var ...
-	
-
-● PL/SQL – structures :
-• variables :
-	DECLARE
-		nom TYPE;
-		...
-
-• conditions :
-	IF ... THEN
-		...
-	[ELSIF ...]
-	[ELSE]
-		...
-	END IF
-
-• boucles :
-	LOOP
-		...
-		EXIT WHEN ...;
-	END LOOP;
-	
-	
-● PL/SQL – divers :
-
-• exécuter une procédure :
-	execute <nomProc>
-
-• procédure nommée == procédure stockée :
-CREATE OR REPLACE PROCEDURE [|schéma.]nomProcédure [|(params...)] IS
-BEGIN
-	...
-END;
-	
-CREATE OR REPLACE FUNCTION [|schéma.]nomFonction [|(params...)]
-	RETURN number IS
-(...)
-
-• procédure anonyme :
-fonction démarrant directement par un «BEGIN», directement exécutée, pas stockée :
-
--- pour sqlplus ou sqlDeveloper : 
-set serveroutput on;
-
--- fonction anonyme
-BEGIN
-    DECLARE
-        -- récupère la liste de toutes les paires EDA/EDE utilisées par les liens
-        CURSOR pairList IS
-            SELECT DISTINCT lbd.bae_id, lbd.dre_id 
-            FROM link_bae_dre lbd
-            ORDER BY lbd.bae_id, lbd.dre_id ;
-
-        pair_bae_id number(19,0);
-        pair_dre_id number(19,0);
-
-        lastLbdId number(19,0);
-        lastEndDate date;
-
-    BEGIN
-        open pairList;
-        -- boucle à travers la liste de paires EDA/EDE
-        loop
-            fetch pairList into pair_bae_id, pair_dre_id;
-            EXIT WHEN pairList%NOTFOUND;
-            
-            -- infos : affiche chaque paire EDA/EDE traitée
-            dbms_output.put_line( chr(10) || '● paire ' || pair_bae_id || '/' || pair_dre_id || ' : ');
-
-            -- ID et date de fin du dernier lien traité dans la boucle ci-dessous
-            -- (ordonnés par dates croissantes de début et de fin)
-            lastLbdId := NULL;
-            lastEndDate := NULL;
-
-            -- boucle à travers les liens relatifs à une même paire EDE/EDA,
-            -- ordonnés par date croissante
-            for line in (
-                select * from link_bae_dre lbd
-                    where lbd.dre_id = pair_dre_id and lbd.bae_id = pair_bae_id
-                    order by lbd.lbd_start_date, lbd.lbd_end_date,lbd.lbd_id
-            )
-            loop
-                -- infos : lien traité
-                dbms_output.put_line(
-                    'lbd_id = ' || line.lbd_id ||
-                    ', lbd_bae_id = ' || line.bae_id ||
-                    ', lbd_dre_id = ' || line.dre_id ||
-                    ', lbd_start_date = ' || line.lbd_start_date ||
-                    ', lbd_end_date = ' || line.lbd_end_date
-                );
-                
-                if (lastLbdId is not null)
-                then
-                    -- clôt le lien précédemment examiné s'il est encore ouvert
-                    -- à la date de début du lien en cours, en armant sa date de
-                    -- fin au jours précédant la date de départ du lien en cours
-                    if line.lbd_start_date <= lastEndDate
-                    then
-                        -- infos : requête exécutée
-                        dbms_output.put_line(
-                            '    • requête exécutée : ' ||
-                            'update link_bae_dre set lbd_end_date = ' ||
-                            (line.lbd_start_date - interval '1' day) ||
-                            ' where lbd_id = ' || lastLbdId
-                        );
-                        update link_bae_dre set lbd_end_date = (line.lbd_start_date - interval '1' day) where lbd_id = lastLbdId;
-                    end if;
-                end if;
-               
-               lastLbdId := line.lbd_id;
-               lastEndDate := line.lbd_end_date;
-            end loop;
-
-        end loop;
-    END;
-    -- insérer COMMIT ici si le script est satisfaisant
-    -- COMMIT;
-END;
-/
+	-- • combien de courbes à remonter chaque semaine ?
+	SELECT TRUNC(DATE_COURBE, 'MONTH') Mois, COUNT(COURBE_ID) "nb courbes"
+	FROM DIA_COURBES
+	WHERE
+	  (TYPE_COURBE = 9 OR TYPE_COURBE = 10)
+	  AND EST_DERNIERE_VERSION = 1
+	  AND PUBLIABLE = 1
+	GROUP BY TRUNC(DATE_COURBE, 'MONTH')
+	ORDER BY TRUNC(DATE_COURBE, 'MONTH') DESC;
+devient :
+	WITH unsorted as (
+		SELECT
+		  TRUNC(DATE_COURBE, 'MONTH') Mois,
+		  COUNT(COURBE_ID)            "nb courbes"
+		FROM DIA_COURBES
+		WHERE
+		  (TYPE_COURBE = 9 OR TYPE_COURBE = 10)
+		  AND EST_DERNIERE_VERSION = 1
+		  AND PUBLIABLE = 1
+		group by TRUNC(DATE_COURBE, 'MONTH')
+	)
+	select *
+	from unsorted
+	ORDER BY Mois DESC;
 

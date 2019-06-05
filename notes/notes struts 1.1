@@ -1,0 +1,16 @@
+• afficher un message (internationalisable) via sa clef dans un .properties :
+
+	<bean:message key='<%="adminJobsAuto.listeJobs.titreColonneDateDerniereExec"%>'/>
+
+ou, avec une clef relative au bloc de définition actuel :
+	<bean:message key='<%=current_block+".title"%>'/>
+
+
+• propriété « name » des tags – le nom du bean / classe java d'où tirer la propriété :
+
+    <logic:empty name="adminJobsAutoForm" property="listeJobAuto">
+        <bean:message key='<%="adminJobsAuto.listeJobs.messageSiVide"%>'/>
+    </logic:empty>
+
+• OU dans le cas d'un <bean:write> au sein d'un <dia:iterateRow> :
+	le nom de la variable JSP d'ou tirer le champs ...

@@ -78,11 +78,11 @@ la configuration, par exemple /etc/mysql.conf.d/my.cnf:
 
 
 ● CLÉ PRIMAIRE, CLÉ SECONDAIRE, CLÉ ÉTRANGÈRE :
-• clé primaire :
+• clé primaire : « référence unique de la ligne dans cette table »
 	PRI
 Le champs (ou la combinaison de champs – clef composite) permettant de
  référencer de manière non-ambigüe l'enregistrement
-• clé secondaire :
+• clé secondaire : « référence à une ligne unique dans une autre table »
 	SEC
 Une clé référençant un autre enregistrement de la même table
 • clé étrangère :
@@ -91,12 +91,22 @@ Une clé référençant un enregistrement d'une autre table
 
 
 ● INDEX :
-Ressources, comme les tables.
+_ Ressource, comme les tables.
+
+• coût :
+_  accès plus rapide en lecture,
+_  accès plus lent en écriture (car les données sont stockées en table ET et index),
+	plus d'espace consommé
+
 • « index couvrant » :
 	index couvrant 2 colonnes ou plus.
 
 CREATE INDEX ix_... ON table(colonne)
-	
+
+
+● SÉQUENCE :
+	<todo>
+
 
 
 ●(MySQL) par défaut, les chaînes ne sont PAS stockées en UTF8 :
@@ -119,13 +129,19 @@ il faut indiquer l'encodage à la création d'une table :
 
 ● VUE :
 	CREATE VIEW nom AS SELECT ...
-	
-Table virtuelle (et dynamique) en L/E. 
+
+• Table virtuelle (et dynamique) en L/E. 
 Affiche, par exemple, le résultat d'une requête. Les changements réalisés dans
  la vue sont bien sûr appliqués aux tables sous-jacentes !
 _ on peut lui appliquer des droits via GRANT et REVOKE
 	→ très utilisé pour gérer la sécurité à une granularité inférieure
 	  à celle de la table.
+
+_ rajoute une couche d'abstraction par dessus les tables concernées :
+on peut donc changer la structure des tables impliquées (ajouter/supprimer/renommer
+tables/colonnes, ...), sans changer l'accès à la vue – juste la définition de la vue.
+
+
 
 • VUES ≠ TABLE TEMPORAIRE :
 _VUE :
@@ -271,13 +287,18 @@ les expressions rationnelles s'écrivent entre guillements simples «'».
 ● WHERE :
 	BETWEEN ... AND ...
 	IN ( ..., ..., ..., ... )
-	LIKE
+	LIKE				# plus lent que « where substr(...) = '...' »
 	=, <>, =>, <=, >, <
 	AND, OR, NOT,
 	... IS NULL / IS NOT NULL,
 	...
-• WHERE EXISTS (requête)
-	EXISTS(...) est vrai quand la sous-requête ne renvoit pas NULL 
+• ÉVITER LES WHERE IN – préférer les sous-requêtes.
+
+• WHERE EXISTS (requête) :
+	EXISTS(...) est vrai quand la sous-requête ne renvoit pas NULL
+Si on ne souhaite remonter que les données de la table de gauche,
+ PLUS PERFORMANT que de faire une simple sous-requête :
+	<TODO : un exemple>
 
 •(Oracle) :
 	on peut utiliser des WHERE IN portant sur des n-uplets :
@@ -297,7 +318,9 @@ les expressions rationnelles s'écrivent entre guillements simples «'».
 	SELECT * FROM élèves, écoles (...)
 est équivalent à
 	SELECT * FROM élèves JOIN écoles (...)
-• JOIN tout seul → « INNER JOIN »
+
+• PAS DE « JOIN » tout seul – « INNER JOIN », car le défaut peut changer !
+TOUJOURS « INNER JOIN »
 
 
 • clause ON :
@@ -323,16 +346,26 @@ récupère les noms d'élèves apprenant le PHP,
 	WHERE language.nom = 'PHP';
 
 • différents types :
-_ [INNER|] JOIN	→ retourne les enregistrements pour lesquels la condition
-	du ON est remplie dans les 2 tables droite et gauche
-_ JOIN →	affiche aussi les enreg de la table de gauche ne remplissant
-	pas la cond°
-_ RIGHT JOIN → affiche aussi les enreg de la tbl de droite ne remplissant pas ...
-_ CROSS JOIN se comporte comme un INNER quand on lui ajoute une condition.
+_ [|INNER] JOIN	:
+Retourne les enregistrements pour lesquels la condition du ON est remplie
+ dans les 2 tables droite et gauche.
+
+_ LEFT [|OUTER] JOIN :
+Affiche aussi les enreg de la table de gauche ne remplissant pas la cond°
+
+_ RIGHT [|OUTER] JOIN :
+Affiche aussi les enreg de la tbl de droite ne remplissant pas ...
+
+_ CROSS JOIN :
+Se comporte comme un INNER quand on lui ajoute une condition.
+
 _ SELF JOIN :
-	se fait en donnant deux alias différents à la même table au sein du FROM :
+Se fait en donnant deux alias différents à la même table au sein du FROM :
 		« FROM tbl t1, tbl t2 »
-_ THETA JOIN
+
+_ THETA JOIN :
+	<TODO>
+
 
 ● OPÉRATEURS D'ENSEMBLE :
 • UNION :
@@ -341,10 +374,9 @@ _ THETA JOIN
 	on laisse les doublons.
 • UNION peut aussi créer une ensemble, qui sera traité comme une table
 	– pratique quand on a les droits de créer une table (même temporaire) 
-
-• INTERSECT,
-  MINUS
-
+• INTERSECT :
+	on ne prends que les données communes aux 2 listes.
+• MINUS
 
 
 ● FONCTIONS :
@@ -353,15 +385,22 @@ _ ISNULL(ₙ) renvoit 𝑛, ou 0 si le nombre 𝑛 est null
 	→ ( salaire + isnull(prime) ) renvoit tjr un nombre même si «prime» est null
 _ COALESCE(v1, v2, ...)
 	renvoit le premier v𝑛 non null
-_ length()
-_ replace()
-_ substring(ch, i, nb) ← index **à partir de 1**
+_ TRIM()
+_ UPPER(), LOWER()
+_ length(ch)
+_ replace(ch, de, vers)
+_ substr(ch, i, nb) ← index **à partir de 1**		#plus rapide que « where ... like ... »
 _ left(ch, 1)		   ← substr() depuis la gauche
 _ 
 _ concat(ch1, ch2)
 
 _ PARSE(ch, typeDest)
   TRY_PARSE(ch, typeDest) → ne génère pas d'erreur mais un NULL si le parse échoue   
+
+_ NVL(v1, v2) : renvoit v2 si v1 == NULL
+
+_ CELL()
+_ FLOOR() :		arrondi par défaut/par excès
 
 
 • fonctions mathématiques :
@@ -402,9 +441,12 @@ p.ex :
 
 
 • FONCTIONS D'AGGRÉGATION :
+utilisées pour faire du décisionnel.
 	COUNT(), SUM(), MAX(), MIN(), AVG(), ...
+	
 • HAVING :
-	s'utilise avec les fonctions d'aggrégations comme le WHERE.
+_ sous-groupes de données.
+S'utilise avec les fonctions d'aggrégations comme le WHERE.
 
 • FONCTIONS SCALAIRES :
 	LEAST()		→ valeur minimale

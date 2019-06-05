@@ -1,0 +1,311 @@
+• SQL : standard
+
+• PL/SQL : « Procedural Language / Structured Query Language »
+spécifique à Oracle
+
+_ language avec une notion d'objets
+_ structuré en blocs itératifs
+
+_ nombreuses commandes qu'on ne retrouve pas dans le SQL
+
+_ insensible à la casse
+
+
+● SQLPLUS :
+• connexion :
+sqlplus						→	à la BdD par défaut
+sqlplus <NOM>@<BdD>
+sqlplus <NOM>/<MdP>@<BdD>	moins sécurisé
+
+
+• exécuter un script :
+	@<fichier>
+• et une procédure :
+	execute [|<nomPackage>.]<nomProc>
+
+• les blocs de code doivent SE TERMINER PAR UN SLASH pour être exécutés :
+si une déclaration de procédure, package, ... ne se termine pas par un slash,
+ sqlplus affichera un prompt débutant par un n° de ligne en attendant + de code.
+
+• largeur d'affichage des résultats :
+	set lin[|esize] <largeur> 
+
+• définir une variable :
+	def var = val
+ou
+	define var = val
+	//l'utilisation de la variable se fait via le préfixe & :
+	... &var ...
+
+
+
+● conception modèle de données :
+¿ Dans quelle(s) table(s) stocker les données ?
+Quand on a, à la fois, dans une entité :
+_ des données qui varient peu
+		(p.ex, pour un film : titre, genres, réalisateur, ...),
+_ des données souvent mises à jour
+	 (p.ex pour ce même film : nombre entrées réalisées, ..., mises à jour
+	  toutes les nuit)
+→ il vaut mieux stocker les données « constantes » dans un table, et les
+ données variables dans une autre, pour des raisons de performance.
+
+
+• analyse décisionnelle :
+	des « faits », dans une table centrale, liés à des « dimensions » / axes d'analyses 
+→  ut° de fonctions d'aggrégation avec GROUP BY
+
+
+• SQL → paradigme ensembliste :
+	pas d'affectation de variables, de stockage, de boucles, juste manipulation de tables.
+• SQL → paradigme impératif :
+	suite d'instruction ; variables, boucles, ...
+	
+• Dans l'idéal, le moins de PL/SQL possible, car le PL/SQL est plus lent que le SQL
+→ autant que possible, faire du SQL plutôt que du PL/SQL.
+
+================================================================================
+
+
+● BONNES PRATIQUES :
+_ commenter les blocs de code
+_ préfixer les variables (v_), constantes (c_), paramètres (p_), ...
+_ lisibilité : 
+	préférer le nommage des paramètres lors de l'appel de procédures :
+		getDividedNum(p_divider => 3)  
+
+• PAS de SELECT * : si un collègue rajoute une colonne, ça peut péter le PL/SQL ...
+
+• autant que possible, PAS de LIKE / NOT IN / HAVING / ORDER BY
+	NOT IN : remplacer par NOT EXISTS
+	ORDER BY : gourmand en ressources, ne s'en servir que pour l'affichage
+				utiliser des fonctions analytiques
+_	"		"			pas de DISTINCT, qui risque de passer sous silence des données
+
+_ les lignes ne sont PAS triées sans ORDER BY, ne pas compter sur un tri particulier
+
+_ diminuer la complexité cyclomatique
+
+
+
+● structures :
+• déclarations :
+	v_nom [|CONSTANT] type [|NOT NULL] [|:= ...];
+Autant que possible, récupérer le type d'une colonne via <colonne>%TYPE;
+ex: 
+	v_country_name pays.libelle%TYPE;
+	v_film_name    film.titre%TYPE;
+	v_message      varchar2(256);
+	
+
+• exception :
+	EXCEPTION
+		WHEN NO_DATA_FOUND THEN ...
+		WHEN OTHERS THEN ...
+	END
+
+• IF/THEN/ELSIF/ELSE/END IF :
+	IF ...
+	THEN
+		...
+	ELSIF ...
+		...
+	ELSE
+		...
+	END IF;
+
+• CASE : plusieurs syntaxes possibles ...
+	CASE var 
+		WHEN val THEN ...
+		WHEN val THEN ...
+	END CASE;
+
+• boucles :
+	LOOP ... [|EXIT WHEN ...] ... END LOOP;
+	
+	WHILE ... LOOP ... END LOOP;
+	
+	FOR	v IN ... LOOP ... END LOOP;
+
+
+
+● curseur :
+Permet de parcourir une liste de résultats.
+• curseur implicite :
+Découle d'un « SELECT INTO »
+	SELECT r1, r2, ... INTO v1, v2, ...
+	
+• curseur explicite :
+Curseur déclaré :
+	CURSOR <nom>[|(<paramètres>)
+	<TODO: SQL%ROWCOUNT>
+
+
+• PRAGMA_AUTONOMOUS_TRANSACTION :
+Directive indiquant si chaque bloc doit être autonome vis-à-vis du commit de
+ ses transactions & de la gestion des exceptions.
+
+
+
+● types :
+Dans un entête de package ou un bloc DECLARE :
+	TYPE ... IS [RECORD|OBJECT|VARRAY|TABLE|...]
+
+_ RECORD( ... ) : pas de récursivité, pas de stockage en base
+_ OBJECT : DÉCONSEILLÉ, stockable en base
+_ VARRAY: <TODO>
+_ COLLECTION: <TODO>
+
+
+● variables :
+Pas de variables globales.
+
+
+● procédure ou fonction :
+_ procédures et fonctions POLYMORPHES.
+_ ne pas mettre les parenthèses quand il n'y a pas de paramètres
+_ toujours mettre un «/» après la déclaration d'une procédure ou fonction
+
+
+	[|CREATE [|OR REPLACE]] PROCEDURE <nom>[|(<params>)] IS
+	BEGIN
+		...
+	END [|<nom>] /
+	
+	[|CREATE [|OR REPLACE]] FUNCTION <nom>[|(<params>)]
+	RETURN <typeDeRetour>
+	IS
+	BEGIN
+		...
+	END [|<nom>] /
+	
+
+• exécuter une procédure :
+	execute <nomProc>;
+
+
+• qualificateurs de paramètres :
+_ IN
+
+_ OUT,
+_ IN OUT : passage PAR VALEUR.
+La valeur du paramètre original est recopiée dans un tampon, lui-même passé en
+ paramètre à la procédure ;
+Si la procédure s'achève correctement, le tampon est recopié dans la variable originale.
+
+_ NOCOPY : « OUT NOCOPY », « IN OUT NOCOPY » : passage PAR RÉFÉRENCE.
+C'est un HINT ! Conditions à remplir ...
+Les modifications ont lieu directement dans la variable d'origine.
+
+
+• ATTENTION – « PROCÉDURE ANONYME » == procédurée NOMMÉE mais déclarée dans une
+autre procédure, donc inaccessible de l'extérieur.
+Le concept de «procédure anonyme » en PL/SQL est très différent de ceux
+ d'autres languages ! 
+
+• procédure anonyme :
+procédure démarrant directement par un «BEGIN», directement exécutée, pas stockée :
+
+• procédure nommée == procédure stockée :
+Hors package :
+
+	CREATE OR REPLACE PROCEDURE [|schéma.]nomProcédure [|(params...)] IS
+	BEGIN
+		...
+	END;
+		
+	CREATE OR REPLACE FUNCTION [|schéma.]nomFonction [|(params...)]
+		RETURN number IS
+	(...)
+
+
+
+● FONCTIONS DE SORTIE :
+	SET SERVEROUTPUT ON;
+	...
+	DBMS_OUTPUT.PUT_LINE();
+	DBMS_OUTPUT.PUT_LINE();
+	DBMS_OUTPUT.PUT_LINE();
+
+
+
+● EXEMPLE DE PROCÉDURE :
+-- pour sqlplus ou sqlDeveloper : 
+set serveroutput on;
+
+-- fonction anonyme
+BEGIN
+    DECLARE
+        -- récupère la liste de toutes les paires EDA/EDE utilisées par les liens
+        CURSOR pairList IS
+            SELECT DISTINCT lbd.bae_id, lbd.dre_id 
+            FROM link_bae_dre lbd
+            ORDER BY lbd.bae_id, lbd.dre_id ;
+
+        pair_bae_id number(19,0);
+        pair_dre_id number(19,0);
+
+        lastLbdId number(19,0);
+        lastEndDate date;
+
+    BEGIN
+        open pairList;
+        -- boucle à travers la liste de paires EDA/EDE
+        loop
+            fetch pairList into pair_bae_id, pair_dre_id;
+            EXIT WHEN pairList%NOTFOUND;
+            
+            -- infos : affiche chaque paire EDA/EDE traitée
+            dbms_output.put_line( chr(10) || '● paire ' || pair_bae_id || '/' || pair_dre_id || ' : ');
+
+            -- ID et date de fin du dernier lien traité dans la boucle ci-dessous
+            -- (ordonnés par dates croissantes de début et de fin)
+            lastLbdId := NULL;
+            lastEndDate := NULL;
+
+            -- boucle à travers les liens relatifs à une même paire EDE/EDA,
+            -- ordonnés par date croissante
+            for line in (
+                select * from link_bae_dre lbd
+                    where lbd.dre_id = pair_dre_id and lbd.bae_id = pair_bae_id
+                    order by lbd.lbd_start_date, lbd.lbd_end_date,lbd.lbd_id
+            )
+            loop
+                -- infos : lien traité
+                dbms_output.put_line(
+                    'lbd_id = ' || line.lbd_id ||
+                    ', lbd_bae_id = ' || line.bae_id ||
+                    ', lbd_dre_id = ' || line.dre_id ||
+                    ', lbd_start_date = ' || line.lbd_start_date ||
+                    ', lbd_end_date = ' || line.lbd_end_date
+                );
+                
+                if (lastLbdId is not null)
+                then
+                    -- clôt le lien précédemment examiné s'il est encore ouvert
+                    -- à la date de début du lien en cours, en armant sa date de
+                    -- fin au jours précédant la date de départ du lien en cours
+                    if line.lbd_start_date <= lastEndDate
+                    then
+                        -- infos : requête exécutée
+                        dbms_output.put_line(
+                            '    • requête exécutée : ' ||
+                            'update link_bae_dre set lbd_end_date = ' ||
+                            (line.lbd_start_date - interval '1' day) ||
+                            ' where lbd_id = ' || lastLbdId
+                        );
+                        update link_bae_dre set lbd_end_date = (line.lbd_start_date - interval '1' day) where lbd_id = lastLbdId;
+                    end if;
+                end if;
+               
+               lastLbdId := line.lbd_id;
+               lastEndDate := line.lbd_end_date;
+            end loop;
+
+        end loop;
+    END;
+    -- insérer COMMIT ici si le script est satisfaisant
+    -- COMMIT;
+END;
+/
+

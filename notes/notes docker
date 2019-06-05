@@ -4,7 +4,16 @@
 
 ● CONTENEURS :
 • créer conteneur :
-docker run --name xxx ...
+docker run [-d] [-it] --name xxx ...
+	-d	→ en arrière-plan
+	-i	→ Keep STDIN open even if not attached
+p.ex :
+	mkdir $HOME/images.docker/formation_plsql/shared_datadir
+	mkdir $HOME/images.docker/formation_plsql/dump
+	sudo chown sroze: $HOME/images.docker/formation_plsql/*
+	sudo chmod a+rwx $HOME/images.docker/formation_plsql $HOME/images.docker/formation_plsql/*
+	docker run --name formation_plsql_oracle_12c -it -p20000:1521 -p20001:5500 -e ORACLE_SID=PLSQLUTF8 -e ORACLE_PDB=PLSQLPDB1 -v /home/sroze/images.docker/formation_plsql/shared_datadir:/opt/oracle/oradata -v /home/sroze/images.docker/formation_plsql/dump:/opt/oracle/dump  registry-private.docker.iscbordeaux.lan.bdx.sqli.com/oracleserver/entreprise:12.1.0.2-utf8
+
 
 • démarrer/arrêter conteneur :
 docker start|stop <nomContainer>
