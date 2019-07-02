@@ -201,12 +201,19 @@ pour ne modifier qu'un seul fichier :
 • pour un fichier :
 	git diff <commitA> <commitB> -- <chemin>
 
+• afficher différences entre 2 fichiers de 2 branches :
+	git diff <branche1>:<fic1> <branche2>:<fic2>
+
 • afficher le contenu d'un commit (ou de tous) :
 	git show <commit>
 	git show
+	
 • lister les fichiers modifiés par une commit :
 	git show --name-only <commit|HEAD|etc.>
 	git show --name-only --pretty="" <commit|HEAD|etc.> | sort | uniq
+
+• afficher un fichier d'une autre branche (ou le recopier) :
+	git show <branche>:<fic> [|><nouvelleCopie>]
 
 
 ● SYNONYMES :
@@ -283,7 +290,8 @@ pour fusionner les 2 derniers commits.
 
 
 ● SUPPRIMER UN FICHIER DE TOUTE L'HISTORIQUE :
-• supprimer un fichier, mais sans le faire disparaitre de l'historique :
+• supprimer un fichier du suivi, mais sans le faire disparaitre du disque
+ ni de l'historique :
 	git rm --cached <fic>
 	git commit ...
 	git push
@@ -373,7 +381,14 @@ Pas d'espace entre l'option et le paramètre !
 _ sans tenir compte des changements de nom :
 	git log -- <fic-ou-motif>
 _ en suivant les renommages :
-	xxxxxxxx
+	git log --full-history -- <fic>
+
+• chercher les commits concernant une **FONCTION** :
+	git log -L :<regExFonction>:<cheminFichier>
+
+• CHERCHER LE COMMIT AYANT SUPPRIMÉ UN FICHIER :
+	git log --full-history -1 -- <fic>
+-1 pour n'afficher que le dernier commit concernant ce fichier.
 
 
 ● CHERCHER UN FICHIER (PEUT-ÊTRE NON EXISTANT DANS LA BRANCHE ACTUELLE)

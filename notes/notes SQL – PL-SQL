@@ -76,15 +76,20 @@ _ lisibilité :
 
 • PAS de SELECT * : si un collègue rajoute une colonne, ça peut péter le PL/SQL ...
 
-• autant que possible, PAS de LIKE / NOT IN / HAVING / ORDER BY
+• autant que possible, PAS de LIKE / NOT IN / HAVING / ORDER BY :
 	NOT IN : remplacer par NOT EXISTS
 	ORDER BY : gourmand en ressources, ne s'en servir que pour l'affichage
 				utiliser des fonctions analytiques
-_	"		"			pas de DISTINCT, qui risque de passer sous silence des données
+• autant que possible, pas de DISTINCT – risque de passer sous silence des données.
 
 _ les lignes ne sont PAS triées sans ORDER BY, ne pas compter sur un tri particulier
 
 _ diminuer la complexité cyclomatique
+
+_ 1er package à créer au début d'un projet :
+un PACKAGE de log, permettant de tracer toutes actions.
+
+• PAS de TRIGGER : gros risque pour la maintenabilité.
 
 
 
@@ -140,8 +145,22 @@ Curseur déclaré :
 	CURSOR <nom>[|(<paramètres>)
 	<TODO: SQL%ROWCOUNT>
 
+• utilisation d'un curseur :
+	DECLARE 
+		CURSOR <nom> IS <requête>;
+		...
+	BEGIN
+		OPEN <nom>;
+		LOOP
+			FETCH <nom> into ...; 
+			EXIT WHEN <nom>%NOTFOUND;
+			...
+		END LOOP;
+		CLOSE <nom>;
+		...
 
-• PRAGMA_AUTONOMOUS_TRANSACTION :
+
+● PRAGMA_AUTONOMOUS_TRANSACTION :
 Directive indiquant si chaque bloc doit être autonome vis-à-vis du commit de
  ses transactions & de la gestion des exceptions.
 
@@ -157,8 +176,10 @@ _ VARRAY: <TODO>
 _ COLLECTION: <TODO>
 
 
+
 ● variables :
 Pas de variables globales.
+
 
 
 ● procédure ou fonction :
@@ -226,6 +247,57 @@ Hors package :
 	DBMS_OUTPUT.PUT_LINE();
 	DBMS_OUTPUT.PUT_LINE();
 	DBMS_OUTPUT.PUT_LINE();
+
+
+
+● exceptions :
+• capture :
+	BEGIN
+		...
+	EXCEPTION
+		#pas d'instructions avant les WHEN
+		WHEN no_data_found THEN
+			...
+		# « others » : capture de toutes exceptions non gérées
+		WHEN others THEN
+			#utiliser SQLCODE, SLQERRM, ...
+			IF SQLCODE = ... THEN ... END IF;
+			...
+	END;
+
+• fonctions utilisables dans les blocs EXCEPTION/WHEN :
+_SQLCODE
+_SQLERRM, SQLERRM(<sqlcode>) : message d'erreur de l'exception
+_RAISE :	
+_ RAISE <exception> :
+
+
+• déclaration : dans bloc DECLARE :
+	DECLARE
+		ex1	EXCEPTION;
+	BEGIN
+		IF ... THEN RAISE ex1;
+
+
+2 propriétés importantes :
+_ libellé de l'exception, le plus souvent renseigné
+_ SQLCODE, toujours renseigné
+
+• récupérer les informations d'un exception :
+_SQLCODE
+_ SQLERRM : message d'erreur 
+	...
+	EXCEPTION
+		WHEN ... THEN
+			DBMS_OUTPUT.PUT_LINE();
+	END
+
+•lever une exception :
+	RAISE <nomException>
+	
+•lever une exception personnalisée :
+Utile pour un gros projet avec une bibliothèque d'exceptions.
+	RAISE_APPLICATION_ERROR(errNum, mssg, bool);
 
 
 

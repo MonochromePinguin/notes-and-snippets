@@ -27,7 +27,7 @@ et entrer un motif des classes à exclure du déboguage.
 Ctrl Maj A      action rapide
 
 Ctrl E			liste derniers fichiers ouverts
-Ctrl Maj E		go to file
+Ctrl Maj E		"	" derniers fichiers édités
 Alt home		barre de navigation
 
 Ctrl Maj T		aller au fichier du T.U. (ou le créer)
@@ -35,13 +35,28 @@ Ctrl Maj T		aller au fichier du T.U. (ou le créer)
 Ctrl F12			« structure du fichier » – méthodes & variables
 Ctrl F12 Ctrl F12	une 2e fois, affiche aussi membres interfaces & superclasse
 
+• panneaux :
 Alt 1       panneau fichiers
-Alt 2       panneau « favoris »
-Alt 9		GIT et assimilés
+Alt 2		"	"	BdD
+Alt Maj 2	"	"	console BdD   (perso)
+(Alt 3, Alt Maj 3 ...)
+Alt 4		"	"	run
+Alt 5		"	"	debug   (perso)
+Alt 6		"	"	TODO   (perso)
+Alt Maj 6	"	"	favoris   (perso)
+Alt 7		"	"	structure (de la classe, ...)   (perso)
+Alt 8		"	"	hiérarchie
+Alt 9		"	"	suivi de version (commits & Cie)   (perso)
+Alt 0		"	"	sonarLint   (perso)
+
 Alt F12		terminal
 
-Alt ← →      naviguer entre onglets du même groupe
+• navigation panneaux & onglets :
+Alt ← →      naviguer entre onglets du même groupe au sein d'un panneau.
+	panneau « fichiers » : changer de fichier ;
+	panneau « projet » (Alt + 1) : changer de vue (project, scratches, ...)
 
+Ctrl Tab	popup « bascule de panneaux »
 Alt ↑↓		entre fonctions/etc.
 
 
@@ -155,13 +170,17 @@ Ctrl Maj espace         « smart type completion » (tient compte du contexte)
 Ctrl Maj Entrée         complétion d'instruction et de structures,
 					    avec éventuel déplacemement
 					    devant une expression : l'englobe dans un appel de f°
+• complétion suffixée :
+    <expr>.if <TAB>     →   <expr> englobée dans une structure «if»
 
 • ACCEPTER SUGGESTION D'AUTOCOMPLÉTION :
 entrée          → remplace ce qui est à gauche
 TAB             → remplace aussi les caractères à droite
 
+(pr suggestions d'autocomplétion) :
+Ctrl Maj Entrée → corrige la construction courante
 
-Maj F6 – refactoriser
+
 
 ● REFACTORISATION :
 ici, utiliser « AltGr » en place de « Alt » :
@@ -172,13 +191,11 @@ Ctrl Alt F      "           "       champ
 Ctrl Alt P      "           "       paramètre
 
 
-~~~~~~~~~~~~~~~~~~~
+Maj F6		renommer
+F6			refactoriser
+			 «Move inner to upper level» sur une classe interne :
+			 	la mettre dans sa propre classe
 
-• complétion suffixée :
-    <expr>.if <TAB>     →   <expr> englobée dans une structure «if»
-
-(pr suggestions d'autocomplétion) :
-Ctrl Maj Entrée → corrige la construction courante
 
 
 ● LIVE TEMPLATES PERSO :
@@ -202,8 +219,9 @@ _ dans onglet «Database» :
 F4		ouvrir console SQL par défaut
 F5		choix de la console SQL
 
-
 • changer le dialecte SQL :
 dans properties, choisir «Drivers» / Oracle, combo «Dialect»
 
-
+• supprimer une console SQL :
+dans le panneau « Projet » (Alt + 1), choisir la vue « Scratches »
+puis descendre dans «Database Consoles», ...

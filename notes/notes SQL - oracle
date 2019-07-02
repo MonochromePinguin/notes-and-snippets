@@ -279,8 +279,9 @@ suivant l'unitée spécifiée par <format> :
 
 
 • calcul de dates :
-	<date> - 𝑛		→ soustrait 𝑛 jours à la date donnée.
-						fonctionne pour les DATE mais pas les TIMESTAMP.
+	<date> + 𝑛
+	<date> - 𝑛		→ ajoute ou soustrait 𝑛 jours à la date donnée.
+						fonctionne pour les DATE mais PAS pour les TIMESTAMP.
 
 	LAST_DAY(date) → arme la date au dernier jour du mois contenu
 
@@ -334,4 +335,9 @@ devient :
 	select *
 	from unsorted
 	ORDER BY Mois DESC;
+
+
+
+● TRIGGERS :
+	CREATE OR REPLACE TRIGGER <TODO>
 
