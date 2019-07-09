@@ -496,16 +496,33 @@ utiliser le «--line-buffered» vu ci-dessus ↑.
   unbuffer <prog>		désactive la mise-en-tampon de la sortie de <prog>
 
 
-● SSH - raccourcis clavier :
-⏎~.		→	déconnection
-Ctrl D		→	 "	"
+● SSH :
+• raccourcis clavier :
+⏎~.				→	déconnection
+Ctrl D			→	 "	"
 exit, logout	→	 "	"
 
 ⏎~
 
-_ et bien sûr, « ssh utilisateur@hôte commande »,
-	     « ssh utilisateur@hôte < listeCommandes »,
+• configuration :
+	$HOME/.ssh/config
+
+(dés)activer différents types d'accès à un hôte spécifique :
+Host [IP|DNS]
+	User <user>
+	PubKeyAuthentication [yes|no]
+	PasswordAuthentication [yes|no]
+
+
+• connexion SSH :
+	ssh <utilisateur>@<hôte>
+	ssh <utilisateur>@<hôte> <commande>
+	ssh <utilisateur>@<hôte> < <texteListeCommandes>
 	     ...
+
+• scp :
+	scp <fic> <user>@<host>:<fic>
+
 
 
 ●ADMINISTRATION SYSTÈME & UTILISATEURS :
