@@ -29,6 +29,7 @@ _ les références des callbacks & blocs de code à exécuter sont enlistées d
  une queue, et chaque code code est exécuté séquentiellement.
 ¿ MAIS EST-CE QUE ÇA S'APPLIQUE AUSSI À document.readystate ?
 
+
 ● exécuter du code à la fréquence de rafraichissement de l'écran :
   requestAnimationFrame(cbRappel) : peut recevoir une valeur max,
  et doit être appelé pour chaque trame – par ex en fin de f° de MàJ.
@@ -140,7 +141,11 @@ elem.getAttributes()
 	.appendChild()
 	.prependChild()
 	.removeChild()
+	.replaceWith() #expérimental en ES6
+	.clone(true) #pour clonage récursif
 etc.
+
+
 
 
 ● ATTRIBUTS DE DONNÉES :
@@ -298,7 +303,7 @@ val = +'blabla' →    NaN !
 
 ● BOUCLES «FOR OF» (VALEURS) ET «FOR IN» (INDEXES) :
 • VALEUR – « for ( v of tbl )» :
-	parcourt les valeurs ; i reçoit une copie de la valeur
+	parcourt les valeurs ; v reçoit une copie de la valeur
 • INDICES – « for ( p in obj )» :
 	parcourt les propriétés, (donc les indices pour un tableau)
 	→ on accède à la valeur via « obj[p] » ...
@@ -309,6 +314,10 @@ val = +'blabla' →    NaN !
 ● pour toutes les boucles «for» :
 préférer for (const ...) à for( let ... ) quand on ne modifie pas le compteur !
 
+
+
+● création d'une instance d'une classe sans appeler le constructeur :
+	v = Object.create(Object.getPrototype(classe));
 
 
 ● HOISTING :
