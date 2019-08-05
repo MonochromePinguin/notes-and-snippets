@@ -522,6 +522,14 @@ Host [IP|DNS]
 
 • scp :
 	scp <fic> <user>@<host>:<fic>
+• ATTENTION AU BUG  BUGZILLA 20527 DE scp :
+le ~/.bashrc de la destination est lu quand bash est exécuté via scp.
+Or, une éventuelle sortie texte de bash peut embrouiller scp : 
+_ problème de protocole obsolète, maintenu en l'état pour raisons de compatibilité
+→ une solution :
+éviter d'exécuter .bashrc quand on est en mode non interactif :
+insérer un
+	[[ $- == interactive ]] || return 
 
 
 
