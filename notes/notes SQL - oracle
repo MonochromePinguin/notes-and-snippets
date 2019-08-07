@@ -59,6 +59,41 @@ _ contournable par la commande « set scan off »
 set serveroutput on;
 
 
+● La BdD est pleine, elle occupe toute la partition ? :
+Pourquoi ne pas vider les tablespaces UNDO et TEMP, qui occupent parfois
+des dizaines de Go ?
+_ créer un nouveau tablespace TEMP pour remplacer le précédent,
+_ redémarrer la base – ce qui va
+→ exemple :
+
+-- créer un nouveau tablespace et l'utiliser
+--
+CREATE TEMPORARY TABLESPACE TEMP2 TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0101.dbf' SIZE 20M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 32767M;
+ALTER DATABASE DEFAULT TEMPORARY TABLESPACE TEMP2;
+
+-- redémarrer pour appliquer le changement  
+shutdown immediate;
+startup;
+
+-- abandonner l'ancien tablespace
+DROP TABLESPACE TEMP INCLUDING CONTENTS AND DATAFILES;
+
+-- recréer un nouveau tablespace identique à l'ancien, et l'utiliser – mais vide
+--
+CREATE TEMPORARY TABLESPACE TEMP TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0102.dbf' SIZE 25M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 32767M;
+ALTER TABLESPACE TEMP ADD TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0103.dbf' SIZE 25M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 8000M;
+ALTER TABLESPACE TEMP ADD TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0104.dbf' SIZE 25M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 11000M;
+ALTER DATABASE DEFAULT TEMPORARY TABLESPACE TEMP;
+
+-- redémarrer pour appliquer le changement ...
+shutdown immediate;
+startup;
+
+-- supprimer la tablespace temporaire
+DROP TABLESPACE TEMP2 INCLUDING CONTENTS AND DATAFILES;
+
+
+
 
 
 ● IMPORTER UN DUMP :

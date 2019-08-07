@@ -80,7 +80,15 @@ _ ps -A -o uid,pid,time,args
 etc. ...
 
 ● FIND :
+La totalité des options est traitée comme une expression logique.
 • opérateurs logiques : -o, -a, -not
+
+• éviter certains chemins :
+	-path <chemin> -prune -o (...)
+Le sous-ensemble « -path <chemin> -prune » est traité comme une opération logique,
+il faut donc le combiner avec les autres expressions via un « -o » :
+	-path <chem1> -prune  -o  -path <chem2> -prune  -o  -path <chem3> -prune  -o (...)
+
 • permission:
 	-perm <permissions exacte>
 	-perm /<permissions> → certaines des permissions indiquées
