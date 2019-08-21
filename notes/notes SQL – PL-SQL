@@ -12,30 +12,7 @@ _ insensible à la casse
 
 
 ● SQLPLUS :
-• connexion :
-sqlplus						→	à la BdD par défaut
-sqlplus <NOM>@<BdD>
-sqlplus <NOM>/<MdP>@<BdD>	moins sécurisé
-
-
-• exécuter un script :
-	@<fichier>
-• et une procédure :
-	execute [|<nomPackage>.]<nomProc>
-
-• les blocs de code doivent SE TERMINER PAR UN SLASH pour être exécutés :
-si une déclaration de procédure, package, ... ne se termine pas par un slash,
- sqlplus affichera un prompt débutant par un n° de ligne en attendant + de code.
-
-• largeur d'affichage des résultats :
-	set lin[|esize] <largeur> 
-
-• définir une variable :
-	def var = val
-ou
-	define var = val
-	//l'utilisation de la variable se fait via le préfixe & :
-	... &var ...
+voir le § « SQLPLUS » dans « notes SQL – oracle »
 
 
 
@@ -160,6 +137,7 @@ Curseur déclaré :
 		...
 
 
+
 ● PRAGMA_AUTONOMOUS_TRANSACTION :
 Directive indiquant si chaque bloc doit être autonome vis-à-vis du commit de
  ses transactions & de la gestion des exceptions.
@@ -172,8 +150,13 @@ Dans un entête de package ou un bloc DECLARE :
 
 _ RECORD( ... ) : pas de récursivité, pas de stockage en base
 _ OBJECT : DÉCONSEILLÉ, stockable en base
-_ VARRAY: <TODO>
 _ COLLECTION: <TODO>
+_ VARRAY: <TODO>
+
+• COLLECTIONS :
+.EXTEND <TODO>
+
+IF <val> MEMBER OF <varCollection> THEN ... END IF;
 
 
 
@@ -302,7 +285,7 @@ Utile pour un gros projet avec une bibliothèque d'exceptions.
 
 
 ● EXEMPLE DE PROCÉDURE :
--- pour sqlplus ou sqlDeveloper : 
+-- pour activer l'affichage des sorties DBMS (sous sqlplus ou sqlDeveloper) : 
 set serveroutput on;
 
 -- fonction anonyme
