@@ -268,19 +268,41 @@ MAIS on ne peut pas utiliser de variables dans l'expression.
 
 
 ● traitement des chaînes de caractères :
- elles travaillent sur des motifs glob :
-	var=/aa/bb/cc/dd/fic; echo ${var#/*/*/*/}		}→ affiche «dd/fic»
-• ${var^^}  ${var,,}	→	conversion en MAJUSCULE & MINUSCULE
-• ${var#préfixe}  ${var##préfixe} → suppress° du préfixe après développement :
-	# → la plus courte correspondance, ## → la plus longue
-• ${var%suffixe}  ${var%%suffixe} → suppress° du suffixe après développement :
-	% → la plus courte, %% → la plus longue
-• ${var:pos}			→	sous-chaîne débutant à «pos»
-• ${var:pos:longueur}	→	"	"	" de cette longueur
-• ${var/de/vers }, ${var//de/vers }
-	→	remplace la 1e occurence / toutes les occurences de «de» par «vers»
+ elles travaillent sur des motifs glob (ou extglob si activé) :
+	var=/aa/bb/cc/dd/fic; echo ${var#/*/*/*/}
+			→ affiche «dd/fic»
+• conversion en MAJUSCULE & MINUSCULE :
+	${var^^}
+	${var,,}
+• suppress° du préfixe après développement :
+	${var#préfixe}
+	${var##préfixe}
+	#	# → la plus courte correspondance, ## → la plus longue
+• suppress° du suffixe après développement :
+	${var%suffixe}
+	${var%%suffixe}
+	#	% → la plus courte, %% → la plus longue
+
+  uniquification des slashs dans un chemin – avec extglob :
+	${var//+('/')/'/'}
+  suppression des slash terminaux :
+	merci au gars ayant fourni cette solution en 2 étapes sur stackOverflow !
+	${var%%${var##*[!/]}}	# supprimer un suffixe correspondant au préfixe
+							# terminé par le dernier caractère non-slash
+ou
+	${var%%+('/')}
+
+• sous-chaîne débutant à «pos» :
+	${var:pos}
+• "	"	" de cette longueur :
+	${var:pos:longueur}
+
+• remplace la 1e occurence ('/')  toutes les occurences ('//') de «de» par «vers» :
+	${var/de/vers }
+	${var//de/vers }
  	S'applique également sur les éléments des tbl indexés par [*] ou [@] !
 	tblRes=( ${tblOrig[*]/de/vers } )
+
 
 ● Un bashisme utile :
 	echo aa{bb,cc} produit	« aabb aacc »
