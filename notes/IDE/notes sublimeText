@@ -1,5 +1,10 @@
 ● RACCOURCIS NOTABLES :
 
+Ctrl + Maj + P      barre de commande
+
+Ctrl + Maj + T      ouvrir (𝑛ième) dernier fichier
+
+
 •ÉDITION :
 
 Ctrl + retArr/suppr, Ctrl + maj + retArr/suppr ...
@@ -14,6 +19,11 @@ Ctrl + Maj + V		collage avec indentation
 Ctrl + Y (perso),
 Ctrl + Maj + K      supprimer ligne
 
+
+• MODIFICATION CODE :
+Alt + Maj + W       entourer d'une balise
+
+
 • SÉLECTION :
 Ctrl + Maj + espace :
         sélectionne tout jusque délimiteurs (<>''"", etc.) englobant
@@ -23,13 +33,16 @@ Ctrl + Maj + A      sélection élément englobant, puis parent, ...
 Alt + Maj + W       entourer la sélection d'un élément
 (Ctrl + L           sélectionner ligne – écrasé)
 
-ctrl + D            multi-curseur – sélectionne prochaine occurence mot
+ctrl + D            multi-curseur – sélectionne prochaine occurrence mot
 
 Ctrl + E (perso),
-Ctrl + F3           multi-curseur – sélectionne toutes occurences mot
+Ctrl + F3           multi-curseur – sélectionne toutes occurrences mot
+
+
 
 • FORMATAGE :
 Ctrl + []           indenter/désindenter
+
 
 
 • CASSE :
@@ -42,6 +55,17 @@ Ctrl + K Ctrl + L   minuscule
 
 • NAVIGATION :
 F12         aller à la définition de l'élém sous curseur
+maj + F12   aller utilisation(s)
+
+Ctrl + R    liste symboles / aller ...
+
 
 Ctrl + Maj + RetArr (perso)     aller édition précédente
 Alt + Maj + RetArr (perso)     aller édition suivante
+
+
+• SIGNETS :
+Ctrl + F2      marquer signet
+
+F2,
+maj + F2      naviguer entre signets suiv/prév.

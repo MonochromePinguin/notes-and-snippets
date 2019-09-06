@@ -914,6 +914,7 @@ _ CUPS les a supplantés et fournit les 2 commandes pour la compatibilité
 	   -o lpi=[lignesParPouce]
 
 
+
 ● GESTION PAQUETS :
 • update-alternatives ( avec les options --auto, --config ou --install )
  par ex : « update-alternatives --install /usr/bin/java java_vm /usr/share/java-sun/jre1.7.0_07/bin/java_vm <priorité numérique> »
@@ -932,6 +933,17 @@ _ CUPS les a supplantés et fournit les 2 commandes pour la compatibilité
 •« lesspipe <nompaquet> | less » affiche le résumé (contenu dans le .deb) !
 •«dpkg-deb» permet de dépaqueter/rempaqueter une arborescence en .deb (cf les «notes systèmes»)...
 
+
+• la partition /var est remplie,
+ apt update ne peut achever le téléchargement des listes de paquet ?
+/var/cache/apt/archives qui stocke un cache des paquets .deb,
+	a peut-être grossi démesurément.
+→ commandes pour purger le cache apt :
+  apt-get clean			vide le cache de tous paquets
+  apt-get autoclean		supprime uniquement les paquets non téléchargables
+
+
+
 ● le paquet «java-package» fournit la commande «make-jpkj» permettant de
  fabriquer un .deb à partir d'une archive .tar.gz de Oracle,
  à la manière de «googleearth-package» ...
@@ -940,6 +952,7 @@ _ CUPS les a supplantés et fournit les 2 commandes pour la compatibilité
 ● «mimeopen -d <fic>» permet de choisir en ligne de commande
  l'application par défaut pour un type de fichier
  mais hélas çà ouvre aussi ce fichier ! -
+
 
 
 ● ATTRIBUTS ÉTENDUS & ATTRIBUTS DE SÉCURITÉ DES FICHIERS :
@@ -951,6 +964,7 @@ _ CUPS les a supplantés et fournit les 2 commandes pour la compatibilité
 ● ABANDON DE CAPACITÉS PAR UN EXÉCUTABLE :
 Passer par la surcouche «capsh» (qui appelle «sh» après avoir abandonné les
  capacités spécifiées ...)
+
 
 
 ● GÉRER LA PARTITION u3 D'UNE CLÉ :
