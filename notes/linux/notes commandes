@@ -318,10 +318,22 @@ mais les 3 conduites en substitution de proc' écrivent s/ la même sortie,
   lzop
    etc ...
 
+
 ●● PROGRAMMES NOTABLES EN TTY/FRAMEBUFFER :
+_ lynx (navigateur en mode texte)
 _ w3m (navigateur en mode texte)
 _ w3m-img (greffon w3m pour afficher les images)
+
 ⊕ fbi	(visionneur d'images)
+
+_ mpg123 (équivalent de aplay pour les mp3 et autres flux mpg
+_ ogg123 (lecteur pour flux ogg)
+⊕ mocp (paquet « moc » : lecteur audio ncurse)
+
+_ alsamixer (mixeur son ncurse)
+
+
+
 
 ●● UTILITAIRES SYSTÈMES NOTABLES /s X11 :
 ⊕ assogiate (modifier les associations type-de-fichier/icône)
@@ -348,6 +360,7 @@ _ avahi-discover
 ⊕ EasyTag
 ⊕ haguichi (GUI pour hamachi)
 
+
 ●● IDE notables :
 _ eclipse (java & autres)
 _ anjuta (pesante ...)
@@ -356,6 +369,7 @@ _ sublime text	(source externe)
 _ visual studio code (source externe)
 
 ● vimtutor !
+
 
 ●● NAVIGATEURS DE DOC notables :
 ⊕ Zeal	(fournit avec docs variées & étendues)
@@ -1151,7 +1165,8 @@ _ convert/mogrify -strip "$f" efface toutes les métadonnées
 
 ● SON & PÉRIPHÉRIQUES AUDIO :
   aplay -L 	→	liste les noms utilisables en options de «aplay -D XXX»,
- càd les différentes sorties avec/sans convertion
+ càd les différentes sorties avec/sans convertion :
+ 	« aplay -D default:0 ... »
   aplay -l 	→	liste uniquement les périphériques matériels
  les n° leur correspondant sont utilisables avec «alsamixer -c XXX»
 
