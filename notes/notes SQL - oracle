@@ -28,13 +28,20 @@ sqlplus <NOM>/<MdP>@<BdD>	moins sécurisé
 
 
 • exécuter un script :
-	@<fichier>
+	sqlplus @<fichier>
+• exécuter un script **avec des paramètres** :
+	@<fichier>  param1  param2  param...
+Pour accéder à ces paramètres de script :
+utiliser une esperluette.
+	&param1, &param2, ...
+	
 • et une procédure :
 	execute [|<nomPackage>.]<nomProc>
 
 • les blocs de code doivent SE TERMINER PAR UN SLASH pour être exécutés :
 si une déclaration de procédure, package, ... ne se termine pas par un slash,
  sqlplus affichera un prompt débutant par un n° de ligne en attendant + de code.
+Par contre, il ne faut PAS mettre de slash dans un bloc imbriqué.
 
 
 • largeur d'affichage des résultats :
@@ -182,6 +189,8 @@ et spécifier le nom d'hôte dans l'URI :
 p.ex :
 	sqlplus SYSTEM/MotDePasse@//localhost/d12utf8pdb_3_4_1_20190129_0630
 
+
+
 ● CREATE :
 • créer un utilisateur commun à tous PDB :
 	prefixé par [cC]##
@@ -198,6 +207,7 @@ doit être créé depuis le CDB racine.
 
 • créer une table à partir de données :
 	CREATE TABLE ... AS ( SELECT * FROM ...);
+
 
 
 ● DROP :
@@ -360,7 +370,8 @@ TRUNC() renvoit une DATE (quelque soit le format de date d'entrée) TRONQUÉE
 suivant l'unitée spécifiée par <format> :
 	TRUNC( TO_DATE('14/10/2010', 'DD/MM/YYYY'), 'MONTH' )	==	01/10/2010
 	TRUNC( TO_DATE('14/10/2010', 'DD/MM/YYYY'), 'YEAR' )	==	01/01/2010
-
+• TRUNC(Date) :
+	par défaut, si le format est omis, TRUNC() arrondi au jour.
 
 • calcul de dates :
 	<date> + 𝑛
