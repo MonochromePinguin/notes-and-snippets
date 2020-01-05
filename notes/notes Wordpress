@@ -1,0 +1,32 @@
+● Wordpress :
+
+_ un CMS open source basé sur PHP/MYSQL – blogs & sites plus traditionnels
+_ 2001 ; encore très répandu.
+
+_ autres CMS : Drupal (/s symfony), Jooma! (PHP aussi)
+
+
+_rédaction de contenu,
+ presonnalisat°,
+ espace d'admin,
+ gest° utilisateurs : en f° du niveau :
+	abonné < contributeur < auteur (modif°)
+		  < Éditeur (modif°/suppression/publicat°) < admin (ajout greffons, etc)
+
+wordpress.com : pour hébergement
+wordpress.org : « vrai » site
+
+éditeur WYSIWIG : TinyMCE !
+
+● système d plugins :
+_ les plugins sont édités par tt le monde → nombreuses incompatibilités,
+	(différentes versions de bootstrap, style impératif ou POO, ...)
+
+• création de plugin :
+	basée sur une API documentée
+
+• création de thèmes («templates»):
+	xxxx
+
+• WP 4.7 :
+	API REST disponible par défaut.

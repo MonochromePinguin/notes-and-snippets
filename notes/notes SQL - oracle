@@ -19,83 +19,6 @@ _ ANCIENNE VERSION :
 	ALTER PLUGGABLE DATABASE D12UTF8PDB_3_4_1_20181226_516 open; ## ¿ peut-être la seule ligne utile ?
 
 
-
-● SQLPLUS :
-• connexion :
-sqlplus						→	à la BdD par défaut
-sqlplus <NOM>@<BdD>
-sqlplus <NOM>/<MdP>@<BdD>	moins sécurisé
-
-
-• exécuter un script :
-	@<fichier>
-• et une procédure :
-	execute [|<nomPackage>.]<nomProc>
-
-• les blocs de code doivent SE TERMINER PAR UN SLASH pour être exécutés :
-si une déclaration de procédure, package, ... ne se termine pas par un slash,
- sqlplus affichera un prompt débutant par un n° de ligne en attendant + de code.
-
-
-• largeur d'affichage des résultats :
-	set lin[|esize] <largeur> 
-
-• définir une variable :
-	def var = val
-ou
-	define var = val
-	//l'utilisation de la variable se fait via le préfixe & :
-	... &var ...
-
-• ATTENTION AUX ESPERLUETTES / «&» :
-**Même dans les commentaires**, une esperluette sera interprétée comme
- une référence à une variable définie par le mot suivant le «&».
-**Si cette prétendue variable n'a pas été définie**, elle provoquera l'affichage
- d'un prompt et la lecture de données depuis stdIn !
-_ contournable par la commande « set scan off »
-
-
-• activer l'affichage des sorties DBMS :
-set serveroutput on;
-
-
-● La BdD est pleine, elle occupe toute la partition ? :
-Pourquoi ne pas vider les tablespaces UNDO et TEMP, qui occupent parfois
-des dizaines de Go ?
-_ créer un nouveau tablespace TEMP pour remplacer le précédent,
-_ redémarrer la base – ce qui va
-→ exemple :
-
--- créer un nouveau tablespace et l'utiliser
---
-CREATE TEMPORARY TABLESPACE TEMP2 TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0101.dbf' SIZE 20M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 32767M;
-ALTER DATABASE DEFAULT TEMPORARY TABLESPACE TEMP2;
-
--- redémarrer pour appliquer le changement  
-shutdown immediate;
-startup;
-
--- abandonner l'ancien tablespace
-DROP TABLESPACE TEMP INCLUDING CONTENTS AND DATAFILES;
-
--- recréer un nouveau tablespace identique à l'ancien, et l'utiliser – mais vide
---
-CREATE TEMPORARY TABLESPACE TEMP TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0102.dbf' SIZE 25M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 32767M;
-ALTER TABLESPACE TEMP ADD TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0103.dbf' SIZE 25M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 8000M;
-ALTER TABLESPACE TEMP ADD TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0104.dbf' SIZE 25M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 11000M;
-ALTER DATABASE DEFAULT TEMPORARY TABLESPACE TEMP;
-
--- redémarrer pour appliquer le changement ...
-shutdown immediate;
-startup;
-
--- supprimer la tablespace temporaire
-DROP TABLESPACE TEMP2 INCLUDING CONTENTS AND DATAFILES;
-
-
-
-
-
 ● IMPORTER UN DUMP :
 	impdp <utilisateur>/<MdP>@<hôte> directory=<dump_dir> dumpfile=<dump.dmp> \
 		[logfile=<log.log>] schemas=CREMA,CREMA_LEC,CREMA_EAI \
@@ -317,18 +240,11 @@ SELECT LENGTH('ÉLECTRICITÉ'), LENGTHB('ÉLECTRICITÉ') FROM DUAL
 • timezone de la connexion, de la base de données, et du serveur hébergeant cette dernière. 
 
 ● TYPES – date :
-• ATTENTION, oracle stocke par défaut les millisecondes.
+• ATTENTION, oracle stocke les millisecondes par défaut.
 _ TIMESTAMP
 _ TIMESTAMP WITH TIME ZONE
 _ TIMESTAMP WITH LOCAL TIMEZONE
 
-_DATE : chez oracle, stocke date et heure.
-**PAR DÉFAUT, UN SELECT NE RENVOIT QUE LA PARTIE «DATE»**
-• Pour requêter une date avec heure:minutes:secondes :
-	TO_CHAR(DATE_DERNIERE_EXEC, 'YYYY-MM-DD HH24:MI:SS')
-ou **sans les secondes** :
-	TRUNC(DATE_DERNIERE_EXEC, 'MI')
-car la granularité de DATE est à la seconde, pas de 'SS' pour TRUNC() 
 
 
 ● ENCODAGE :

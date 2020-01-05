@@ -5,14 +5,10 @@
 # En fonction de la présence de $XAUTHORITY et des programmes zenity & dialog,
 # une des 3 implémentations (zenity sous X11, dialog en console, SELECT de bash
 # en console) sera déclarée.
-#
-# ATTENTION À LA DUPLICATION DE CODE :
-# Si ces 3 fonctions devaient être implémentées dans un même fichier,
-# du code en début et en fin de fonction serait à factoriser !
 
-
-## ● DÉPENDANCES : ** nécessite qu'extglob soit armé **
+## ● DÉPENDANCES : **nécessite qu'extglob soit armé **
 shopt -s extglob
+
 
 
 ## Fonction demandant de choisir un dossier ou un fichier au sein de $2,
@@ -22,7 +18,7 @@ shopt -s extglob
 #
 #● 4 PARAMÈTRES :
 #	$1 == cible par défaut.
-#	$2 == dossier au sein duquel la sélection doit être contenue ou égale.
+#	$2 == dossier au sein duquel la sélection doit être contenue.
 #		En cas de liens symbolique choisi, son chemin réel doit être au sein de $2
 #	$3 == titre à afficher (BdDial ou texte en ligne-de-comm)
 #	$4 == type de sélection (FACULTATIF) :
@@ -31,100 +27,48 @@ shopt -s extglob
 #				2 → "		"	   dossier ou fichier
 #
 #● SORTIE :
-#• 0 si choix effectué, ≠ 0 si abandon.
-#• si $? == 0 :
-#	la variable globale ** $destination ** est armée au chemin de la sélection
-#	**RELATIF** à $2, qui vaudra :
+#• retourne 0 si choix effectué, ≠ 0 si abandon.
+#• si $? == 0,
+# arme le chemin **RELATIF** à $2 de la sélection sera dans $destination, qui vaudra :
 #		_ "."		si la destination choisie est le dossier $2,
 #		_ le sous-répertoire choisi, SLASH TERMINAL INCLU,
-#		_ ou le fichier choisi.
+#		  ou le fichier choisi.
 #
 #● VARIABLE MODIFIÉE :
 #		$destination
-
 if [[ -n $XAUTHORITY && -n $(which zenity) ]]
 then
-
-	#codes de couleur
-	declare -r cR=$(tput setaf 1)
-	declare -r cN=$(tput sgr0)
-
   BdDialChoixDossier()
   {
-	# $2 doit être un dossier
-	[[ -d $2 ]] || {
-		echo "${cR}Le paramètre «$2» n'est pas un dossier accessible$cN" >&2
-		return 2
-	}
-
-	#vérification de la cohérence entre $4 et $1
-	case "$4" in
-		1)
-			[[ -f $1 ]] || {
-				echo "${cR}«$1» n'est pas un fichier accessible !$cN" >&2
-				return 1
-			}
-			;;
-		2)
-			[[ -e $1 ]] || {
-				echo "${cR}Le paramètre «$1» est inaccessible$cN" >&2
-				return 1
-			}
-			;;
-		*)
-			[[ -d $1 ]] || {
-				echo "${cR}«$1» n'est pas un dossier accessible !$cN" >&2
-				return 1
-			}
-			;;
-	esac
-
-
-	#Quels types de sélection sont autorisés :
-	case "$4" in
-		0)
-			local autoriseDossier=1
-			;;
-		1)
-			local autoriseFichier=1
-			;;
-		2)
-			local autoriseDossier=1
-			local autoriseFichier=1
-			;;
-		*)
-			local autoriseDossier=1
-	esac
+	#Quels types de retour sont autorisés :
+	local autoriseDossier=0
+		[[ $4 = 0 || $4 = 2 ]] && autoriseDossier=1
+	local autoriseFichier=0
+		[[ $4 = 1 || $4 = 2 ]] && autoriseFichier=1
 
 	local titre=$3
 
-
-	#la sélection DOIT appartenir à l'arborescence de ce dossier.
-	# normalisé par la suppression des slash surnuméraires
+	#dossier devant contenir la sélection au sein de son arborescence – SANS slash terminal
+	# normalisé par la suppression des slash surnuméraires et terminaux.
 	local ancetreSelection=${2//+('/')/'/'}
-
-	# chemin canonique de ce dossier ancêtre
-	local ancetreRealpath=$( realpath -- "$ancetreSelection")
-
+	ancetreSelection=${ancetreSelection%'/'}
 
 	local selectionInitiale=${1//+('/')/'/'}
-
-	## test de l'appartenance ce la sélection initiale à $ancetreSelection
-	# après résolution des liens symboliques.
-	# À défaut, la sélection initiale est ramenée à l'ancêtre autorisé.
-	[[ $(realpath -- "$selectionInitiale") != ${ancetreRealpath%/}?(/*) ]] \
-	&& {
+	## la sélection initiale doit être un descendant de $ancetreSelection :
+	# par le chemin donné en paramètre,
+	# ET par le chemin canonique.
+	[[ $selectionInitiale =~ $ancetreSelection?(/*) ]] \
+	&& [[ $(readlink -f "$selectionInitiale") =~ $(readlink -f "$ancetreSelection")?(/*) ]] \
+	|| {
+		# la sélection initiale est ramenée à l'ancêtre autorisé
 		selectionInitiale=$ancetreSelection
-		echo "${cR}Attention, dossier initial ramené à «$cG$ancetreSelection$cN$cR»$cN" >&2
 	}
 
+	#paramètres additionnels de zenity
+	local params=
+		[[ $4 = 0 || -z $4 ]] && params=--directory
 
-	#paramètres additionnels de zenity : armé s'il faut sélectionner un dossier
-	# (par défaut).
-	local params
-	[[ $4 = 0 || -z $4 ]] && params=--directory
-
-	local result
+	local result=
 
 	while :
 	do
@@ -134,22 +78,25 @@ then
 		#si le code de retour est ≠ 0, c'est qu'on a annulé la sélection
 		[[ $? = 0 ]] || return 1
 
-		#on refuse une sélection hors du dossier ancêtre passé en $2
-		# après résolution des liens symboliques
-		[[ $(realpath -- "$result") != ${ancetreRealpath%/}?(/*) ]] \
-		&& {
-			titre="SÉLECTION LIMITÉE À LA DESCENDANCE DE «$ancetreSelection» HORS LIENS SYMB. – $3"
+		#on refuse une destination hors du dossier passé en $2
+		# (y compris après résolution des liens symboliques)
+		# la vérification inclus $2 ET sa descendance
+		if [[ $result != $ancetreSelection  &&  $result != $ancetreSelection/* ]] \
+			|| [[ $(realpath -- "$result") != $ancetreSelection  \
+					&& $(realpath -- "$result") != $ancetreSelection/* ]]
+		then
+			titre="! EMPLACEMENT LIMITÉ À LA DESCENDANCE DE «$ancetreSelection/» ! – $3"
 			continue
-		}
+		fi
 
 		#Le résultat doit être du type attendu (fichier &/ou dossier)
 		#
-		[[ -z $autoriseDossier  &&  -d $result ]] && {
-			$titre="LE CHOIX DOIT ÊTRE UN FICHIER ! – $3"
+		[[ $autoriseDossier = 0  &&  -d $result ]] && {
+			$titre="!!! LE CHOIX DOIT ÊTRE UN FICHIER – $3"
 			continue
 		}
-		[[ -z $autoriseFichier  && -f $result ]] && {
-			$titre="LE CHOIX DOIT ÊTRE UN DOSSIER ! – $3"
+		[[ $autoriseFichier = 0  && -f $result ]] && {
+			$titre="!!! LE CHOIX DOIT ÊTRE UN DOSSIER – $3"
 			continue
 		}
 
@@ -157,122 +104,79 @@ then
 	done
 
 	# ajustement du résultat
-	#
 	if [[ -d $result ]]
 	then
 		# ... pour dossier
-		if [[ $(realpath -- "$result") = $ancetreRealpath ]]
+		if [[ $result = $ancetreSelection ]]
 		then
 			destination=.
 		else
-			#zenity ne met PAS de slash terminal, mais le résultat DOIT en avoir.
-			#la combinaison de ces 2 instructions prends en compte le cas
-			# particulier de $ancetreSelection=/
+			#zenity ne met PAS de slash terminal, mais le résultat DOIT en avoir
 			destination=${result#"$ancetreSelection"}/
-			destination=${destination#/}
 		fi
 	else
 		# ... pour fichier
 		destination=${result#"$ancetreSelection"}
-		destination=${destination#/}
 	fi
 
 	return 0
   }
 
 
-
 elif which dialog >/dev/null
 #Pas sous X11 ou sans zenity, mais «dialog» est disponible
 then
 
-	#codes de couleur
-	declare -r cR=$(tput setaf 1)
-	declare -r cN=$(tput sgr0)
-
   BdDialChoixDossier()
   {
-	# $2 doit être un dossier
-	[[ -d $2 ]] || {
-		echo "${cR}Le paramètre «$2» n'est pas un dossier accessible$cN" >&2
-		return 2
-	}
-
-	#vérification de la cohérence entre $4 et $1
-	case "$4" in
-		1)
-			[[ -f $1 ]] || {
-				echo "${cR}«$1» n'est pas un fichier accessible !$cN" >&2
-				return 1
-			}
-			;;
-		2)
-			[[ -e $1 ]] || {
-				echo "${cR}Le paramètre «$1» est inaccessible$cN" >&2
-				return 1
-			}
-			;;
-		*)
-			[[ -d $1 ]] || {
-				echo "${cR}«$1» n'est pas un dossier accessible !$cN" >&2
-				return 1
-			}
-			;;
-	esac
-
-
 	#coordonnées de la fenêtre de sélection
 	local Xt Yt
 
 	local titre=$3
 	local hline
 
-	#mode de sélection fourni à dialog :
+	#mode de sélection fourni à dialog
 	local paramSelection
+	local autoriseDossier=0
+	local autoriseFichier=0
 
-	case "$4" in
-	  1)
-		# ... fichier (2 panneaux)
-		hline='Sélectionner le fichier dans le panneau supérieur droit'
-		paramSelection=--fselect
-		local autoriseFichier=1
-		;;
-	  2)
-		# ... fichier ou dossier
-		hline='Sélectionner le fichier ou dossier dans le panneau supérieur droit'
-		paramSelection=--fselect
-		local autoriseDossier=1
-		local autoriseFichier=1
-		;;
-	  *)
-		# ... dossier (1 panneau affiché)
-		hline='Sélectionner le dossier dans le panneau supérieur'
-		paramSelection=--dselect
-		local autoriseDossier=1
-		;;
-	esac
-
-
-	#la sélection DOIT appartenir à l'arborescence de ce dossier.
-	# normalisé par la suppression des slash surnuméraires
+	#dossier au sein duquel doit se trouver le résultat – SANS slash terminal
 	local ancetreSelection=${2//+('/')/'/'}
-
-	# chemin canonique de ce dossier ancêtre
-	local ancetreRealpath=$( realpath -- "$ancetreSelection")
-
+	ancetreSelection=${ancetreSelection%'/'}
 
 	local selectionInitiale=${1//+('/')/'/'}
-
-	## test de l'appartenance ce la sélection initiale à $ancetreSelection
-	# après résolution des liens symboliques.
-	# à défaut, la sélection initiale est ramenée à l'ancêtre autorisé
-	[[ $(realpath -- "$selectionInitiale") != ${ancetreRealpath%/}?(/*) ]] \
-	&& {
+	## la sélection initiale doit être un descendant de $ancetreSelection :
+	# par le chemin donné en paramètre,
+	# ET par le chemin canonique.
+	[[ $selectionInitiale =~ $ancetreSelection?(/*) ]] \
+	&& [[ $(readlink -f "$selectionInitiale") =~ $(readlink -f "$ancetreSelection")?(/*) ]] \
+	|| {
+		# la sélection initiale est ramenée à l'ancêtre autorisé
 		selectionInitiale=$ancetreSelection
-		echo "${cR}Attention, dossier initial ramené à «$cG$ancetreSelection$cN$cR»$cN" >&2
 	}
 
 	local result
+
+	#mode de fonctionnement :
+	if [[ $4 = 0 ]]
+	then
+		# ... dossier (1 panneau affiché)
+		hline='Sélectionner le dossier dans le panneau supérieur'
+		paramSelection=--dselect
+		autoriseDossier=1
+	elif [[ $4 = 1 ]]
+	then
+		# ... fichier (2 panneaux)
+		hline='Sélectionner le fichier dans le panneau supérieur droit'
+		paramSelection=--fselect
+		autoriseFichier=1
+	else
+		# ... fichier ou dossier
+		hline='Sélectionner le fichier ou dossier dans le panneau supérieur droit'
+		paramSelection=--fselect
+		autoriseDossier=1
+		autoriseFichier=1
+	fi
 
 	while :
 	do
@@ -300,21 +204,24 @@ then
 		# (cf page man)
 		[[ $? = 0 ]] || return 1
 
-		#on refuse une sélection hors du dossier ancêtre passé en $2
-		# après résolution des liens symboliques
-		[[ $(realpath -- "$result") != ${ancetreRealpath%/}?(/*) ]] \
-		&& {
-			titre="! SÉLECTION LIMITÉE À LA DESCENDANCE DE «$ancetreSelection» HORS LIENS SYMB. ! – $3"
+		#on refuse une destination hors du dossier passé en $2
+		# (y compris après résolution des liens symboliques)
+		# la vérification inclus $2 ET sa descendance
+		if [[ $result != $ancetreSelection  &&  $result != $ancetreSelection/* ]] \
+			|| [[ $(realpath -- "$result") != $ancetreSelection  \
+					&& $(realpath -- "$result") != $ancetreSelection/* ]]
+		then
+			titre="! EMPLACEMENT LIMITÉ À LA DESCENDANCE DE «$ancetreSelection/» ! – $3"
 			continue
-		}
+		fi
 
 		#Le résultat doit être du type attendu (fichier &/ou dossier)
 		#
-		[[ -z $autoriseDossier  &&  -d $result ]] && {
+		[[ $autoriseDossier = 0  &&  -d $result ]] && {
 			titre="! LE CHOIX ÊTRE UN FICHIER ! – $3"
 			continue
 		}
-		[[ -z $autoriseFichier  &&  -f $result ]] && {
+		[[ $autoriseFichier = 0  && -f $result ]] && {
 			titre="! LE CHOIX DOIT ÊTRE UN DOSSIER ! – $3"
 			continue
 		}
@@ -322,334 +229,156 @@ then
 		break
 	done
 
-	if [[ $(realpath -- "$result") == $ancetreRealpath ]]
+	#contrairement à zenity, dialog met un slash terminal aux répertoires
+	if [[ $result == $ancetreSelection/ ]]
 	then
 		destination=.
 	else
-		#contrairement à zenity, dialog met un slash terminal aux répertoires,
-		# il n'y a pas besoin de l'ajouter
 		destination=${result#"$ancetreSelection"}
-		destination=${destination#/}
 	fi
 
 	return 0
   }
 
-#
-# ●●●● pour déboguage 3e implémentation !
-fi
-
-#else
+else
 #ni X11, ni zenity, ni dialog : on demande d'entrer le répertoire à la main
 
-	#codes de couleur
-	declare -r cN=$(tput sgr0)
-	declare -r cO=$(tput setaf 3)
-	declare -r cJ=$(tput setaf 11)
-	declare -r cR=$(tput setaf 1)
-	declare -r cG=$(tput bold)
+##TODO : ces 2 lignes sont POUR LE DÉBOGUAGE !
+:
+fi
+#TODO :
+_ versions Zenity & dialog OK,
+_ répercuter modifications signature sur le code de la dernière fonction, tester :
+	« si $4 == 0, on s'assure que $1 est un dossier, et on ajoute un slash terminal. »
+XXX tester si la $destination fournie par la dernière version correspond à la
+description, et annoter le code cas "1" du «c.a.s.e $REPLY» :
+	« si $1 est sélectionné, $destination vaut bien «.» »
+_ utilisation de LINES & COLUMNS par la commande interne «select» à activer (cf man) !
 
  BdDialChoixDossier()
   {
-	# $2 doit être un dossier
-	[[ -d $2 ]] || {
-		echo "${cR}Le paramètre «$2» n'est pas un dossier accessible$cN" >&2
-		return 2
-	}
+	#codes de couleur
+	local -r cN=$(tput sgr0)
+	local -r cO=$(tput setaf 3)
+	local -r cJ=$(tput setaf 11)
+	local -r cR=$(tput setaf 1)
+	local -r cG=$(tput bold)
 
-	#vérification de la cohérence entre $4 et $1
-	case "$4" in
-		1)
-			[[ -f $1 ]] || {
-				echo "${cR}«$1» n'est pas un fichier accessible !$cN" >&2
-				return 1
-			}
-			;;
-		2)
-			[[ -e $1 ]] || {
-				echo "${cR}Le paramètre «$1» est inaccessible$cN" >&2
-				return 1
-			}
-			;;
-		*)
-			[[ -d $1 ]] || {
-				echo "${cR}«$1» n'est pas un dossier accessible !$cN" >&2
-				return 1
-			}
-			;;
-	esac
-
-
-	#utilisé comme séparateur au sein des listes de nom !
 	local IFS=$'\n'
-
-	#peut-on armer $COLUMNS au sein de la f° ?
-	[[ -n $(which tput) && -n $TERM ]]
-	local -r armerNbCols=$?
-
-
-	# option indiquant le type d'objet sélectionnable
-	case "$4" in
-		1) # fichier seulement
-			local optionSelection=-f
-			local fichiersSeulement=1
-			;;
-		2) #fichiers & dossiers
-			local optionSelection
-			;;
-		*) #répertoires seulement (par défaut)
-			local optionSelection=-d
-	esac
-echo "●optionSelection : $optionSelection"
-
-
-	#la sélection DOIT appartenir à l'arborescence de ce dossier.
-	# normalisé par la suppression des slash surnuméraires
-	local ancetreSelection=${2//+('/')/'/'}
-
-	# chemin canonique de ce dossier ancêtre
-	local ancetreRealpath=$( realpath -- "$ancetreSelection")
-
-
-	local selectionInitiale=${1//+('/')/'/'}
-
-	## test de l'appartenance de la sélection initiale à $ancetreSelection
-	# après résolution des liens symboliques.
-	# À défaut, la sélection initiale est ramenée à l'ancêtre autorisé.
-	[[ $(realpath -- "$selectionInitiale") != ${ancetreRealpath%/}?(/*) ]] \
-	&& {
-		selectionInitiale=$ancetreSelection
-		echo "${cR}Attention, dossier initial ramené à «$cG$ancetreSelection$cN$cR»$cN" >&2
-	}
-
-
-	#détermination du dossier initial,
-	# tenant compte du cas où la sélection initiale est un fichier
-	local dossierInitial
-	if [[ -d $selectionInitiale ]]
-	then
-		dossierInitial=$selectionInitiale
-	else
-		dossierInitial=$(dirname -- "$selectionInitiale")
-	fi
-
-
-	#détermination de la sélection initiale (cas d'un fichier)
-	[[ -n fichiersSeulement  &&  -f selectionInitiale ]] && {
-		local selectionInitialeFichier=$(basename -- "$selectionInitiale")
-	}
-
 
 	#la sauvegarde du répertoire de travail est nécessaire car on
 	# chdir avant d'afficher la liste des sous-dossiers
 	local -r oldPWD=$PwD
 
-	cd -- "$dossierInitial" || {
-		echo "${cR}Erreur : dossier «$cG$dossierInitial$cR» inaccessible. Abandon.$cN" >&2
-		return 1
+	#dossier au sein duquel doit se trouver le résultat – SANS slash terminal
+	local ancetreSelection=${2//+('/')/'/'}
+	ancetreSelection=${ancetreSelection%'/'}
+
+	local selectionInitiale=${1//+('/')/'/'}
+	## la sélection initiale doit être un descendant de $ancetreSelection :
+	# par le chemin donné en paramètre,
+	# ET par le chemin canonique.
+	[[ $selectionInitiale =~ $ancetreSelection?(/*) ]] \
+	&& [[ $(readlink -f "$selectionInitiale") =~ $(readlink -f "$ancetreSelection")?(/*) ]] \
+	|| {
+		# la sélection initiale est ramenée à l'ancêtre autorisé
+		selectionInitiale=$ancetreSelection
 	}
 
 
-	unset dossierInitial
-	unset selectionInitiale
-
-	#faut-il afficher les dossiers & fichiers cachés ?
-	#
-	# $hidden sert à la fois de drapeau, et d'indice aux sein de ces 2 tableaux,
-	# $optionModif[] et $verbeHidden[] :
-	# _ $optionModif[$hidden] indique le paramètre à passer à compgen
-	#   ( -X : motif des fichiers à exclure),
-	# _ $verbeHidden[$hidden]  le libellé de l'action affichée dans la liste
+	#faut-il afficher les dossiers cachés ?
+	# $hidden sert de drapeau et d'indice aux sein des 2 tableaux,
+	# $optionMotif[] indique le paramètre à passer à compgen ( -X : motif
+	#	des fichiers à exclure),
+	# $verbeHidden le verbe à afficher dans le choix de changement d'affichage
 	local hidden=0
-
-	local -r optionMotif=( '-X.*' '' )
-
-	local -r verbeHidden=(
+	local optionMotif=( '-X.*' '' )
+	local verbeHidden=(
 			"${cJ}Afficher les dossiers cachés$cN"
 			"${cJ}Ne pas afficher les dossiers cachés$cN" )
 
-
-	#Peut-on passer dans le dossier parent ?
-	# (le choix doit rester au sein de l'arborescence de $2)
-	#
-	# → option «remonter» conditionnellement activée ;
-	# $autoriserRemonter sert d'indice au sein de $verbeRemonter[],
-	# et est décidé à chaque itération de la boucle principale
-	local autoriserRemonter
-
-	local -r verbeRemonter=(
-			"${cO}Remontée interdite. Le choix est limité à l'arborescence de «$cG$ancetreSelection$cN$cO».$cN"
+	#le choix doit être dans l'arborescence de $1
+	# → option «remonter» conditionnellement activée
+	local autoriserRemonter=0
+	local verbeRemonter=(
+			"${cO}Le choix est cantonné à l'arborescence de «$ancetreSelection». Pas de remontée autorisée.$cN"
 			"${cJ}Remonter$cN" )
 
-	#Peut-on sélectionner le dossier actuel ?
-	local selectionDossierActuel=''
-	[[ -z $fichiersSeulement ]] && selectionDossierActuel="${cJ}Sélectionner le dossier actuel$cN"
+	cd "$selectionInitiale" || {
+		echo "${cR}Erreur : dossier «$selectionInitiale» inaccessible. Abandon.$cN" >&2
+		return 1
+	}
 
-
-	until :
+	until [[ $destination =~ $ancetreSelection/* ]]
 	do
-		#affiche le titre, le dossier actuel,
-		# ainsi que la sélection actuelle
-		echo
+		#affiche le titre
 		echo "$cG$cO●● $3 ●●$cN"
-		echo "dossier actuel : «$cJ$cG$PWD$cN»"
-		[[ -n $selectionInitialeFichier ]] \
-			&& echo "sélection actuelle : «$cG$selectionInitialeFichier$cN»"
-		echo
 
-		#récupère la liste des objets sélectionnables sous $dirActu
-		liste=( $( compgen  "$optionSelection"  "${optionMotif[ $hidden ]}" ) )
+		echo "dossier actuel «$cJ$cG$PWD$cN» :"
 
-		#met à jour $autoriserRemonter
-		[[ $PWD == ${ancetreSelection%/}?(/) ]]
-		autoriserRemonter=$?
-
-		#met à jour la taille d'écran disponible pour "select"
-		[[ $armerNbCols = 0 ]] && {
-			COLUMNS=$(tput cols)
-			LINES=$(tput lines)
-		}
-
-#TODO :
-#_ versions Zenity & dialog OK,
-#● zenity ne peut pas sélectionner « fichier OU dossier » !
-#
-#• pour dernière implémnetation :
-# _ créer le tableau, ajouter conditionnellemen les $selectionDossierActuel et $accepter sélection courante,
-	puis appeler « select in »
-# _ tester sélection dossier, sélection fichier et sélection fichier/dossier
-#● màj.sh : répondre NON à « copier .../BASH/bouts de code/ » le copie quand même !?
-
+		#récupère la liste des dossiers sélectionnables sous $dirActu
+		liste=( $( compgen -d ${optionMotif[ $hidden ]} ) )
 
 		select rep in \
+			${cJ}Sélectionner$cN \
 			${cJ}Annuler$cN \
 			"${verbeRemonter[ $autoriserRemonter ]}" \
 			"${verbeHidden[ $hidden ]}" \
-			"$selectionDossierActuel" \
 			"${liste[@]}"
 		do
-
 		  case "$REPLY" in
-			1) #Annuler
-				cd -- "$oldPWD"; return 1
+			1) #Sélectionner
+				destination=$PWD/
+				cd "$oldPWD"; return 0
 				;;
 
-			2) #Remonter vers répertoire parent
+			2) #Annuler
+				cd "$oldPWD"; return 1
+				;;
+
+			3) #Remonter vers répertoire parent
 				if [ $autoriserRemonter = 0 ]
 				then
-					echo "${cR}Non ! Le choix est limité à l'arborescence de «$cG$ancetreSelection$cN$cR».$cN" >&2
+					echo "${cR}Non ! Le choix est limité à l'arborescence de «$cG$ancetreSelection$cR».$cN" >&2
 					echo
 				else
-					#changer de dossier RAZ $selectionInitiale
-					unset selectionInitiale
 					cd ..
-					break
+					[ "$PWD/" = "$1" ] && autoriserRemonter=0
 				fi
+				break
 				;;
 
-			3) #basculer l'affichage des fichiers & dossiers cachés
+			4) #basculer l'affichage des dossiers cachés
 				hidden=$(( ! hidden ))
 				break
 				;;
 
-			4) #Sélectionner le dossier courant (si -z $fichiersSeulement),
-			   #OU le fichier de la sélection initiale (si -n $selectionInitiale :
-				[[ -z $fichiersSeulement ]] && {
-					#sélection de dossiers autorisée
-					if [[ $PWD == ${ancetreSelection%/}?(/*) ]]
-					then
-						destination=.
-					else
-						destination=${PWD#$ancetreSelection}/
-						destination=${destination#/}
-					fi
-
-					cd -- "$oldPWD"; return 0
-				}
-				;&  # → l'exécution continue avec le prochain bloc du «case» –
-					# gestion du cas « choix n°4 == sélection initiale »
-
-			5) #
-				[[ -n $selectionInitialeFichier ]] && {
-					#accepte le fichier sélectionné par défaut
-					destination=${selectionInitialeFichier#ancetreSelection}
-					destination=${destination#/}
-
-					cd -- "$oldPWD"; return 0
-				}
-				;&  # → l'exécution continue avec le prochain bloc du «case» –
-					# gestion du cas « -n $fichierSeulement && $selectionInitialeFichier effacé »,
-					# quand aucune des 2 dernières options n'est proposée
-
-			#nécessite shopt -s extglob – tou
-			+([0-9])) # descendre dans un dossier ou sélectioner un fichier
-				[[ -n $rep ]] && {
-					#refuse d'utiliser un lien menant hors de $ancetreSelection
-					[[ $(realpath -- "$rep") != ${ancetreRealpath%/}?(/*) ]] && {
-						echo "${cR}L'uilisation de ce lien symbolique mènerait hors de «$cG$ancetreSelection$cN$cR»" >&2
-						echo "or «$cG$rep$cN$cR» est un lien menant vers «$cG$(realpath -- "$rep")$cN$cR»$cN" >&2
-						continue
-					}
-
-					if [[ -d $rep ]]
-					then
-						#descendre dans un dossier
-						if cd -- "$rep"
-						then
-							#changer de dossier RAZ $selectionInitiale
-							unset selectionInitiale
-						else
-							echo "${cR}Impossible de passer dans «$cG$rep$cN$cR»$cN" >&2
-						fi
+			#nécessite shopt -s extglob
+			+([0-9]))
+			#choix valides – on affiche le contenu
+				if [ -n "$rep" ]
+				then
+					cd "$rep" || {
+						echo "${cR}Impossible de passer dans «$cG$rep$cR»$cN" >&2
 						break
-					else
-						#sélection d'un fichier
-						destination=$PWD/$rep
-						destination=${destination#$ancetreSelection}
-						destination=${destination#/}
+					}
+					autoriserRemonter=1
+					break
+				fi
+				;& #l'exécution continue en cas d'erreur !
 
-						cd -- "$oldPWD"; return 0
-					fi
-				}
-				;& # ;& → l'exécution continue avec le prochain bloc du case !
-
-			*) #choix invalide !
-				echo "${cR}choix invalide ! Entrer le n° de l'action à entreprendre, du fichier à sélectionner, ou du répertoire où se rendre$cN" >&2
+			*) #choix invalides !
+				echo "${cR}choix invalide ! Entrer le n° de l'action à entreprendre ou du répertoire où se rendre$cN" >&2
 				echo
+				break
 		  esac
 		done
 
 	done
   }
 
-#●●●● fi
+#....●●●●●●fi
 
-echo ---
-BdDialChoixDossier "/" "/" "dans /"
-echo "rés $? / sélection : $destination (dans /)"
-echo ---
-BdDialChoixDossier "/home/self/C" "/" "/home/self/C dans /"
-echo "rés $? / sélection : $destination (depuis /home/self/C, dans /)"
-echo ---
-BdDialChoixDossier "/home/self/C" "/home/self/" "dans /home/self/"
-echo "rés $? / sélection : $destination dans (/home/self/)"
-echo ---
-BdDialChoixDossier "/home/self/Zique" "/home/self" "dans /home/self"
-echo "rés $? / sélection : $destination dans (/home/self)"
-echo ---
-BdDialChoixDossier "/home/self//C//" "/home/self///" "dans /home/self///"
-echo "rés $? / sélection : $destination (dans /home/self///)"
-
-echo ---
-destination=
-BdDialChoixDossier "/initrd.img" "/" "fichier dans /" 1
-echo "rés $? / sélection : $destination (FICHIER dans /)"
-echo ---
-destination=
-BdDialChoixDossier "/home/self/notes VIM" "/home/self/" "fichier dans dans /home/self/" 1
-echo "rés $? / sélection : $destination (FICHIER dans /home/self/)"
-echo ---
-destination=
-BdDialChoixDossier "/home/self/Zique/The Cure - Spiderman.mp3" "/home/self/" "fichier dans dans /home/self//" 1
-echo "rés $? / sélection : $destination (FICHIER dans /home/self)"
+BdDialChoixDossier "/home/self//Zique//" "/home/self///" "titre de test" 0
+echo "$? / $destination"
 

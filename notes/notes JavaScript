@@ -117,7 +117,6 @@ document.getElementsByTagName('main')[0].children
 
 ● listes notables du DOM :
 document.forms[]
-	→ accès par index (« document.forms[0] ») ou par id (« document.forms['form-principal'] »)
 formElem.elements[]
 elem.classList[]
 elem.chilNodes[]
@@ -201,7 +200,7 @@ etc.
 • Insérer <meta http-equiv="Content-Script-Type" content="text/javascript" />
 dans l'entête pour éviter d'indiquer le type de script à chaque déclaration
  d'action, comme dans
-	<body onload="javascript: document.forms['form-principal'].texte.focus(); testAccesG;">
+	<body onload="javascript: document.forms[0].texte.focus(); testAccesG;">
 ou dans
 	<script language="javascript">
 

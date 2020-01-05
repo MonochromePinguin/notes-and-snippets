@@ -158,7 +158,6 @@ lignes DÉBUTANT par un #
 		/**/*.log	→ ignorer tt les .log des sous-dossiers
 
 
-
 ● initier le contrôle de révision :
 Se placer ds le dossier concerné, puis :
  	git init
@@ -177,8 +176,6 @@ Se placer ds le dossier concerné, puis :
 pour ne modifier qu'un seul fichier :
 	git checkout <commit> <fic>
 
-
-
 ● détruire une branche locale ou distante :
 • locale :
   git branch -d <branche>
@@ -187,7 +184,7 @@ pour ne modifier qu'un seul fichier :
  	raccourci pour « git branch -d --force »
 
 • distante :
-	git push -d <origin> <branche>
+	git push -d <origin> <branche>+
 
 
 
@@ -219,7 +216,6 @@ pour ne modifier qu'un seul fichier :
 	git show <branche>:<fic> [|><nouvelleCopie>]
 
 
-
 ● SYNONYMES :
 	HEAD	@
 	HEAD~	HEAD^1	dernière commit avant HEAD
@@ -231,7 +227,6 @@ pour ne modifier qu'un seul fichier :
 	git commit --amend --no-edit	** NE JAMAIS FAIRE ÇA SUR COMMIT PUSHÉE **
 
 
-
 ● annuler les changements d'un fichier indexé ou non :
 	git checkout [HEAD|branche|commit|...] -- <fic>
 ou
@@ -240,10 +235,8 @@ ou
 	git checkout -- <fic>
 
 
-
 ● défaire un « git add » – retirer un fichier du suivi avant commit :
 	git reset <fic>
-
 
 
 ● ANNULER UN/DES COMMITS :
