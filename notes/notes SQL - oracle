@@ -44,33 +44,101 @@ si une déclaration de procédure, package, ... ne se termine pas par un slash,
 Par contre, il ne faut PAS mettre de slash dans un bloc imbriqué.
 
 
-• largeur d'affichage des résultats :
-	set lin[|esize] <largeur> 
+• VARIABLES SYSTÈME NOTABLES :
+_ set feedback off
+	pas de messages de confirmation ou de nombre de colonnes en sortie.
 
-• définir une variable :
-	def var = val
-ou
-	define var = val
+_ set page[size] 𝑛
+	si == 0, supprime les entêtes, titres & autres infos de formatage. 
+
+_ set lin[|esize] <largeur> 
+	largeur d'affichage des résultats
+
+_ set serveroutput on
+	activer l'affichage des sorties DBMS
+
+_ pour de l'export CSV :
+	-- pas d'écriture sur la sortie standard
+	set termout off
+	-- pas de messages de confirmation
+	set feedback off
+	-- pas d'entêtes
+	set headsep off
+	set pagesize 0
+	-- séparateur de colonnes
+	set colsep ","
+	--pas de conversions des espaces en tabulations
+	set tab off
+	-- pas de retour à la ligne
+	set wrap off
+	--
+	-- utiliser la chaîne « NULL » pour les valeurs nulles
+	set null "NULL"
+	-- évite de combler les lignes par des blancs
+	set trimspool on
+	set trimout on
+	-- arme la largeur de ligne
+	set linesize 256
+	-- nombre de chiffres par colonne numérique
+	set numwidth 2
+
+
+
+• DÉFINIR UNE « VARIABLE DE SUBSTITUTION » SQLPLUS :
+variable de substitution <> variable liée (« bound variables ») :
+	_ contient du texte
+	_ inconnue du SQL
+	_ variable simplement remplacée par son contenu avant exécution,
+		doit être quotée si elle contient une chaîne
+	_ préfixée par une esperluette
+	_ prompt utilisateur si indéfinie
+	
+	def[ine] var = val;
 	//l'utilisation de la variable se fait via le préfixe & :
 	... &var ...
+	
+	
+• DÉFINIR UNE VARIABLE LIÉE (« BOUND VARIABLE ») SQL :
+	_ typée
+	_ accédée par le SQL (lue et modifiée)
+	_ pas besoin de quotes, vrai variable
+	_ préfixée par un deux-points
+	_ pas de prompt
+
+	VARIABLE var : type;
+	//utilisée via un deux-points :
+	... :var ...
+
 
 • ATTENTION AUX ESPERLUETTES / «&» :
-**Même dans les commentaires**, une esperluette sera interprétée comme
+**MÊME DANS LES COMMENTAIRES**, une esperluette sera interprétée comme
  une référence à une variable définie par le mot suivant le «&».
 **Si cette prétendue variable n'a pas été définie**, elle provoquera l'affichage
  d'un prompt et la lecture de données depuis stdIn !
 _ contournable par la commande « set scan off »
 
 
-• activer l'affichage des sorties DBMS :
-set serveroutput on;
+• UTILISER LE RESULTAT D'UN SELECT COMME CODE DE RETOUR DE SQLPLUS :
+déclarer une variable liée / SELECT INTO / « EXIT :variable ».
+**NOTER L'UTILISATION DES DEUX-POINTS POUR TOUTES RÉFÉRENCES À LA VARIABLE**
+
+	VARIABLE nomVariable;
+	BEGIN
+		SELECT ... INTO :nomVariable;
+	END;
+	/
+	EXIT :nomVariable.
+
 
 
 ● La BdD est pleine, elle occupe toute la partition ? :
 Pourquoi ne pas vider les tablespaces UNDO et TEMP, qui occupent parfois
 des dizaines de Go ?
-_ créer un nouveau tablespace TEMP pour remplacer le précédent,
-_ redémarrer la base – ce qui va
+_ créer & utiliser un nouveau tablespace TEMP2 bidon pour remplacer le précédent,
+_ redémarrer la base
+_ abandonner le tablespace original, en récréer un 3e lui étant indentique
+_ redémarrer ...
+_ abandonner le tablespace TEMP2
 → exemple :
 
 -- créer un nouveau tablespace et l'utiliser
@@ -248,6 +316,7 @@ DUAL permet d'exprimer le fait qu'on ne sélecte d'aucune table.
 select sysdate from dual;
 
 
+
 ● FAITS NOTABLES DU SQL ORACLE :
 « uncommited » par défaut.
 
@@ -341,11 +410,13 @@ ou **sans les secondes** :
 car la granularité de DATE est à la seconde, pas de 'SS' pour TRUNC() 
 
 
+
 ● ENCODAGE :
 • les plus courants : 
 	WE8MSWIN1252
 	AL32UTF8
 • définit au niveau de la BdD, et de la colonne.
+
 
 
 ● FONCTIONS :

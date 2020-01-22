@@ -775,18 +775,28 @@ _ WIFI :
 • « ping -t [nbDeSauts] [IPcible] » qui joue sur le TTL, on peut trouver
  l'adresse de chaque point de passage vers l'IP cible ...
 
-• netstat : liste les sockets ouvertes
-  netstat -an : "" ttes les sockets
-  netstat -n : pas de résolution de nom -> plus rapide
-  netstat -pn : "" les programmes ayant ouvert des connections TCP
-  netstat -tulpn : "" les sockets ouvertes «en écoute» & leur propriétaire
+• netstat : 		liste les sockets ouvertes
+  netstat -an :		""  ttes les sockets
+  netstat -n : 		  pas de résolution de nom -> plus rapide
+  netstat -pn : 	"" les programmes ayant ouvert des connections TCP
+  netstat -l	 	"" les socket ouvertes
+  netstat -tulpn :  "" les sockets ouvertes «en écoute» & leur propriétaire
 
   lsof -Pnl +M -i4 : liste les ports ip4 ouverts
   lsof -Pnl +M -i6 : '' ''	'' ip6
 
-• quel processus écoute sur tel port :
+
+• ss – « Socket Statistics » :
+options notables :
+	-t		TCP
+	-u		UDP
+	-p		affiche les processus
+
+_ quel processus écoute sur tel port :
 en tant qu'admin,
 	ss -lptn 'sport = :<n°Port>'
+_  quel processus est connecté sur tel port distant :
+
 
 • nmap est un outils de scan de ports :
 nmap -p<port(s)> <hôte> ...

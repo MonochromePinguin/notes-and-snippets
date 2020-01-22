@@ -337,6 +337,7 @@ Quand le nom de colonne est le même dans les 2 tables, on peut s'en
 
 	SELECT * FROM élèves JOIN écoles ON élèves.id_école = écoles.id
 	  WHERE école.nom = 'Bordeaux';
+
 • elles sont imbricables :
 récupère les noms d'élèves apprenant le PHP,
  au sein d'une BdD contenant les tables éleve → école → language :
@@ -345,7 +346,7 @@ récupère les noms d'élèves apprenant le PHP,
 		JOIN language ON école.id_lang = language.id
 	WHERE language.nom = 'PHP';
 
-• différents types :
+• TYPES DE JOINTURE :
 _ [|INNER] JOIN	:
 Retourne les enregistrements pour lesquels la condition du ON est remplie
  dans les 2 tables droite et gauche.
@@ -359,12 +360,24 @@ Affiche aussi les enreg de la tbl de droite ne remplissant pas ...
 _ CROSS JOIN :
 Se comporte comme un INNER quand on lui ajoute une condition.
 
-_ SELF JOIN :
+Et autres types n'ayant pas de mot clef :
+
+_ « SELF JOIN » :
 Se fait en donnant deux alias différents à la même table au sein du FROM :
 		« FROM tbl t1, tbl t2 »
 
-_ THETA JOIN :
-	<TODO>
+_ « THETA JOIN » :
+Toute jointure utilisant une relation de comparaison entre tables 
+
+_ « EQUIJOIN » :
+Toute jointure utilisant une condition d'égalité entre valeurs des colonnes (ou
+ expressions basées sur les valeurs de colonnes) des 2 tables.
+        ... WHERE tbl1.id = tbl2.id_lien ...
+Bref, une jointure théta ayant l'égalité pour condition.
+
+_ « NATURAL JOIN » :
+une équijointure sur des attributs ayant même nom dans les 2 tables
+
 
 
 ● OPÉRATEURS D'ENSEMBLE :
