@@ -397,18 +397,11 @@ SELECT LENGTH('ÉLECTRICITÉ'), LENGTHB('ÉLECTRICITÉ') FROM DUAL
 • timezone de la connexion, de la base de données, et du serveur hébergeant cette dernière. 
 
 ● TYPES – date :
-• ATTENTION, oracle stocke par défaut les millisecondes.
+• ATTENTION, oracle stocke les millisecondes par défaut.
 _ TIMESTAMP
 _ TIMESTAMP WITH TIME ZONE
 _ TIMESTAMP WITH LOCAL TIMEZONE
 
-_DATE : chez oracle, stocke date et heure.
-**PAR DÉFAUT, UN SELECT NE RENVOIT QUE LA PARTIE «DATE»**
-• Pour requêter une date avec heure:minutes:secondes :
-	TO_CHAR(DATE_DERNIERE_EXEC, 'YYYY-MM-DD HH24:MI:SS')
-ou **sans les secondes** :
-	TRUNC(DATE_DERNIERE_EXEC, 'MI')
-car la granularité de DATE est à la seconde, pas de 'SS' pour TRUNC() 
 
 
 

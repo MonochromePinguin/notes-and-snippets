@@ -158,7 +158,6 @@ lignes DÉBUTANT par un #
 		/**/*.log	→ ignorer tt les .log des sous-dossiers
 
 
-
 ● initier le contrôle de révision :
 Se placer ds le dossier concerné, puis :
  	git init
@@ -219,7 +218,6 @@ pour ne modifier qu'un seul fichier :
 	git show <branche>:<fic> [|><nouvelleCopie>]
 
 
-
 ● SYNONYMES :
 	HEAD	@
 	HEAD~	HEAD^1	dernière commit avant HEAD
@@ -231,19 +229,16 @@ pour ne modifier qu'un seul fichier :
 	git commit --amend --no-edit	** NE JAMAIS FAIRE ÇA SUR COMMIT PUSHÉE **
 
 
-
 ● annuler les changements d'un fichier indexé ou non :
 	git checkout [HEAD|branche|commit|...] -- <fic>
 ou
 	git checkout <fic> qui peut être confondu avec un checkout de branche si homonymie
-==
-	git checkout -- <fic>
 
+	git checkout -- <fic>
 
 
 ● défaire un « git add » – retirer un fichier du suivi avant commit :
 	git reset <fic>
-
 
 
 ● ANNULER UN/DES COMMITS :

@@ -573,7 +573,7 @@ BIGINT		8oct
 
 
 ● (MySQL) CRÉATION / SUPPRESSION D'UNE TABLE EN MySQL :
-  CREATE TABLE <nomTable> (
+  CREATE TABLE <MA_ION
 	id INT PRIMARY KEY AUTO_INCREMENT,
 			→ clé primaire numérique : plus rapide pour les recherches
 	nom VARCHAR(tMax),
