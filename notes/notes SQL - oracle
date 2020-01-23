@@ -24,7 +24,8 @@ _ ANCIENNE VERSION :
 • connexion :
 sqlplus						→	à la BdD par défaut
 sqlplus <NOM>@<BdD>
-sqlplus <NOM>/<MdP>@<BdD>	moins sécurisé
+sqlplus <NOM>/<MdP>@<BdD>	           moins sécurisé
+sqlplus <NOM>/<MdP>@//URL:port/service ""   ""
 
 
 • exécuter un script :
