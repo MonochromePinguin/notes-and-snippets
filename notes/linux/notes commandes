@@ -150,8 +150,11 @@ Si le fichier ZZZ a été effaçé mais est encore ouvert par un programme,
 
 
 ● grep et less :
-•pour coloriser plusieurs motifs mais afficher tt le texte :
-<commande> | grep --color=always 'motif|motif|motif|$ ' | less -R
+• pour colorer un motif en affichant tout le texte :
+    less -p <regEx> <fichier>
+ou
+    <commande> | grep --color=always 'motif|motif|motif|$' | less -R
+ 
   less -R		utilise les codes de contrôle terminal
   grep --color=always		utilise systématiquement les codes de coloration
 							quelque soit le fd en sortie du programme
@@ -208,29 +211,34 @@ _ truncate	retaille un fichier ( en + ou en - ),
 _ dirsplit	découpe un répertoire en n dossiers de tailles éguales,
 
 _	« du -s * | sort -rn | head -1 »,
-_	« lsmod | cut -d' ' -f1 | tail -n +2 | sort"
-	ou "lsmod|cut -d' ' -f1|egrep -v Module|sort »,
+_	« lsmod | cut -d' ' -f1 | tail -n +2 | sort »
+	ou « lsmod|cut -d' ' -f1|egrep -v Module|sort »,
 ...
 
 _ tr	sert à remplacer des caractères
  (par ex: « tr -s ' '» remplace tt les espaces par un seul → «tr -s ' '|cut -d' ' -f2» ...)
 
-_ ps, top, pmap,
-  lsof, fuser,
-  xargs,
-  pkill, pgrep, pidof,
+_ ps
+_ top
+_ pmap
+_ lsof
+_ fuser
+_ xargs
+_ pkill
+_ pgrep
+_ pidof
   « pidof -x ... » liste également les pid des scripts - ce qui n'est
  PAS le cas par défaut !
-  wall, ...
+_ wall
 
 _ watch [-n intervalle] <commande> répète indéfiniment la commande,
   timeout <durée> <commande> la tue si elle dépasse la durée autorisée (1h, 1.5m, ...),
 
-_ «time <commande>» mesure le temps d'exécution de la commande.
+_ time <commande> mesure le temps d'exécution de la commande.
 
 _ nohup <commande>
 
-_  dd if=/dev/urandom ... est plus bcp rapide qu'avec /dev/random
+_ dd if=/dev/urandom ... est plus bcp rapide qu'avec /dev/random
  ( & moins sécurisé ) !
 _ od permet d'afficher sous forme numérique son entrée :
  «od -An -N$taille -i /dev/urandom», par ex, affiche un
@@ -246,7 +254,7 @@ _ xvinfo (paquet x11-utils)renseigne sur capacités XVidéo
     (mise à l'échelle & accélération matérielle),
 _ xdpyinfo (itou) sur le serveur X,
 _ vainfo (paquet vainfo) sur le pilote va-api,
-  vdpauinfo (paquet vdpauinfo) sur "    vdpau,
+_ vdpauinfo (paquet vdpauinfo) sur ""  vdpau,
 _ fglrxinfo -x liste les extentions GL/GLX,
 
 _  gst-inspect-0.10,
@@ -335,16 +343,21 @@ _ whereis :
 
 ●● PROGRAMMES NOTABLES EN TTY/FRAMEBUFFER :
 _ w3m (navigateur en mode texte)
-_ w3m-img (greffon w3m pour afficher les images)
+⊕ w3m-img (greffon w3m pour afficher les images)
 ⊕ fbi	(visionneur d'images)
+_ cmus  (lecteur musical ncurses)
+_ alsamixer (egualiseur ALSA ncurses)
 
 
 
 ●● UTILITAIRES SYSTÈMES NOTABLES /s X11 :
 ⊕ assogiate (modifier les associations type-de-fichier/icône)
+_ galternatives (versions graphique de update-alternatives, paquet galternatives)
 ⊕ eiciel (BdDial pour modifier attributs étendus)
 ⊕ gcdemu (émulateur CD/DVD virtuel)
 _ isomaster (éditeur d'images .iso [ou autres])
+⊕ xwrited (démon relayant les messages de type wall sous forme de notifications
+    bureau, paquet du même nom)
 ⊕ QasMixer (réglages volume ALSA),
 _ alsamixergui ( "	" )
 _ paman (contrôleur/ navigateur propriétés PulseAudio),
@@ -356,7 +369,6 @@ _ xclip-{copy,cut,paste}file (copier/coller d'arborescences entières via
  le presse-papier),
 _ galternatives (alternative graphique GTK+	à update-alternatives),
 ⊕ Gtk-ChTheme
-
 _ xte (paquet « xautomation» : simule évenements X11, tels que boutons de
  souris & touches clavier)
 ⊕ D-feet (inspecteur DBus)
@@ -405,17 +417,26 @@ _ DHelp	(navigateur de doc standard de Debian)
 
 ● INFORMATIONS ET CONTRÔLE DU TERMINAL :
 • tput :
-  tput cols		: renvoit le nb de colonnes du terminal
+  tput cols		 renvoit le nb de colonnes du terminal
   tput lines		"		"	lignes	"	"
   tput colors		"		"	couleurs disponibles
 
-  tput bold, tput smso, ... cf «man terminfo»
+_ tput bold, tput smso, ... : cf «man terminfo»
 
 
-• infocmp :		liste les capacités de la console d'après la BdD terminfo
+⊕ infocmp :
+    liste les capacités de la console d'après la BdD terminfo
 _ toe [/usr/share/terminfo] :
-		liste les différents terminaux connus de terminfo
-_ setterm	arme certaines capacités
+	liste les différents terminaux connus de terminfo
+• setterm :
+arme certaines capacités du terminal (LED numLock, réglages DPMS, couleurs, ...)
+
+_ --blank 𝑛 : écran vide après 𝑛 minutes d'inactivité
+_ --powerdown 𝑛 : arrêt de l'écran après 𝑛 minutes
+_ --powersave [ on | powerdown | hsync | off ] :
+    type d'économie d'énergie utilisé
+_ --foreground 𝑛, --background 𝑛, --hbcolor 𝑛, --ulcolor 𝑛 :
+    défini la couleur 𝑛 comme couleur d'av-plan / arr-plan, gras, souligné
 
 
 
@@ -717,16 +738,24 @@ _commandes par PID :
 
 
 ●INFOS SYSTÈMES :
-• «dmidecode --type 17»
-  donne les infos fournies par le BIOS à propos des modules mémoires
+• via dmidecode :
+La spéc SMI / SMBIOS défini les différents types d'information possibles.
+_ dmidecode --type 17 :
+    donne les infos fournies par le BIOS à propos des modules mémoires
+_ dmidecode --type 9 :
+    infos sur les ports présents (PCIe, M.2, ...)
+
+
+• via lspci -vv ou -vvv (en root) :
+« -vv » pour « très verbeux » ...
+toutes infos sur périphériques & ports (capacités, vitesses, nombre de lignes PCIe négociées, ...)
 
 • "modinfo" pr connaitre les params possibles d'un module ;
 pour les utiliser : par ex, « modprobe ath9k ps_enable=1 ».
 
-• «udevadm info --query=all --name=<DEV-sous-/dev/>»
-  ou «udevadm info -a -n <DEV-sous-/dev/>»  (forme plus compacte)
-donne les infos plus détaillées, notamment
-la liste des attributs («ATTR{xxx}») utilisables ds les règles udev.
+• «udevadm info --query=all --name=<DEV-sous-/dev/>» (donne les envVar)
+ou «udevadm info -a -n <DEV-sous-/dev/>»  (moins détaillé, sans envVar)
+donne la liste des attributs («ATTR{xxx}») utilisables ds les règles udev.
 • on peut aussi utiliser l'option -p [chemin-sous-/sys/] à la place de --name=
 
 • tandis que

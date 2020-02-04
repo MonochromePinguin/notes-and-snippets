@@ -1,0 +1,28 @@
+● entrées notables sous « about:config » :
+_ mousewheel.with_alt.action.override_x = { -1, 0, 1, 2, 3 } :
+action du scroll horizontal sur pavé tactile :
+    -1 : par défaut
+    0 : NOP
+    1 : défilement contenu
+    2 : page préc / page suiv
+    3 : zoom +/-
+_mousewheel.with_alt.delta_multiplier_x = -10 :
+contrôle vitesse et sens du mouvement.
+    < 0 : scroll gauche → page précédente
+
+
+● URL notables du protocole « about: » :
+about:about     liste de toutes les URL du protocole about:
+
+about:config
+
+about:addons
+about:plugins
+
+about:buildconfig
+about:cache
+about:memory
+about:webrtc
+
+• voir la page « ~/.mozilla/the "about" protocol.html » pour plus d'infos
+
