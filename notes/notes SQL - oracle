@@ -19,6 +19,159 @@ _ ANCIENNE VERSION :
 	ALTER PLUGGABLE DATABASE D12UTF8PDB_3_4_1_20181226_516 open; ## ¿ peut-être la seule ligne utile ?
 
 
+
+● SQLPLUS :
+• connexion :
+sqlplus						→	à la BdD par défaut
+sqlplus <NOM>@<BdD>
+sqlplus <NOM>/<MdP>@<BdD>	           moins sécurisé
+sqlplus <NOM>/<MdP>@//URL:port/service ""   ""
+
+
+• exécuter un script :
+	sqlplus @<fichier>
+• exécuter un script **avec des paramètres** :
+	@<fichier>  param1  param2  param...
+Pour accéder à ces paramètres de script :
+utiliser une esperluette.
+	&param1, &param2, ...
+	
+• et une procédure :
+	execute [|<nomPackage>.]<nomProc>
+
+• les blocs de code doivent SE TERMINER PAR UN SLASH pour être exécutés :
+si une déclaration de procédure, package, ... ne se termine pas par un slash,
+ sqlplus affichera un prompt débutant par un n° de ligne en attendant + de code.
+Par contre, il ne faut PAS mettre de slash dans un bloc imbriqué.
+
+
+• VARIABLES SYSTÈME NOTABLES :
+_ set feedback off
+	pas de messages de confirmation ou de nombre de colonnes en sortie.
+
+_ set page[size] 𝑛
+	si == 0, supprime les entêtes, titres & autres infos de formatage. 
+
+_ set lin[|esize] <largeur> 
+	largeur d'affichage des résultats
+
+_ set serveroutput on
+	activer l'affichage des sorties DBMS
+
+_ pour de l'export CSV :
+	-- pas d'écriture sur la sortie standard
+	set termout off
+	-- pas de messages de confirmation
+	set feedback off
+	-- pas d'entêtes
+	set headsep off
+	set pagesize 0
+	-- séparateur de colonnes
+	set colsep ","
+	--pas de conversions des espaces en tabulations
+	set tab off
+	-- pas de retour à la ligne
+	set wrap off
+	--
+	-- utiliser la chaîne « NULL » pour les valeurs nulles
+	set null "NULL"
+	-- évite de combler les lignes par des blancs
+	set trimspool on
+	set trimout on
+	-- arme la largeur de ligne
+	set linesize 256
+	-- nombre de chiffres par colonne numérique
+	set numwidth 2
+
+
+
+• DÉFINIR UNE « VARIABLE DE SUBSTITUTION » SQLPLUS :
+variable de substitution <> variable liée (« bound variables ») :
+	_ contient du texte
+	_ inconnue du SQL
+	_ variable simplement remplacée par son contenu avant exécution,
+		doit être quotée si elle contient une chaîne
+	_ préfixée par une esperluette
+	_ prompt utilisateur si indéfinie
+	
+	def[ine] var = val;
+	//l'utilisation de la variable se fait via le préfixe & :
+	... &var ...
+	
+	
+• DÉFINIR UNE VARIABLE LIÉE (« BOUND VARIABLE ») SQL :
+	_ typée
+	_ accédée par le SQL (lue et modifiée)
+	_ pas besoin de quotes, vrai variable
+	_ préfixée par un deux-points
+	_ pas de prompt
+
+	VARIABLE var : type;
+	//utilisée via un deux-points :
+	... :var ...
+
+
+• ATTENTION AUX ESPERLUETTES / «&» :
+**MÊME DANS LES COMMENTAIRES**, une esperluette sera interprétée comme
+ une référence à une variable définie par le mot suivant le «&».
+**Si cette prétendue variable n'a pas été définie**, elle provoquera l'affichage
+ d'un prompt et la lecture de données depuis stdIn !
+_ contournable par la commande « set scan off »
+
+
+• UTILISER LE RESULTAT D'UN SELECT COMME CODE DE RETOUR DE SQLPLUS :
+déclarer une variable liée / SELECT INTO / « EXIT :variable ».
+**NOTER L'UTILISATION DES DEUX-POINTS POUR TOUTES RÉFÉRENCES À LA VARIABLE**
+
+	VARIABLE nomVariable;
+	BEGIN
+		SELECT ... INTO :nomVariable;
+	END;
+	/
+	EXIT :nomVariable.
+
+
+
+● La BdD est pleine, elle occupe toute la partition ? :
+Pourquoi ne pas vider les tablespaces UNDO et TEMP, qui occupent parfois
+des dizaines de Go ?
+_ créer & utiliser un nouveau tablespace TEMP2 bidon pour remplacer le précédent,
+_ redémarrer la base
+_ abandonner le tablespace original, en récréer un 3e lui étant indentique
+_ redémarrer ...
+_ abandonner le tablespace TEMP2
+→ exemple :
+
+-- créer un nouveau tablespace et l'utiliser
+--
+CREATE TEMPORARY TABLESPACE TEMP2 TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0101.dbf' SIZE 20M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 32767M;
+ALTER DATABASE DEFAULT TEMPORARY TABLESPACE TEMP2;
+
+-- redémarrer pour appliquer le changement  
+shutdown immediate;
+startup;
+
+-- abandonner l'ancien tablespace
+DROP TABLESPACE TEMP INCLUDING CONTENTS AND DATAFILES;
+
+-- recréer un nouveau tablespace identique à l'ancien, et l'utiliser – mais vide
+--
+CREATE TEMPORARY TABLESPACE TEMP TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0102.dbf' SIZE 25M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 32767M;
+ALTER TABLESPACE TEMP ADD TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0103.dbf' SIZE 25M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 8000M;
+ALTER TABLESPACE TEMP ADD TEMPFILE '/opt/oracle/oradata/RTE12UTF8/datafile/temp0104.dbf' SIZE 25M REUSE AUTOEXTEND ON NEXT 1280K MAXSIZE 11000M;
+ALTER DATABASE DEFAULT TEMPORARY TABLESPACE TEMP;
+
+-- redémarrer pour appliquer le changement ...
+shutdown immediate;
+startup;
+
+-- supprimer la tablespace temporaire
+DROP TABLESPACE TEMP2 INCLUDING CONTENTS AND DATAFILES;
+
+
+
+
+
 ● IMPORTER UN DUMP :
 	impdp <utilisateur>/<MdP>@<hôte> directory=<dump_dir> dumpfile=<dump.dmp> \
 		[logfile=<log.log>] schemas=CREMA,CREMA_LEC,CREMA_EAI \
@@ -105,6 +258,8 @@ et spécifier le nom d'hôte dans l'URI :
 p.ex :
 	sqlplus SYSTEM/MotDePasse@//localhost/d12utf8pdb_3_4_1_20190129_0630
 
+
+
 ● CREATE :
 • créer un utilisateur commun à tous PDB :
 	prefixé par [cC]##
@@ -121,6 +276,7 @@ doit être créé depuis le CDB racine.
 
 • créer une table à partir de données :
 	CREATE TABLE ... AS ( SELECT * FROM ...);
+
 
 
 ● DROP :
@@ -159,6 +315,7 @@ DUAL permet d'exprimer le fait qu'on ne sélecte d'aucune table.
 → SELECT 'const' (MySQL) == SELECT 'const' FROM DUAL ...
 
 select sysdate from dual;
+
 
 
 ● FAITS NOTABLES DU SQL ORACLE :
@@ -247,11 +404,13 @@ _ TIMESTAMP WITH LOCAL TIMEZONE
 
 
 
+
 ● ENCODAGE :
 • les plus courants : 
 	WE8MSWIN1252
 	AL32UTF8
 • définit au niveau de la BdD, et de la colonne.
+
 
 
 ● FONCTIONS :
@@ -276,7 +435,8 @@ TRUNC() renvoit une DATE (quelque soit le format de date d'entrée) TRONQUÉE
 suivant l'unitée spécifiée par <format> :
 	TRUNC( TO_DATE('14/10/2010', 'DD/MM/YYYY'), 'MONTH' )	==	01/10/2010
 	TRUNC( TO_DATE('14/10/2010', 'DD/MM/YYYY'), 'YEAR' )	==	01/01/2010
-
+• TRUNC(Date) :
+	par défaut, si le format est omis, TRUNC() arrondi au jour.
 
 • calcul de dates :
 	<date> + 𝑛

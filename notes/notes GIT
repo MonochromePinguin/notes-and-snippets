@@ -176,19 +176,21 @@ Se placer ds le dossier concerné, puis :
 pour ne modifier qu'un seul fichier :
 	git checkout <commit> <fic>
 
-● détruire une branche locale ou distante :
+
+
+● DÉTRUIRE UNE BRANCHE LOCALE OU DISTANTE :
 • locale :
   git branch -d <branche>
  	son contenu doit avoir été fusionné dans sa branche parente ou dans HEAD
   git branch -D <branche>
  	raccourci pour « git branch -d --force »
 
-• distante :
-	git push -d <origin> <branche>+
+• DISTANTE :
+	git push -d <origin> <branche>
 
 
 
-● montrer les changements effectués ...
+● MONTRER LES CHANGEMENTS EFFECTUÉS ...
 • ... mais pas enregistrés dans l'index :
  	git diff
 • ... et prêt à être commités :
@@ -231,7 +233,7 @@ pour ne modifier qu'un seul fichier :
 	git checkout [HEAD|branche|commit|...] -- <fic>
 ou
 	git checkout <fic> qui peut être confondu avec un checkout de branche si homonymie
-==
+
 	git checkout -- <fic>
 
 
@@ -344,10 +346,11 @@ Sont appliqués à la branche ou au commit en cours.
 
 
 
-● montrer les commits présents dans la branche "Old" mais pas la "Nouv" :
+● MONTRER LES COMMITS PRÉSENTS DANS LA BRANCHE "Old" MAIS PAS LA "Nouv" :
   git log <Nouv>..<Old>
 • montrer le diff de ces commits :
   git diff <Nouv>...<Old>	← attention : 3 points.
+
 
 ● LISTER LES BRANCHES CONTENANT DES COMMITS NON MERGÉS dans la branche <cible> :
   git branch --no-merged <cible>

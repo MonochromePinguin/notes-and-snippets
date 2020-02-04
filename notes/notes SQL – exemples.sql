@@ -253,4 +253,69 @@ WHERE ECHEANCE_ID IN (
                            FROM liste)
     AND e.ECHEANCE_ID NOT IN (SELECT idConserve
                               FROM liste)
+;
+
+
+
+-- ORACLE : sélectionne les 𝑛 jours suivant une date :
+SELECT (TO_DATE('01/06/2018', 'DD/MM/YYYY') + rownum - 1) AS JOUR
+FROM ALL_OBJECTS
+WHERE
+  rownum <= 10
+;
+  
+-- ORACLE : sélectionne les jours compris entre 2 dates
+SELECT (TO_DATE('01/06/2018', 'DD/MM/YYYY') + rownum - 1) AS JOUR
+FROM ALL_OBJECTS
+WHERE
+  rownum <= TO_DATE('10/06/2018', 'DD/MM/YYYY') -  TO_DATE('01/06/2018', 'DD/MM/YYYY')  +1
+;
+
+
+
+
+-- ORACLE : sélectionne tous les jours entre deux dates incluses, pour lesquels il existe
+--  un lien RE-fournisseur ARENH valide pour le contrat donné,
+-- puis y associe les complétions ARENH liées. Ceci permet
+-- d'éviter de compter les courbes
+-- absentes sur les jours dépourvus de lien valide.
+--
+-- sélectionne les jours compris entre les 2 dates fournies
+WITH
+dates as (
+    SELECT (TO_DATE('01/06/2018', 'DD/MM/YYYY') + rownum - 1) AS JOUR
+    FROM ALL_OBJECTS
+    WHERE
+      rownum <= TO_DATE('07/07/2018', 'DD/MM/YYYY') - TO_DATE('01/06/2018', 'DD/MM/YYYY') + 1
+),
+-- ne conserve que les jours pour lesquels le RE du contrat RE/GRD présente un lien avec un fournisseur ARENH
+dates_avec_lien as (
+    SELECT JOUR AS JOUR_AVEC_LIEN
+    FROM dates
+    WHERE
+      EXISTS(
+          SELECT 1
+          FROM DIA_CONTRATS dc
+            JOIN DIA_FOURNISSEUR_ARENH dfa ON dc.ID_ACTEUR1 = dfa.ID_ACTEUR
+          WHERE
+--             dc.CONTRAT_ID = 11416
+            dc.contrat_id = 11579
+            AND JOUR BETWEEN dfa.FOURN_DATE_DEBUT_ACTIVITE AND dfa.FOURN_DATE_FIN_ACTIVITE
+    )
+)
+select
+--   dates_avec_lien.JOUR_AVEC_LIEN DATE_COURBE,
+  dates_avec_lien.JOUR_AVEC_LIEN DATE_COURBE,
+  crb.TYPE_COURBE      TYPE_COURBE,
+      crb.PARENT_ID, crb.COMPLETUDE_ID
+from dates_avec_lien
+left join DIA_COMPLETUDE_COURBE_ARENH crb on JOUR_AVEC_LIEN = crb.DATE_COURBE
+  and
+--     crb.PARENT_ID = 11416
+    crb.PARENT_ID = 11579
+    AND crb.TYPE_COURBE IN (69,70,71,72,73)
+    AND crb.STATUT = 2
+order by DATE_COURBE, PARENT_ID, TYPE_COURBE
+;
+
 

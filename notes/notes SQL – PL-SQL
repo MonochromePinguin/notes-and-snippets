@@ -103,11 +103,19 @@ ex:
 	v_message      varchar2(256);
 	
 
-• exception :
+• exceptions :
+	BEGIN
+		...
+		...
 	EXCEPTION
 		WHEN NO_DATA_FOUND THEN ...
+		WHEN ... THEN
+			NULL;				-- équivalent d'un bloc de code vide
 		WHEN OTHERS THEN ...
-	END
+	END;
+
+• L'instruction «NULL» indique un bloc de code vide.
+	
 
 • IF/THEN/ELSIF/ELSE/END IF :
 	IF ...
@@ -134,7 +142,7 @@ ex:
 
 
 
-● curseur :
+● CURSEUR :
 Permet de parcourir une liste de résultats.
 • curseur implicite :
 Découle d'un « SELECT INTO »
@@ -166,7 +174,18 @@ Directive indiquant si chaque bloc doit être autonome vis-à-vis du commit de
 
 
 
-● types :
+● EXÉCUTER UNE INSTRUCTION DDL DANS DU PL/SQL :
+Il faut enrober l'instruction dans un « EXECUTE IMMEDIATE », SANS point-virgule,
+qui prend en paramètre UNE instruction sous forme de chaîne :
+
+	EXECUTE IMMEDIATE 'DROP TABLE BLA_BLA_TABLE';
+
+ou, avec l'opérateur de commentaire alternatif q'' :
+	EXECUTE IMMEDIATE  q'[
+          COMMENT ON TABLE JOBS IS 'Table stockant les paramètres d'instances.']';
+
+
+● TYPES :
 Dans un entête de package ou un bloc DECLARE :
 	TYPE ... IS [RECORD|OBJECT|VARRAY|TABLE|...]
 

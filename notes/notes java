@@ -270,6 +270,10 @@ _ générique :
 		uneString
 	);
 
+• formater un entier sur 2 chiffres, combler par des 0 à gauche :
+	String.format("%02d", nombre);
+	« 0 » → caractère à utiliser
+	« 2 » → nombre minimal de caractères
 
 ● CONCATÉNATION DE CHAÎNES :
 	StringBuilder > StringBuffer > str.concat() > opérateur «+»
