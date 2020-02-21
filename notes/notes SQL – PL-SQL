@@ -189,11 +189,29 @@ ou, avec l'opérateur de commentaire alternatif q'' :
 Dans un entête de package ou un bloc DECLARE :
 	TYPE ... IS [RECORD|OBJECT|VARRAY|TABLE|...]
 
-_ RECORD( ... ) : pas de récursivité, pas de stockage en base
-_ OBJECT : DÉCONSEILLÉ, stockable en base
-_ VARRAY: <TODO>
-_ COLLECTION: <TODO>
+• RECORD( ... ) : pas de récursivité, pas de stockage en base
 
+• OBJECT : DÉCONSEILLÉ, stockable en base
+
+• COLLECTION: <TODO>
+
+• VARRAY :
+tableau de taille fixe.
+    DECLARE
+        TYPE t_type IS VARRAY(𝑛) OF <type>;
+        v_var t_type
+
+• TABLE :
+tableau de taille variable.
+    DECLARE
+        TYPE t_type IS TABLE OF <type>;
+        v_var t_type;
+    
+
+• parcourt d'une collection :
+    FOR i IN <collection>.count LOOP
+        ... <collection>(i) ...
+    END LOOP;
 
 
 ● variables :
@@ -321,10 +339,69 @@ Utile pour un gros projet avec une bibliothèque d'exceptions.
 
 
 ● EXEMPLE DE PROCÉDURE :
+
+• UNE PROCÉDURE STOCKÉE :
+    PROCEDURE UPDATE_AND_LOG_CURVE_STATUS(
+      p_id_message_tdb IN DIAPASON.DIA_TABLEAU_BORD.TABLEAU_BORD_ID%TYPE,
+      p_type_courbe IN DIA_COURBES.TYPE_COURBE%TYPE,
+      p_debut_periode IN DATE,
+      p_fin_periode IN DATE,
+      p_id_contrat IN DIA_CONTRATS.CONTRAT_ID%TYPE,
+      p_format_message IN VARCHAR2)
+    IS
+    BEGIN
+      DECLARE
+        TYPE t_infos_courbe IS RECORD(
+          ID_CONTRAT  DIA_COURBES.PARENT_ID%TYPE,
+          DATE_COURBE DIA_COURBES.DATE_COURBE%TYPE,
+          VERSION     DIA_COURBES.VERSION_COURBE%TYPE
+        );
+
+        TYPE t_liste_resultats IS TABLE OF t_infos_courbe;
+        v_result t_liste_resultats;
+
+        -- message de détail à insérer dans le tableau de bord pour chaque courbe
+        v_chaine_details VARCHAR2(255);
+
+        v_id_detail DIA_TABLEAU_BORD_DETAILS.DETAILS_ID%TYPE;
+
+      BEGIN
+        -- mise à jour des courbes de dernière version non obsolètes de type donné,
+        --  dépendant d'un des contrats dont sont fournis les id,
+        --  durant la période donnée
+        UPDATE DIA_COURBES
+        SET
+          PUBLIABLE = 1
+        WHERE
+          TYPE_COURBE = p_type_courbe
+          AND EST_DERNIERE_VERSION = 1
+          AND PUBLIABLE = 0
+          AND DATE_COURBE BETWEEN p_debut_periode AND p_fin_periode
+          AND PARENT_ID = p_id_contrat
+        RETURNING
+          PARENT_ID, DATE_COURBE, VERSION_COURBE BULK COLLECT INTO v_result;
+
+        IF (0 = v_result.COUNT)
+        THEN
+          PKGDIA.TdbCreerDetails(p_id_message_tdb, SYSDATE, p_message_sans_modif, 1, NULL, v_id_detail);
+        END IF;
+
+        -- insertion d'un détail de message en tableau de bord pour chaque courbe mise à jour
+        FOR i IN 1..v_result.COUNT
+        LOOP
+          v_chaine_details := replace(p_format_message, '{0}', PKGDIA.NomCourbe(
+              PKGDIA.c_C17E, v_result(i).DATE_COURBE, v_result(i).ID_CONTRAT, v_result(i).VERSION, SYSDATE));
+
+          PKGDIA.TdbCreerDetails(p_id_message_tdb, SYSDATE, v_chaine_details, 1, NULL, v_id_detail);
+        END LOOP ;
+
+      END;
+    END;
+
+• UNE FONCTION ANONYME :
 -- pour sqlplus ou sqlDeveloper : 
 set serveroutput on;
 
--- fonction anonyme
 BEGIN
     DECLARE
         -- récupère la liste de toutes les paires EDA/EDE utilisées par les liens

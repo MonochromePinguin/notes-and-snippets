@@ -274,7 +274,8 @@ doit être créé depuis le CDB racine.
 • créer une séquence :
 	CREATE SEQUENCE [|START WITH 𝑛] [|MINVALUE 𝑛] [|MAXVALUE 𝑛] [| [| INCREMENT BY 𝑛]
 
-• créer une table à partir de données :
+• créer une table à partir de données d'une autre table :
+Rapide. les blocs de données ne sont pas copiés, juste référencés en C.O.W.
 	CREATE TABLE ... AS ( SELECT * FROM ...);
 
 

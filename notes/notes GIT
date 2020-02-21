@@ -344,6 +344,8 @@ Sont appliqués à la branche ou au commit en cours.
   git checkout tags/<nomTag> -b <nouvelleBranche> :
 		créé une nouvelle branche à partir du tag
 
+• MONTRER DERNIER TAG (ANNOTÉ OU NON) D'UNE BRANCHE :
+    git describe --tags --abbrev=0 <BRANCHE>
 
 
 ● MONTRER LES COMMITS PRÉSENTS DANS LA BRANCHE "Old" MAIS PAS LA "Nouv" :
