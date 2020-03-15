@@ -110,6 +110,11 @@ F3      (perso)     sélect° prochaine occurence mot
 Maj F3  (perso)     desélection dernière occurence
 Ctrl Alt Maj J      toutes les occurences
 
+• sélection / raccourcis perso :
+Alt Maj U           sélection mot vers la gauche, autre mode camelHump
+Alt Maj P           sélection mot vers la droite, autre mode camelHump
+
+Ctrl Alt ^          sélection ligne entière
 
 
 ● ANALYSE DE CODE :
@@ -134,6 +139,7 @@ Maj F7 Smart step into.
 Maj F8		step out
 Maj F9		va au curseur
 Alt + F8 	Evaluate expression.
+Alt Maj 8, Alt Maj _ Evaluate expression (perso)
 Alt + F9 	Run to cursor.
 Ctrl + F8   Toggle breakpoint.
 
