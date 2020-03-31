@@ -595,6 +595,12 @@ Host [IP|DNS]
 avec sbverify, du paquet « sbsigntool »
     sbverify --cert <chemin-vers-certificat.crt> <fichier>
 
+• lister les certificats de la BdD utilisée par shim :
+    mokutil --list-enrolled
+• récupérer les certificats de la même BdD :
+    mokutil -x
+Produit autant de clefs .der qu'il y a de certificats.
+
 
 
 ●ADMINISTRATION SYSTÈME & UTILISATEURS :
