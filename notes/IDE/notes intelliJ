@@ -132,16 +132,21 @@ Alt Maj 3	comparer avec branche
 Ctrl F5		démarrage
 Ctrl F2		arrêt
 ● DÉBOGUAGE :
-F7			step into
-F8			step over
-F9			resume program
-Maj F7 Smart step into.
-Maj F8		step out
-Maj F9		va au curseur
-Alt + F8 	Evaluate expression.
-Alt Maj 8, Alt Maj _ Evaluate expression (perso)
-Alt + F9 	Run to cursor.
-Ctrl + F8   Toggle breakpoint.
+F7			            step into
+F8			            step over
+F9			            resume program
+Maj F7                  Smart step into.
+Maj F8		            step out
+Maj F9		            va au curseur
+Alt + F9 	            Run to cursor.
+
+Alt + F8 	     Evaluate expression.
+Alt Maj 8        Evaluate expression (perso)
+
+Ctrl + Alt + Maj + clic,
+Ctrl + Alt + 8pavé      évaluation rapide
+   
+Ctrl + F8               Toggle breakpoint.
 
 • zone « variables » du cadre de déboguage :
 clic droit s/ une liste ou tableau, «Filter» 

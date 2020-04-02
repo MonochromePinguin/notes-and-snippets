@@ -319,6 +319,11 @@ select sysdate from dual;
 
 
 
+● SÉLECTIONNER DES LIGNES D'UNE LISTE :
+    SELECT COLUMN_VALUE FROM TABLE(sys.odcinumberList(...))
+
+
+
 ● FAITS NOTABLES DU SQL ORACLE :
 « uncommited » par défaut.
 

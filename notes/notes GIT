@@ -23,7 +23,7 @@ Un dépôt n'est pas forcément distant, ce peut être un chemin local.
 On peut avoir plusieurs dépôts distants !
   git remote add <alias> <url-dépôt-distant>
 	→ par convention, on nomme le 1er distant «origin»
-
+²
   git remote rm <alias>
   git remote rename <de> <vers>
 
@@ -331,7 +331,7 @@ Ils concernent les fichiers stagés et non stagés,
 
 
 ● TAGS :
-Sont appliqués à la branche ou au commit en cours.
+Par défaut, sont appliqués à la branche ou au commit en cours.
   git tag <nom>			→ appliqué à la branche/commit en cours
   git tag --delete <nom>
   git tag list ou « git tag »
@@ -343,6 +343,10 @@ Sont appliqués à la branche ou au commit en cours.
   git checkout tags/<nomTag>
   git checkout tags/<nomTag> -b <nouvelleBranche> :
 		créé une nouvelle branche à partir du tag
+
+• créer un tag sur un commit particulier :
+    git tag -a <nomTag> <(début)hashCommit> -m "message tag"
+  
 
 • MONTRER DERNIER TAG (ANNOTÉ OU NON) D'UNE BRANCHE :
     git describe --tags --abbrev=0 <BRANCHE>
@@ -427,6 +431,6 @@ depuis le départ, 1 patch/commit :
  enregistre dans le commit tt les changements détectés,
  au contraite de
 	git add <xxx> <yyyy> <zzz>
-	git commit
- qui ajoute à l'index les modifications de <xxx>, <yyy>, <zzz> et les commits.
+	git commit -m "..."
+ qui ajoute à l'index les modifications de <xxx>, <yyy>, <zzz> et les commite.
 
