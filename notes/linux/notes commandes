@@ -585,6 +585,18 @@ Host [IP|DNS]
 
 
 
+● UEFI / Secure Boot :
+(partition EFI montée par défaut sous /boot/efi/EFI)
+
+• lister les possibilité de boot enregistrés par l'EFI :
+    efibootmgr --verbose
+
+• vérifier la signature d'un exécutable EFI :
+avec sbverify, du paquet « sbsigntool »
+    sbverify --cert <chemin-vers-certificat.crt> <fichier>
+
+
+
 ●ADMINISTRATION SYSTÈME & UTILISATEURS :
 • Pour lister les utilisateurs définis, pas de commande spéciale ! Donc :
 «cat /etc/passwd|cut -d':' -f1»
