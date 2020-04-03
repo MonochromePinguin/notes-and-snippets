@@ -273,6 +273,26 @@ WHERE
 
 
 
+-- ORACLE : sélectionne les débuts et fin de chaque mois à patir du 01/01/2018
+-- pendant 24 mois
+SELECT TO_DATE('20180101', 'YYYYMMDD') + NUMTOYMINTERVAL(ROWNUM-1, 'MONTH') as debut,
+       LAST_DAY(TO_DATE('20180101', 'YYYYMMDD') 
+       		+ NUMTOYMINTERVAL(ROWNUM-1, 'MONTH')) as fin
+FROM ALL_OBJECTS
+WHERE ROWNUM < 24;
+
+
+
+-- ORACLE : obtiens le MOIS en toutes lettres + ANNÉE du mois
+SELECT to_char(SYSDATE,'MONTH YYYY')
+FROM dual;
+
+
+-- ORACLE : sélectionne le 1er juillet précédent ou égal à la date testée
+SELECT 	ROUND( ?, 'YEAR') - NUMTOYMINTERVAL(1, 'YEAR')  + NUMTOYMINTERVAL(6, 'MONTH')
+FROM DUAL;
+
+
 
 -- ORACLE : sélectionne tous les jours entre deux dates incluses, pour lesquels il existe
 --  un lien RE-fournisseur ARENH valide pour le contrat donné,
@@ -318,4 +338,14 @@ left join DIA_COMPLETUDE_COURBE_ARENH crb on JOUR_AVEC_LIEN = crb.DATE_COURBE
 order by DATE_COURBE, PARENT_ID, TYPE_COURBE
 ;
 
+
+
+-- SÉLECTION D'UNE ARBORESCENCE :
+-- « CONNECT BY PRIOR : champParent = champLigneConsidérée »
+-- « AND LEVEL » : profondeur de l'arbre
+select *
+from DIA_PLANIF
+  START WITH ID_MERE is null
+  CONNECT BY PRIOR ID_CALC = ID_MERE 
+and level <= 4;
 
