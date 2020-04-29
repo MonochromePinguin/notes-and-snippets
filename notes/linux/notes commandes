@@ -346,7 +346,11 @@ _ w3m (navigateur en mode texte)
 ⊕ w3m-img (greffon w3m pour afficher les images)
 ⊕ fbi	(visionneur d'images)
 _ cmus  (lecteur musical ncurses)
-_ alsamixer (egualiseur ALSA ncurses)
+_ alsamixer (egualiseur ALSA ncurses, paquet alsa-utils)
+
+• non essayé :
+_ console-log (paquet) : afficher sous tty, via un pager, divers journaux,
+   en f° configuration.
 
 
 
@@ -373,9 +377,11 @@ _ xte (paquet « xautomation» : simule évenements X11, tels que boutons de
  souris & touches clavier)
 ⊕ D-feet (inspecteur DBus)
 _ avahi-discover
+⊕ haguichi (GUI pour hamachi)
+
+• et programmes notables :
 ⊕ Handbrake
 ⊕ EasyTag
-⊕ haguichi (GUI pour hamachi)
 
 
 
@@ -615,11 +621,22 @@ Produit autant de clefs .der qu'il y a de certificats.
 • adduser et deluser <utilisateur> <groupe>
  pour ajouter/supprimer un utilisateur à un groupe,
 
-_ who	indique qui est connecté,
-_ w		indique en plus qui fait quoi (processus actif) ds chq session,
-_ last/lastb	indiquent les dernières connections,
-		& les échecs de connection pour «lastb»
-_ lastlog	la dernière connection de tous les utilisateurs existants.
+_ users liste les utilisateurs actuellement connectés
+_ who	indique qui est connecté s/ quel tty,
+_ w		indique en plus qui fait quoi (processus actif) ds chq session
+
+_ fgconsole donne le n° du tty actif
+
+_ lslogins,
+  lslogins -u
+  lslogin <id>  donne infos sur les uid connus
+
+_ last	liste les dernières connections connues (id, tty, horodatage) – d'après wtmp
+  last <options> <id> : ... cf man last ...
+  last -a -p now
+_ lastb   "   "   "   échecs de connexion – d'après btmp
+_ lastlog "   "   "   la dernière connection de tous les utilisateurs existants.
+
 
 • «chsh» : changer le shell par défaut d'un utilisateur,
   «add-shell», «remove-shell» : gestion liste shells autorisés
@@ -648,11 +665,16 @@ _ le dossier «Documentation» des sources du noyau (... en partie seulement)
  (batch, temps-réel, ...) de la commande
 
 • «openvt» (en tant qu'administrateur) ouvre un nouveau terminal.
- -slc num <commande> :
-	-c num pour ouvrir le terminal n° num,
-	-l exécuter "commande" en tant que login (et non un shell par défaut)
+  openvt -us
+  openvt -slc <num> <commande> :
+	-c num pour ouvrir le terminal n° <num>,
+	-l exécuter <commande> en tant que login (et non un shell par défaut)
 	-s bascule aussitôt vers le VT)
+	-u, en tant que root : exécute login sur le VT nouvellement alloué
+  openvt -us
 • «deallocvt» libère les données des VT inutilisés (sans programme les utilisant)
+
+_ cf « fgconsole » ↑
 
 • «/proc/filesystem» contient la liste les pilotes de système de fichiers
  en mémoire - PAS la totalité de ceux supportés !
@@ -771,16 +793,16 @@ toutes infos sur périphériques & ports (capacités, vitesses, nombre de lignes
 • "modinfo" pr connaitre les params possibles d'un module ;
 pour les utiliser : par ex, « modprobe ath9k ps_enable=1 ».
 
-• «udevadm info --query=all --name=<DEV-sous-/dev/>» (donne les envVar)
-ou «udevadm info -a -n <DEV-sous-/dev/>»  (moins détaillé, sans envVar)
+• « udevadm info --query=all --name=<DEV-sous-/dev/> » (donne les envVar)
+ou « udevadm info -a -n <DEV-sous-/dev/> »  (moins détaillé, sans envVar)
 donne la liste des attributs («ATTR{xxx}») utilisables ds les règles udev.
 • on peut aussi utiliser l'option -p [chemin-sous-/sys/] à la place de --name=
 
 • tandis que
- «udevadm test <DEV-sous-/sys/class/qqch>» donne en fin d'affichage la liste
+ « udevadm test <DEV-sous-/sys/class/qqch> » donne en fin d'affichage la liste
  des variables d'environnement («ENV{xxx}») utilisables
 
-♦ «udevadm control --log-priority=debug»
+♦ « udevadm control --log-priority=debug »
  est très utile pour voir ce qui se passe ! (sortie verbeuse dans les journaux)
 
 • "getconf -a"
@@ -1014,6 +1036,13 @@ _ CUPS les a supplantés et fournit les 2 commandes pour la compatibilité
 
 
 
+● GCC :
+Obtenir informations sur les drapeaux spécifiques à la cible :
+    gcc --help=target
+
+
+
+
 ● GESTION PAQUETS :
 • update-alternatives ( avec les options --auto, --config ou --install )
  par ex : « update-alternatives --install /usr/bin/java java_vm /usr/share/java-sun/jre1.7.0_07/bin/java_vm <priorité numérique> »
@@ -1185,9 +1214,12 @@ courante)
   --wait=𝑛 --random-wait
   --header "User-Agent: Mozilla/5.0 (Android 4.4; Tablet; rv:41.0) Gecko/41.0 Firefox/41.0"
 • ne sauver que certains fichiers :
-	-A [expressionRationnelleSimple] - pex : -A "*.jpg,*.png,[0-9]??"
+	-A [globsSimple] – pex : -A "*.jpg,*.png,[0-9]??"
 • et en rejeter certains :
-	-R [expressionRationnelleSimple]
+	-R [globsSimple]
+• de même pour les URL entières :
+    --accept-regex [regEx]
+    --reject-regex [regEx]
 • mettre à jour le dossier : -N (qui en fait active la comparaison d'horodatage ; ne PAS utiliser avec -nc)
 ○ « wget -Nr <Addresse> » : mise-à-jour récursive d'une arborescence
 ○ « wget -q --output-document=- » : wget silentieux, doc écrit s/ sortie standard.

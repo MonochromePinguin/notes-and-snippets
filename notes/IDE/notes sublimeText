@@ -6,12 +6,16 @@ Ctrl + P 			« goto anything »
 	"  " #			  →
 
 
-Ctrl + Maj + P      barre de commande
+Ctrl + Maj + P		barre de commande
 
-Ctrl + Maj + T      ouvrir (𝑛ième) dernier fichier
+Ctrl + Maj + T		ouvrir (𝑛ième) dernier fichier
 
 Ctrl + '			(dé)affiche la console
 
+
+Logo + Tab			insérer une tab (macro perso')
+					pour insérer une tab alors que le menu d'autocomplétion
+					(par tab ...) est ouvert
 
 •ÉDITION :
 
@@ -88,7 +92,8 @@ F2,
 maj + F2      naviguer entre signets suiv/prév.
 
 
-• GREFFON BracketHighlighter (PERSO) :
+
+● greffon BracketHighlighter (PERSO) :
 Logo + Alt + ,		aller à l'accolade ouvrante
 Logo + Alt + !		aller à l'accolade fermante
 
@@ -97,3 +102,14 @@ Ctrl + M			aller à l'accolade associée
 Alt + Maj + espace	sélectionner entre accolades – non récursif
 
 Logo + Alt + J		sélectionner les 2 tags HTML
+
+
+
+● greffon ColorPicker :
+Ctrl + Maj + C		ouvrir le sélecteur de couleur
+
+
+
+● greffon devHelp :
+F2			ouvrir devHelp sur la recherche du mot
+Maj + F2	barre de recherche où taper texte
