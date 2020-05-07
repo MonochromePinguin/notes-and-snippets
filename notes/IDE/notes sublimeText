@@ -1,23 +1,36 @@
 ● RACCOURCIS NOTABLES :
 
-Ctrl + Maj + P      barre de commande
+Ctrl + P 			« goto anything »
+	puis @			  → symboles
+	"  " :			  → ligne
+	"  " #			  →
 
-Ctrl + Maj + T      ouvrir (𝑛ième) dernier fichier
 
+Ctrl + Maj + P		barre de commande
+
+Ctrl + Maj + T		ouvrir (𝑛ième) dernier fichier
+
+Ctrl + '			(dé)affiche la console
+
+
+Logo + Tab			insérer une tab (macro perso')
+					pour insérer une tab alors que le menu d'autocomplétion
+					(par tab ...) est ouvert
 
 •ÉDITION :
 
 Ctrl + retArr/suppr, Ctrl + maj + retArr/suppr ...
+(Ctrl + maj + retArr : écrasé par raccourci perso)
 
+Alt + Maj + ↑↓ (perso),
+Ctrl + Maj + ↑↓			↑↓ ligne
 
-Ctrl + Maj + ↑↓		↑↓ ligne
+Ctrl + Maj + D 			dupliquer sél° / ligne
 
-Ctrl + Maj + D 		dupliquer sél° / ligne
-
-Ctrl + Maj + V		collage avec indentation
+Ctrl + Maj + V			collage avec indentation
 
 Ctrl + Y (perso),
-Ctrl + Maj + K      supprimer ligne
+Ctrl + Maj + K			supprimer ligne
 
 
 • MODIFICATION CODE :
@@ -27,6 +40,9 @@ Alt + Maj + W       entourer d'une balise
 • SÉLECTION :
 Ctrl + Maj + espace :
         sélectionne tout jusque délimiteurs (<>''"", etc.) englobant
+
+Ctrl + Maj + L		multi-curseur à partir de la sélection
+
 
 Ctrl + Maj + A      sélection élément englobant, puis parent, ...
 
@@ -43,6 +59,8 @@ Ctrl + F3           multi-curseur – sélectionne toutes occurrences mot
 • FORMATAGE :
 Ctrl + []           indenter/désindenter
 
+Alt + Q				formater § (à la règle des 𝑛 colonnes)
+Ctrl + J			joindre lignes
 
 
 • CASSE :
@@ -54,11 +72,14 @@ Ctrl + K Ctrl + L   minuscule
 
 
 • NAVIGATION :
+Ctrl + Tab, Ctrl + Maj + Tab		naviguer entre onglets du groupe
+Alt + 𝑛								aller au groupe d'onglets 𝑛
+
 F12         aller à la définition de l'élém sous curseur
 maj + F12   aller utilisation(s)
 
 Ctrl + R    liste symboles / aller ...
-
+(équivalent de Ctrl + P, @)
 
 Ctrl + Maj + RetArr (perso)     aller édition précédente
 Alt + Maj + RetArr (perso)     aller édition suivante
@@ -69,3 +90,26 @@ Ctrl + F2      marquer signet
 
 F2,
 maj + F2      naviguer entre signets suiv/prév.
+
+
+
+● greffon BracketHighlighter (PERSO) :
+Logo + Alt + ,		aller à l'accolade ouvrante
+Logo + Alt + !		aller à l'accolade fermante
+
+Ctrl + M			aller à l'accolade associée
+
+Alt + Maj + espace	sélectionner entre accolades – non récursif
+
+Logo + Alt + J		sélectionner les 2 tags HTML
+
+
+
+● greffon ColorPicker :
+Ctrl + Maj + C		ouvrir le sélecteur de couleur
+
+
+
+● greffon devHelp :
+F2			ouvrir devHelp sur la recherche du mot
+Maj + F2	barre de recherche où taper texte

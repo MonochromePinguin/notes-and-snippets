@@ -1,0 +1,49 @@
+un exemple d'utilisation de gtk_accel_group_activate,
+en particulier de ce que signifie le paramètre GQuark :
+
+• f° utilisable par ex. dans la callback gérant l'évén key_press, pour détecter
+certains raccourcis claviers avant de propager l'évenement à d'autres widgets :
+
+static gboolean
+handle_background_accel_group (GtkWidget   *widget,
+							   GdkEventKey *event,
+							   const GdkModifierType modifier_mask)
+{
+	gchar * accel_name =
+			gtk_accelerator_name (event->keyval, (event->state & modifier_mask));
+	const GQuark accel_quark = g_quark_from_string (accel_name);
+	g_free (accel_name);
+
+	return gtk_accel_group_activate (
+			PLUMA_WINDOW (window)->priv->background_accel_group,
+			accel_quark,
+			window, 
+			event->keyval,
+			event->state & modifier_mask);
+}
+
+• f° ayant créé ce groupe d'accélérateurs – n'étant pas liés à un menu ou un widget,
+ces accélérateurs ne peuvent pas être chargés via un GtkAction ou un GAction :
+
+static GtkAccelGroup*
+create_background_accel_group (PlumaWindow *window)
+{
+	const gchar * const accel_path_cycle_view =
+		g_intern_static_string ("<Shortcuts>/PlumaWindowShortcuts/CycleViews");
+
+	GtkAccelGroup * const accel_group = gtk_accel_group_new ();
+
+	(...)
+
+	if (!gtk_accel_map_lookup_entry (accel_path_cycle_view, NULL))
+	{
+		gtk_accel_map_add_entry (accel_path_cycle_view, GDK_KEY_F6, 0);
+	}
+	gtk_accel_group_connect_by_path (accel_group, accel_path_cycle_view,
+		g_cclosure_new (G_CALLBACK (cycle_view_forward), window, NULL));
+
+	(...)
+
+	return accel_group;
+}
+
