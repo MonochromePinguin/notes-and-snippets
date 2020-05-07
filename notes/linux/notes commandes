@@ -497,6 +497,11 @@ cut -c8- affiche de la colonne 8 à la fin de la ligne.
 
 	file -bi <fic(s)>
 
+• détection de l'encodage des fins de ligne :
+    dos2unix -i <fic>
+→ affiche les colonnes suivantes :
+    nbLnDOS, nbLn UNIX, nbLn Mac, bom, nomFic
+
 
 
 ● DÉCODAGE DE TEXTES MIME, XML, ENTITÉS HTML :

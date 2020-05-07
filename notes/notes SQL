@@ -168,7 +168,7 @@ _ se placent après les champs.
 _ AU MOINS SOUS MySQL, l'espace de nommage des contraintes est unique, partagé
  par toutes les tables !
 
-UNIQUE(champs)
+UNIQUE(champs[,champs]x𝑛)
 CHECK(condition)	→ PAS IMPLÉMENTÉ PAR MYSQL !
 
 	CREATE TABLE Test(

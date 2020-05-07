@@ -63,6 +63,7 @@ Alt ↑↓		entre fonctions/etc.
 
 ● NAVIGATION DU CODE :
 Ctrl Maj RetArr			se rendre au précédent lieu d'édition (inter-fichier)
+Ctrl Maj Inser          "       "     lieu d'édition suivant
 
 Ctrl Alt clic (perso)	aller à l'implémentation
 
@@ -95,27 +96,45 @@ Ctrl Maj /                  (dé)commenter bloc /* */
 
 Ctrl Alt T : « entourer par » ...
 
-Ctrl U (perso),
+Ctrl L (perso),
 Ctrl Maj U					basculer casse
+
 
 
 • déplacer code :
 Ctrl Maj ↑↓     déplacer ligne ds bloc de code
 Alt Maj ↑↓      déplacer ligne comme du texte
 
+
 • recherche :
-Ctrl Maj F7         surligne toutes occurences du mot
+Ctrl F, Alt F3      chercher
+Ctrl F3             chercher mot sous curseur
 
-F3      (perso)     sélect° prochaine occurence mot
-Maj F3  (perso)     desélection dernière occurence
-Ctrl Alt Maj J      toutes les occurences
+Ctrl Alt Maj J      sélectionne toutes les occurences
 
-• sélection / raccourcis perso :
-Alt Maj U           sélection mot vers la gauche, autre mode camelHump
-Alt Maj P           sélection mot vers la droite, autre mode camelHump
+Ctrl F2 (perso)         sélect° prochaine occurence mot
+Ctrl Maj F2  (perso)    désélection dernière occurence
+
+
+• déplacement/sélection – raccourcis perso :
+En plus de mes raccourcis habituels :
+
+AltGr ,         vers mot à gauche, camelHump
+AltGr !         vers mot à droite, camelHump
+
+AltGr ,         sélecion vers mot à gauche, camelHump
+AltGr !         sélecion vers mot à droite, camelHump
 
 Ctrl Alt ^          sélection ligne entière
 
+
+Ctrl AltGr :        aller début bloc
+Ctrl AltGr ;        aller fin bloc
+Ctrl AltGr :        aller début bloc avec sélection
+Ctrl AltGr ;        aller fin bloc avec sélection
+
+Ctrl Maj M,
+Ctrl M (perso)      aller à la parenthèse/crochet/accolade pairée (ou à celui de fin du bloc)
 
 ● ANALYSE DE CODE :
 Ctrl Alt H			hiérarchie des appels
@@ -172,6 +191,7 @@ _ Ctrl Maj Entrée	complétion de structure, cf ↓
 
 ●
 F2              prochaine erreur remarquée
+Maj F2          erreur précédente
 
 
 ● AUTOCOMPLÉTION :

@@ -35,6 +35,11 @@ sqlplus <NOM>/<MdP>@//URL:port/service ""   ""
 Pour accéder à ces paramètres de script :
 utiliser une esperluette.
 	&param1, &param2, ...
+
+• affichage réduit au minimum :
+Seules les sorties du script seront affichées :
+    option « -silent ».
+ 
 	
 • et une procédure :
 	execute [|<nomPackage>.]<nomProc>
@@ -394,7 +399,10 @@ _ CHAR(lng)
 	longueur fixe (1 par défaut, jusque 32Ko)
 
 _ VARCHAR2(lng [|BYTE|CHAR])
-	longueur variable, valeur stockée séparémment de la table y faisant référence.
+    longueur variable, valeur stockée séparément de la table y faisant référence.
+	taille maximale (défaut) : 4000 o.
+	taille maximale configurable  :
+	    jusqu'à 32767 o, configurable par le paramètre MAX_STRING_SIZE. 
 
 SELECT LENGTH('ÉLECTRICITÉ'), LENGTHB('ÉLECTRICITÉ') FROM DUAL
 	→ 11 CHAR, 13 BYTES
