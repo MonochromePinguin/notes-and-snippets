@@ -357,6 +357,21 @@ FETCH FIRST num% PERCENT ROWS ONLY;
   DBA_CONSTRAINTS :
     toutes les contraintes
 
+• trouver les clefs étrangères pointant ves une table :
+    SELECT *
+    FROM ALL_CONSTRAINTS
+    WHERE
+        r_constraint_name IN (
+          select constraint_name
+          FROM all_constraints
+          WHERE
+            table_name = 'DIA_TABLEAU_BORD'
+        );
+la sous-requête retourne les noms des contraintes, mais pas les tables d'origine,
+la requête globale indique table faisant référence à la table indiquée.
+
+ 
+
 • trouver un index :
 	SELECT * FROM USER_INDEXES
 	WHERE 

@@ -45,7 +45,7 @@ Alt 5		"	"	debug   (perso)
 Alt 6		"	"	TODO   (perso)
 Alt Maj 6	"	"	favoris   (perso)
 Alt 7		"	"	structure (de la classe, ...)   (perso)
-Alt 8		"	"	hiérarchie
+Alt 8		"	"	hiérarchie (classe ou appels méthode)
 Alt 9		"	"	suivi de version (commits & Cie)   (perso)
 Alt 0		"	"	sonarLint   (perso)
 
@@ -119,26 +119,29 @@ Ctrl Maj F2  (perso)    désélection dernière occurence
 • déplacement/sélection – raccourcis perso :
 En plus de mes raccourcis habituels :
 
-AltGr ,         vers mot à gauche, camelHump
-AltGr !         vers mot à droite, camelHump
+AltGr ,         vers sous-mot à gauche, camelHump
+AltGr !         vers sous-mot à droite, camelHump
 
-AltGr ,         sélecion vers mot à gauche, camelHump
-AltGr !         sélecion vers mot à droite, camelHump
+AltGr Maj ,         sélecion vers sous-mot à gauche, camelHump
+AltGr Maj !         sélecion vers sous-mot à droite, camelHump
 
 Ctrl Alt ^          sélection ligne entière
 
+Ctrl Alt è      suppression sous-mot à gauche
+Ctrl Alt _      suppression sous-mot à droite
 
 Ctrl AltGr :        aller début bloc
 Ctrl AltGr ;        aller fin bloc
 Ctrl AltGr :        aller début bloc avec sélection
 Ctrl AltGr ;        aller fin bloc avec sélection
 
+
 Ctrl Maj M,
 Ctrl M (perso)      aller à la parenthèse/crochet/accolade pairée (ou à celui de fin du bloc)
 
 ● ANALYSE DE CODE :
-Ctrl Alt H			hiérarchie des appels
-
+Ctrl Alt H			méthode : hiérarchie des appels
+Ctrl H              objet : hiérarchie des classes
 
 
 ● GIT :

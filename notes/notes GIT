@@ -83,6 +83,9 @@ Supprimer les branches supprimées, vider le cache de branches distantes :
 
 (voir aussi git fetch -p)
 
+• supprimer une branche distante :
+    git push --delete <origin> <branche>
+
 
 ● OPTIMISATION / NETTOYAGE DE DÉPÔT LOCAL :
 	git gc --aggressive

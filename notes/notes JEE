@@ -102,6 +102,19 @@ _ compilées par un compilateur JSP pour devenir des servlets Java : JSP (→ ja
 →
     <%= request.getContextPath() %>
 
+• sécurité (failles XSS) :
+_ toujours filtrer les chaînes de provenance extérieure :
+    <bean:write name="..." property="..." filter="true"/>
+La prop' « filter » du tag « write » indique s'il faut échapper les caractères
+sensibles pour HTML. **VRAI PAR DÉFAUT**.
+
+    <c:out value="org.package.classe.propriété" escapeXml="true"/>
+La prop' « escapeXml » du tag « out » indique s'il faut échapper les caractères
+sensibles pour XML. **VRAI PAR DÉFAUT**.
+(<c:out> est un équivalent de <%= ... %>, permettant un accès plus direct aux 
+propriétés).
+
+         
 
 • FAIRE TRÈS ATTENTION À LA CORRESPONDANCE VERSION–URI :
   à partir de javax.servlets:jst 1.2, l'URI à indiquer dans la taglib
