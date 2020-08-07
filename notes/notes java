@@ -125,7 +125,7 @@ Class.forName(str) : renvoit une référence à la classe nommée en param'
 NOTION LIÉE AUX INTERFACES.
 	un élément fait partie de l'autre (durée de vie, exclusivité)
 • aggrégation :
-	un élément a possède un autre élément b (mais b peut se passer de a)
+	un élément a peut posséder un autre élément b (mais b peut se passer de a)
 
 
 
@@ -269,6 +269,7 @@ _ générique :
 		unInt,
 		uneString
 	);
+_ à préférer à la concaténation dans les messages à fournir aux loggers.
 
 • formater un entier sur 2 chiffres, combler par des 0 à gauche :
 	String.format("%02d", nombre);
@@ -338,6 +339,36 @@ _ System.in, System.out
 
 • JNDI :
 	Java Naming and Directory Interface
+
+
+
+● INITIALISEURS DE LIST<> :
+•    List<T> l = Arrays.asList(v1, v2, ..., vₙ);
+_ la liste résultante est de taille fixe
+
+_ si elle est créée à partir d'un tableau, la liste fait référence aux mêmes
+ données que le tableau, modifier le contenu du tableau modifie celui de la liste :
+
+    String[] tbl = {ch1, ch2, ch3};
+    List<String> l = Arrays.asList(tbl);
+    → même contenu
+
+• via des Stream :
+    List<String> l = Stream.of("foo", "bar")collect(Collectors.toList());
+
+
+• (depuis java 9) CRÉATION DE LISTES, SET & MAP IMMUTABLES :
+_    List<T> l = List.of(v1, v2, ..., vₙ);
+
+_    Set<T> s = Set.of(v1, v2, ...,vₙ);
+    
+_   Map<K, V> = Map.of(k1, v1, k2, v2, ... kₙ, vₙ); // jusqu'à 10 paires
+
+    Map<K, V> = Map.ofEntries(
+        new AbstractMap.SimpleEntry<>(k1, v2),
+        new AbstractMap.SimpleEntry<>(k2, v2),
+        ...
+    );
 
 
 

@@ -5,7 +5,7 @@
  to %MODULE_WORKING_DIR% for 'Working Directory' in Run/Debug configuration »
 
 
-● greffons notables :
+● GREFFONS NOTABLES :
 ⊕ AsciiDoc
 _ Emmet everywhere ?
 _ Hibernate inspections ?
@@ -18,6 +18,14 @@ _ Hibernate inspections ?
 ● NE PAS STEPPER À TRAVERS CERTAINES CLASSES :
 	File -> Settings... -> Build, Execution, Deployment -> Debugger -> Stepping,
 et entrer un motif des classes à exclure du déboguage.
+
+
+
+● COPIER/COLLER :
+Ctrl Maj V      coller d'après historique
+Ctrl Alt Maj V  coller sans formatage
+
+• Ctrl AltGr V (perso)    coller presse-papier X11
 
 
 
@@ -35,7 +43,38 @@ Ctrl Maj T		aller au fichier du T.U. (ou le créer)
 Ctrl F12			« structure du fichier » – méthodes & variables
 Ctrl F12 Ctrl F12	une 2e fois, affiche aussi membres interfaces & superclasse
 
-• panneaux :
+
+• NAVIGATION DU CODE :
+Ctrl Maj RetArr			se rendre au précédent lieu d'édition (inter-fichier)
+Ctrl Maj Inser          "       "     lieu d'édition suivant
+
+Ctrl Alt clic (perso)   aller à l'implémentation
+
+Ctrl N				go to class
+Ctrl Alt Maj N		go to symbol
+
+Ctrl U			    go to superclass
+Ctrl Alt B		    go to derived class (choix)
+
+• goto perso :
+Ctrl G, D    goto  definition/implementations     
+Ctrl G, I     "  " implémentation(s)                   
+Ctrl G, T     "  " déclaration du type                
+
+Ctrl G, B
+Alt clic     retour emplacement précédent
+
+Ctrl G, L    aller à la ligne                    
+
+
+• trouver les usages d'une méthode :
+Ctrl F7			trouver les usages *dans le fichier* d'une méthode
+					&/OU de sa méthode d'interface
+
+Ctrl Maj F7	(perso)	 trouver les usages d'une méthode &/OU son interface
+
+
+• PANNEAUX :
 Alt 1       panneau fichiers
 Alt 2		"	"	BdD
 Alt Maj 2	"	"	console BdD   (perso)
@@ -51,7 +90,8 @@ Alt 0		"	"	sonarLint   (perso)
 
 Alt F12		terminal
 
-• navigation panneaux & onglets :
+
+• NAVIGATION PANNEAUX & ONGLETS :
 Alt ← →      naviguer entre onglets du même groupe au sein d'un panneau.
 	panneau « fichiers » : changer de fichier ;
 	panneau « projet » (Alt + 1) : changer de vue (project, scratches, ...)
@@ -59,26 +99,12 @@ Alt ← →      naviguer entre onglets du même groupe au sein d'un panneau.
 Ctrl Tab	popup « bascule de panneaux »
 Alt ↑↓		entre fonctions/etc.
 
+Ctrl Maj T  réouvrir onglet fermé
 
 
-● NAVIGATION DU CODE :
-Ctrl Maj RetArr			se rendre au précédent lieu d'édition (inter-fichier)
-Ctrl Maj Inser          "       "     lieu d'édition suivant
-
-Ctrl Alt clic (perso)	aller à l'implémentation
-
-Ctrl N				go to class
-Ctrl Alt Maj N		go to symbol
-
-Ctrl U			go to superclass
-Ctrl Alt B		got to derived class (choix)
-
-
-• trouver les usages d'une méthode :
-Ctrl F7			trouver les usages *dans le fichier* d'une méthode
-					&/OU de sa méthode d'interface
-
-Ctrl Maj F7	(perso)	 trouver les usages d'une méthode &/OU son interface
+• DIVISER VUE :
+AltGr Maj ↑     diviser horizontalement
+AltGr Maj →     diviser verticalement
 
 
 
@@ -106,7 +132,7 @@ Ctrl Maj ↑↓     déplacer ligne ds bloc de code
 Alt Maj ↑↓      déplacer ligne comme du texte
 
 
-• recherche :
+• RECHERCHE :
 Ctrl F, Alt F3      chercher
 Ctrl F3             chercher mot sous curseur
 
@@ -116,14 +142,14 @@ Ctrl F2 (perso)         sélect° prochaine occurence mot
 Ctrl Maj F2  (perso)    désélection dernière occurence
 
 
-• déplacement/sélection – raccourcis perso :
+• DÉPLACEMENT/SÉLECTION – RACCOURCIS PERSO :
 En plus de mes raccourcis habituels :
 
-AltGr ,         vers sous-mot à gauche, camelHump
-AltGr !         vers sous-mot à droite, camelHump
+Ctrl ,         vers sous-mot à gauche, camelHump
+Ctrl !         vers sous-mot à droite, camelHump
 
-AltGr Maj ,         sélecion vers sous-mot à gauche, camelHump
-AltGr Maj !         sélecion vers sous-mot à droite, camelHump
+Ctrl Maj ,         sélecion vers sous-mot à gauche, camelHump
+Ctrl Maj !         sélecion vers sous-mot à droite, camelHump
 
 Ctrl Alt ^          sélection ligne entière
 
@@ -135,9 +161,23 @@ Ctrl AltGr ;        aller fin bloc
 Ctrl AltGr :        aller début bloc avec sélection
 Ctrl AltGr ;        aller fin bloc avec sélection
 
+Ctrl ↑,
+Ctrl ↓                  déplacer vue
 
 Ctrl Maj M,
 Ctrl M (perso)      aller à la parenthèse/crochet/accolade pairée (ou à celui de fin du bloc)
+
+
+
+● MULTI-CURSEUR :
+• poser curseurs à la souris :
+    Alt Maj Clic
+
+• poser curseurs au clavier :
+Ctrl AltGr ↑        nouveau curseur au-dessus
+Ctrl AltGr ↓        nouveau curseur en-dessous
+
+
 
 ● ANALYSE DE CODE :
 Ctrl Alt H			méthode : hiérarchie des appels
@@ -177,6 +217,10 @@ clic droit s/ une liste ou tableau, «Filter»
 • clic droit sur une marque de point d'arrêt dans la fenêtre d'édition : 
 	édition des propriétés du point d'arrêt.
 
+• déplacement dans la pile d'exécution :
+(perso ?)
+AltGr ↑
+AltGr ↓
 
 
 ● REPLIER/DÉPLIER BLOC :
@@ -246,13 +290,15 @@ situés dans Settings/Editor/Live Templates
 _ JSP :
     fore → <c:forEach ...>
 _ java :
-    psf →  private static final
-    pusf → public static final
-    psfs → private static final String
-    pvf → public void function
-    rsa → request.setAttribute(...)
+    psf   →  private static final
+    pusf  →  public static final
+    psfs  →  private static final String
+    pusfs →  public statict final String
+    pvf   →  public void function
+    rsa →     request.setAttribute(...)
 _SQL :
-	td → TO_DATE('...', 'YYYYMMDD')
+	td   → TO_DATE('...', 'YYYYMMDD')
+    td-  → TOD_DATE('...', 'YYYY-MM-DD')
 
 
 ● console SQL :

@@ -467,12 +467,20 @@ suivant l'unitée spécifiée par <format> :
 • TRUNC(Date) :
 	par défaut, si le format est omis, TRUNC() arrondi au jour.
 
+• DaysInMonth(mois, année) :
+    donne le nombre de jours du mois de l'année donnée, avec « mois » € 1..12
+
+• LAST_DAY(date) :
+    arme la date au dernier jour du mois contenu
+
+
+• NOMBRE DE JOURS DU MOIS D'UNE DATE DONNÉE :
+    LAST_DAY(PERIODE) - trunc(PERIODE, 'MONTH') +1
+
 • calcul de dates :
 	<date> + 𝑛
 	<date> - 𝑛		→ ajoute ou soustrait 𝑛 jours à la date donnée.
 						fonctionne pour les DATE mais PAS pour les TIMESTAMP.
-
-	LAST_DAY(date) → arme la date au dernier jour du mois contenu
 
 _ opérations avec les «INTERVAL» :
 	uneDate + INTERVAL 'nb' [YEAR|MONTH|DAY|HOUR|MINUTE];
@@ -493,6 +501,12 @@ _ SYSDATE :
 	date courante sur le SERVEUR. Retour dépendant de NLS_DATE_FORMAT.
 _ CURRENT_DATE :
 	données dans la zone de temps de la SESSION
+
+
+● SELECT UNE PLAGE DE DATES :
+        SELECT TO_DATE('2020-01-01', 'YYYY-MM-DD') + (ROWNUM-1)
+        FROM ALL_OBJECTS
+        WHERE ROWNUM < 31;
 
 
 
